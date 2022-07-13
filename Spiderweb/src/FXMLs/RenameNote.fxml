@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<VBox minHeight="85.0" prefHeight="85.0" prefWidth="1000.0" style="-fx-background-color: #2F2F2F;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="43.0" prefWidth="1000.0" style="-fx-background-color: #2F2F2F;" VBox.vgrow="ALWAYS">
+         <children>
+            <TextField promptText="Rename Note To" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+         </children>
+      </AnchorPane>
+      <VBox prefHeight="200.0" prefWidth="100.0">
+         <children>
+            <AnchorPane minHeight="10.0" prefHeight="10.0" prefWidth="200.0" />
+            <HBox minHeight="20.0" prefHeight="20.0" prefWidth="200.0">
+               <children>
+                  <AnchorPane minWidth="5.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button maxWidth="80.0" minWidth="80.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="497.0" text="Cancel" />
+                  <AnchorPane minWidth="5.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+                  <Button maxWidth="80.0" minWidth="80.0" mnemonicParsing="false" prefHeight="20.0" prefWidth="501.0" text="Confirm" />
+                  <AnchorPane minWidth="5.0" prefHeight="200.0" prefWidth="200.0" HBox.hgrow="ALWAYS" />
+               </children>
+            </HBox>
+            <AnchorPane minHeight="20.0" prefHeight="20.0" prefWidth="200.0" />
+         </children>
+      </VBox>
+   </children>
+</VBox>
