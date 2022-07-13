@@ -6,9 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-
 import javax.imageio.ImageIO;
-
 import application.MasterReference;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
@@ -16,8 +14,6 @@ import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import handlers.NoteChooserHandler.Note;
 import javafx.embed.swing.SwingFXUtils;
 import javafx.scene.Node;
-import javafx.scene.Scene;
-import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
@@ -672,21 +668,8 @@ public class ReadAndWriteHandler {
 			
 			System.out.println(stnc.getTitleArea().getText());
 		}
-		
-		/*
-		try {
-			mR.renameTab(treeItem, textField.getText());
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
- 		*/
- 	
 		}
     }
-    
-    
-    
-    
     
     
 	

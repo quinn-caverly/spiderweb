@@ -1,27 +1,15 @@
 package overriders;
 
-import java.io.IOException;
 import java.io.Serializable;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.List;
-
-import handlers.NoteChooserHandler.Note;
-import javafx.beans.binding.DoubleBinding;
-import javafx.css.CssMetaData;
-import javafx.css.Styleable;
 import javafx.event.ActionEvent;
 import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.TreeItem;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.ContextMenuEvent;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.MouseEvent;
-import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
 
 public class FluidImageWrapper extends AnchorPane implements Serializable {
@@ -50,12 +38,7 @@ public class FluidImageWrapper extends AnchorPane implements Serializable {
 		
 		
 		this.setOnMouseClicked(onClick);
-		
-		//this.setOnMousePressed(onMousePressed);
-		
-		//this.setOnMouseMoved(onMouseMoved);
-		
-		//this.setOnMouseReleased(onMouseReleased);
+
 		
 		ContextMenu contextMenu = new ContextMenu();
 		
@@ -345,9 +328,6 @@ public class FluidImageWrapper extends AnchorPane implements Serializable {
 			else {
 				
 			}
-			
-			
-			
 		}
 		
 		else if (imagePool.getChildren().size() == 2) {
@@ -363,9 +343,6 @@ public class FluidImageWrapper extends AnchorPane implements Serializable {
 			
 			
 		}
-	
-		
-		
 	}
 	
 	

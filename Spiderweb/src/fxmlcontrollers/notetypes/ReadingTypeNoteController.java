@@ -1,18 +1,11 @@
 package fxmlcontrollers.notetypes;
 
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 import application.MasterReference;
-import handlers.NoteChooserHandler.Note;
-import javafx.beans.value.ChangeListener;
-import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -20,16 +13,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
-import javafx.scene.control.ScrollBar;
-import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
-import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Text;
 import overriders.AnchorForReadingType;
 
 public class ReadingTypeNoteController implements Initializable {
@@ -42,22 +30,12 @@ public class ReadingTypeNoteController implements Initializable {
 	private Button addAnalysisButton;
 	@FXML
 	private Button addBothButton;
-	
 	@FXML
 	private AnchorPane marginKeeper;
 	@FXML
 	private VBox collectorVBox;
-	
 	@FXML
 	private AnchorPane parentOfScrollPane;
-	
-	
-	
-	public void setMasterReference(MasterReference mR) {
-		this.mR = mR;
-	}
-
-
 	
 	
 	@Override
@@ -119,15 +97,6 @@ public class ReadingTypeNoteController implements Initializable {
 		}});
 	}
 
-
-
-
-	public VBox getCollectorVBox() {
-		return collectorVBox;
-	}
-	
-	
-	
 	
 	public TextArea pushAnalysisButton() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ReadingTypeSubFXMLs/Analysis.fxml"));
@@ -341,14 +310,15 @@ public class ReadingTypeNoteController implements Initializable {
 				sumContents += quoteTextArea.getText() + " " + analysisTextArea.getText() + " ";
 			}
 		}
-		
 		return sumContents;
 	}
 	
 	
-	
-	
-	
-	
-	
+	public void setMasterReference(MasterReference mR) {
+		this.mR = mR;
+	}
+
+	public VBox getCollectorVBox() {
+		return collectorVBox;
+	}
 }

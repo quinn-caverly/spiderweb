@@ -1,6 +1,5 @@
 package overriders;
 
-import javafx.beans.value.ObservableValue;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 

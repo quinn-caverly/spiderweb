@@ -3,14 +3,11 @@ package fxmlcontrollers;
 import application.MasterReference;
 import handlers.NoteChooserHandler.Note;
 import javafx.fxml.FXML;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.layout.HBox;
-import javafx.stage.Screen;
 
 public class SimilarNotesNodeController {
 	

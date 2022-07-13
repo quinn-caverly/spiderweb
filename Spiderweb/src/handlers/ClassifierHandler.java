@@ -5,19 +5,14 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
-import java.util.Collections;
-
 import application.MasterReference;
 import fxmlcontrollers.MainClassController;
-import fxmlcontrollers.SimilarNotesNodeController;
-import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import handlers.NoteChooserHandler.Note;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.control.TreeView;
@@ -25,7 +20,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Region;
 import javafx.scene.layout.VBox;
 import overriders.TypeTab;
 import representers.CurrentNoteRepresenter;
@@ -140,9 +134,7 @@ public class ClassifierHandler {
 		
 		//removes the opened note so it is not displayed in the HBox
 		listOfNotes.remove(openedItem);
-		
-		Double perfectScore = openedItem.getValue().getScoreWithNoteBeingClassified()/2;
-		
+				
 		//score logic, 10 point scale
 		
 		//if a note has 50% of the entire possible score (the score determined by classifying the note by itself)
@@ -162,9 +154,7 @@ public class ClassifierHandler {
 
             	try {
             		AnchorPane root = loader.load();
-            	
-            		Scene scene = root.getScene();
-            		
+            	            		
             		HBox mainHBox = (HBox) root.getChildren().get(0);
             		VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
             		
@@ -269,9 +259,7 @@ public class ClassifierHandler {
 
             	try {
             		AnchorPane root = loader.load();
-            	
-            		Scene scene = root.getScene();
-            		
+            	            		
             		HBox mainHBox = (HBox) root.getChildren().get(0);
             		VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
             		
@@ -401,10 +389,5 @@ public class ClassifierHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		
-		
-		
 	}
-	
 }

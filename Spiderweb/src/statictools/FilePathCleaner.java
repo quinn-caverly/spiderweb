@@ -8,5 +8,4 @@ public class FilePathCleaner {
 		
 		return filePath;
 	}
-
 }

@@ -4,20 +4,16 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
 
 import application.MasterReference;
-import fxmlcontrollers.notetypes.subtypes.PyramidController;
-import handlers.NoteChooserHandler.Note;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Rectangle2D;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.SplitPane;
@@ -25,7 +21,6 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.input.DragEvent;
 import javafx.scene.input.TransferMode;
 import javafx.scene.layout.AnchorPane;
@@ -33,8 +28,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.stage.Screen;
-import overriders.AnchorForReadingType;
 import overriders.FluidImageWrapper;
 
 public class StandardTypeNoteController implements Initializable{
@@ -176,10 +169,6 @@ public class StandardTypeNoteController implements Initializable{
 		if (collectorVBox.getChildren().size() != 0) {
 			pyramidButton.setGraphic(mR.getButtonIconImageView());
 		}
-		
-		
-		
-		
 	}
 	
 	
@@ -291,11 +280,7 @@ public class StandardTypeNoteController implements Initializable{
 			currentWidth -= 50;
 			
 		}
-		
-		
-		
 	}
-	
 	
 	
 	
@@ -394,6 +379,4 @@ public class StandardTypeNoteController implements Initializable{
 	public VBox getCollectorVBox() {
 		return collectorVBox;
 	}
-	
-	
 }

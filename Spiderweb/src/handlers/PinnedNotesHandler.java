@@ -1,18 +1,11 @@
 package handlers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Scanner;
-
 import handlers.NoteChooserHandler.Note;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
@@ -21,7 +14,6 @@ import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import overriders.TypeTab;
-
 import application.MasterReference;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
@@ -49,7 +41,6 @@ public class PinnedNotesHandler {
 		TreeItem<Note> currentItem = typeTab.getTreeItem();
 		
 		Note note = currentItem.getValue();
-		String filePath = note.getFilePath();
 		
 		ArrayList<Integer> listOfPinnedIDs = note.getListOfPinnedIDs();
 		
