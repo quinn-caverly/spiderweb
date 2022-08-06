@@ -1,0 +1,491 @@
+/* JavaFX CSS - Leave this comment until you have at least create one rule which uses -fx-Property */
+
+.root {
+    /* A bright blue for highlighting/accenting objects.  For example: selected
+     * text; selected items in menus, lists, trees, and tables; progress bars;
+     * default buttons.
+     */
+    -fx-accent: "#A30000";
+
+    /* A bright blue for the focus indicator of objects. Typically used as the
+     * first color in -fx-background-color for the "focused" pseudo-class. Also
+     * typically used with insets of -1.4 to provide a glowing effect.
+     *
+     * TODO: should this be derived from -fx-accent?
+     */
+    -fx-focus-color: "#A30000";
+}
+
+
+.label{
+	-fx-background-color: "#2F2F2F";
+	-fx-text-fill: "#f0f0f0";
+}
+
+.label:disabled{
+	-fx-background-color: "#2F2F2F";
+	
+}
+
+/*
+ * A label for the EAP quote
+ */
+#edgarQuote{
+	-fx-border-color: "#444447";
+	-fx-background-color: "#2F2F2F";
+	-fx-text-fill: "#f0f0f0";
+	-fx-font-weight:bold;
+	
+	-fx-font-size: 16;
+}
+
+/*
+ * the anchorpane right above edgarQuote
+ */
+
+#edgarAnchor0{
+	
+	-fx-background-color: "#444447";
+	
+}
+
+#edgarAnchor1{
+	
+	-fx-background-color: "#444447";
+	
+}
+
+
+.anchorpane{
+	-fx-background-color: "#2F2F2F";
+}
+
+
+
+.vbox {
+	-fx-background-color: "#2F2F2F";
+	
+}
+
+
+/*
+ * Scroll Pane
+ */
+
+
+
+/*
+ * Button
+ */
+
+.button{
+	
+	-fx-background-color: "#444447";
+	-fx-border-color: "#444447";
+	
+	-fx-text-fill: "#f0f0f0";
+
+	-fx-font-weight: bold;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+.button:pressed {
+	
+	-fx-background-color: "#A30000";
+	-fx-border-color: "#A30000";
+	-fx-font-size: 11.5;
+}
+
+.button:hover { 
+		
+
+}
+
+/*
+ * The X button for removing a node
+ */
+
+#removeNodeButton:hover {
+	
+	-fx-border-color: "#A30000";
+	
+}
+
+/*
+ * The buttons for opening a new node, highlight to show that they are pressable
+ */
+
+#buttonOne:hover {
+	
+	-fx-border-color: "#A30000";
+	
+}
+
+#buttonTwo:hover {
+	
+	-fx-border-color: "#A30000";
+	
+}
+
+#buttonThree:hover {
+	
+	-fx-border-color: "#A30000";
+	
+}
+
+
+
+
+
+
+/*
+ * Context Menu
+ */
+
+.context-menu {
+  -fx-background-color: "#444447";
+  -fx-text-fill: "#444447";
+  
+  -fx-font-weight: bold;
+}
+
+.menu-item .label {
+  -fx-text-fill: "#f0f0f0";
+  -fx-background-color: transparent;
+  
+}
+
+.menu-item:focused .label {
+	-fx-font-weight: bold;
+}
+
+
+/*
+ * Combo Box Stuff
+ */
+
+.combo-box{
+	
+	-fx-background-color: "#444447";
+	-fx-control-inner-background: "#444447";
+	-fx-font-family: TimesNewRoman;
+	-fx-text-fill: "#f0f0f0";
+	
+	-fx-border-color: "#444447";
+	-fx-border-radius: 4;
+		
+	-fx-font-weight: bold;
+	
+	-fx-prompt-text-fill: "#f0f0f0";
+	
+	-fx-highlight-fill: "#f0f0f0";
+	-fx-highlight-text-fill: "#2F2F2F";
+	-fx-display-caret: true;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+
+.combo-box .text-input {
+	
+	-fx-background-color: "#444447";
+	-fx-control-inner-background: "#444447";
+	-fx-font-family: TimesNewRoman;
+	-fx-text-fill: "#f0f0f0";
+	
+	-fx-border-color: "#444447";
+	-fx-border-radius: 4;
+		
+	-fx-font-weight: bold;
+	
+	-fx-prompt-text-fill: "#f0f0f0";
+	
+	-fx-highlight-fill: "#f0f0f0";
+	-fx-highlight-text-fill: "#f0f0f0";
+	-fx-display-caret: true;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+/*
+ * This is what is shown when the combo box is set to non editable
+ */
+
+.combo-box .list-cell {
+	
+	-fx-background-color: "#444447";
+	-fx-control-inner-background: "#444447";
+	-fx-font-family: TimesNewRoman;
+	-fx-text-fill: "#f0f0f0";
+	
+	-fx-border-color: "#444447";
+	-fx-border-radius: 4;
+		
+	-fx-font-weight: bold;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+.combo-box .list-cell:hover {
+	
+	-fx-background-color: "#A30000";
+
+}
+
+
+
+
+
+/*
+ * Text Area Stuff
+ */
+
+.text-area{	
+	-fx-background-color: "#444447";
+	-fx-control-inner-background: "#444447";
+	-fx-font-family: TimesNewRoman;
+	-fx-text-fill: "#f0f0f0";
+	
+	-fx-font-size: 18;
+
+	-fx-border-color: "#444447";
+	-fx-border-radius: 4;
+		
+	-fx-prompt-text-fill: "#f0f0f0";	
+	
+	-fx-highlight-fill: "#f0f0f0";
+	-fx-highlight-text-fill: "#2F2F2F";
+	-fx-display-caret: true;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+
+
+.text-field{
+	
+	-fx-background-color: "#444447";
+	-fx-control-inner-background: "#444447";
+	-fx-font-family: TimesNewRoman;
+	-fx-text-fill: "#f0f0f0";
+	
+	-fx-border-color: "#444447";
+	-fx-border-radius: 4;
+			
+	-fx-font-weight: bold;
+	
+	-fx-prompt-text-fill: "#f0f0f0";
+	
+	-fx-highlight-fill: "#f0f0f0";
+	-fx-highlight-text-fill: "#2F2F2F";
+	-fx-display-caret: true;
+	
+	-fx-faint-focus-color: rgba(163,0,0,0.1);
+    -fx-focus-color:rgba(163,0,0,0.1);
+}
+
+
+
+
+/*
+ * Tab Pane stuff
+ */
+
+.tab-pane {
+	-fx-background-color: "#444447";
+	
+	-fx-tab-min-width: 80;
+	-fx-tab-max-width: 80;
+	
+	-fx-border-color: "#444447";
+	-fx-border-width: 3;
+}
+
+.tab-header-area .headers-region{
+	-fx-background-color: "#2F2F2F";
+}
+
+.tab-header-area .tab-header-background{
+	-fx-background-color: "#2F2F2F";
+	
+}
+
+.tab-header-area .tab{
+	-fx-background-color: "#444447";
+}
+
+.tab-header-area .tab{
+	-fx-font-weight: bold;
+	
+}
+
+
+.tab-header-area .tab-label {
+	-fx-text-fill: "#f0f0f0";
+	
+}
+
+.tab-header-area .tab-close-button:hover {
+	-fx-background-color: "#A30000";
+}
+
+
+/*
+ * this makes the tab header on the standard type note invisible
+ */
+
+#standardTypeTabPane {
+	-fx-tab-max-height: 0;
+}
+
+#standardTypeTabPane .tab-header-area{
+	visibility: hidden;
+	-fx-padding: -20 0 0 0;
+}
+
+/*
+ * Split Pane Stuff
+ */
+
+.split-pane {
+	-fx-border-color: "#444447";
+}
+
+.split-pane:horizontal > .split-pane-divider {
+	
+	
+   -fx-background-radius : 2.0em;
+   -fx-background-color: derive(black,70.0%);
+   -fx-background-insets: 0, 0 1 0 1;
+   
+}
+
+
+.split-pane:vertical > .split-pane-divider {
+		
+   -fx-background-color: derive(black,70.0%);
+   -fx-background-insets: 0, 0 1 0 1;
+    -fx-background-radius : 2.0em;
+
+}
+
+
+/*
+ * Tree Cell Stuff
+ */
+
+
+.tree-view, .tree-cell {
+	-fx-background-color: "#2F2F2F";
+	-fx-text-fill: "#f0f0f0";
+}
+.tree-cell:selected {
+	-fx-font-weight: bold;
+}
+
+.tree-cell > .tree-disclosure-node > .arrow  {
+    -fx-background-color: "#f0f0f0";
+}
+.tree-cell:expanded > .tree-disclosure-node > .arrow {
+}
+
+
+.text-area .scroll-pane {
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .viewport{
+    -fx-background-color: transparent;
+}
+.text-area .scroll-pane .content{
+    -fx-background-color: transparent;
+}
+
+
+.scroll-pane {
+   -fx-background: "#2F2F2F";
+   -fx-background-color: "#2F2F2F";
+
+}
+
+
+.scroll-pane .corner {    
+    -fx-background-color: "#444447";
+    -fx-border-color: "#444447";
+    }
+
+.scroll-bar .filler{
+    -fx-background-color: "#444447";
+    -fx-border-color: "#444447";	
+}
+
+.virtual-flow > .corner{
+    -fx-background-color: "#444447";
+    -fx-border-color: "#444447";    
+    
+}
+
+
+/*
+ * the following scroll bar lines were gotten from stack overflow
+ * link:
+ * https://stackoverflow.com/questions/48048943/javafx-8-scroll-bar-css
+ * 
+ */
+ 
+
+.scroll-bar:horizontal .track,
+.scroll-bar:vertical .track{
+    -fx-background-color: "#444447";
+    -fx-border-color: "#444447";
+    -fx-background-radius : 0.0em;
+    -fx-border-radius :2.0em;
+}
+
+
+.scroll-bar:horizontal .increment-button ,
+.scroll-bar:horizontal .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 0.0 10.0 0.0;
+
+}
+
+.scroll-bar:vertical .increment-button ,
+.scroll-bar:vertical .decrement-button {
+    -fx-background-color :transparent;
+    -fx-background-radius : 0.0em;
+    -fx-padding :0.0 10.0 0.0 0.0;
+
+}
+
+ .scroll-bar .increment-arrow,
+ .scroll-bar .decrement-arrow{
+    -fx-shape : " ";    
+    -fx-padding :0.15em 0.0;
+}
+
+ .scroll-bar:vertical .increment-arrow,
+ .scroll-bar:vertical .decrement-arrow{
+    -fx-shape : " ";    
+    -fx-padding :0.0 0.15em;
+}
+
+.scroll-bar:horizontal .thumb,
+.scroll-bar:vertical .thumb {
+    -fx-background-color :derive(black,90.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}
+
+.scroll-bar:horizontal .thumb:hover,
+.scroll-bar:vertical .thumb:hover {
+    -fx-background-color :derive(#4D4C4F,10.0%);
+    -fx-background-insets : 2.0, 0.0, 0.0;
+    -fx-background-radius : 2.0em;
+}

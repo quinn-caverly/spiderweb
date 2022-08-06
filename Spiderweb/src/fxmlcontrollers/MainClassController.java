@@ -1,5 +1,8 @@
 package fxmlcontrollers;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -25,6 +28,8 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
+import javafx.scene.text.Font;
+import javafx.stage.Stage;
 
 
 public class MainClassController implements Initializable {
@@ -114,6 +119,8 @@ public class MainClassController implements Initializable {
     private Button pinnedNotesButton;
     @FXML
     private Button similarNotesButton;
+    @FXML
+    private Button exitButton;
     
     private HBox pinnedNotesHBox;
 
@@ -128,6 +135,10 @@ public class MainClassController implements Initializable {
     private String currentQuoteText;
     private String currentQuoteAuthor;
     
+    public void handleCloseButtonAction() {
+        Stage stage = (Stage) exitButton.getScene().getWindow();
+        stage.close();
+    }
     
     public void handlePinnedNotesButton() {
     	similarNotesButton.setDisable(false);
@@ -195,9 +206,9 @@ public class MainClassController implements Initializable {
 		//if no parent, then it is currently not on the window
 		if (edgarQuote.getParent() == null) {
 			
-			mainVBox.getChildren().add(1, edgarAnchor0);
-			mainVBox.getChildren().add(1, edgarQuote);
-			mainVBox.getChildren().add(1, edgarAnchor1);
+			mainVBox.getChildren().add(2, edgarAnchor0);
+			mainVBox.getChildren().add(2, edgarQuote);
+			mainVBox.getChildren().add(2, edgarAnchor1);
 		}
 		
 		else {
@@ -272,6 +283,7 @@ public class MainClassController implements Initializable {
     
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
 		mR = new MasterReference(this);
 		mR.setMainClassController(this);
 		
