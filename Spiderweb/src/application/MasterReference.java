@@ -371,8 +371,8 @@ public class MasterReference {
 			mCC.getFunctionBox().getChildren().clear();
 			mCC.getFunctionBox().getChildren().add(root);
 			
-			mCC.getFunctionBox().setMinHeight(85);
-			mCC.getFunctionBox().setMaxHeight(85);
+			mCC.getFunctionBox().setMinHeight(105);
+			mCC.getFunctionBox().setMaxHeight(105);
 			
 			
 			EventHandler<ActionEvent> onCancelPressed = (new EventHandler<ActionEvent>() { 
@@ -426,8 +426,8 @@ public class MasterReference {
 			mCC.getFunctionBox().getChildren().clear();
 			mCC.getFunctionBox().getChildren().add(newNoteName);
 			
-			mCC.getFunctionBox().setMinHeight(85);
-			mCC.getFunctionBox().setPrefHeight(85);
+			mCC.getFunctionBox().setMinHeight(105);
+			mCC.getFunctionBox().setPrefHeight(105);
 			
 			AnchorPane labelAnchor = (AnchorPane) newNoteName.getChildren().get(0);
 			Label label = (Label) labelAnchor.getChildren().get(0);

@@ -16,7 +16,7 @@
       <VBox prefHeight="10000.0" prefWidth="10000.0" HBox.hgrow="ALWAYS">
          <children>
             <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="500.0" prefWidth="200.0" VBox.vgrow="ALWAYS" />
-            <TextArea fx:id="textArea" prefHeight="10000.0" prefWidth="10000.0" wrapText="true" VBox.vgrow="ALWAYS" />
+            <TextArea fx:id="pyramidLevelTextArea" prefHeight="10000.0" prefWidth="10000.0" wrapText="true" VBox.vgrow="ALWAYS" />
             <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="500.0" prefWidth="200.0" />
          </children>
       </VBox>
@@ -43,7 +43,7 @@
                   <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                </rowConstraints>
                <children>
-                  <Button fx:id="removeNodeButton" maxHeight="16.0" maxWidth="16.0" minHeight="16.0" minWidth="16.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="16.0" text="x" GridPane.columnIndex="1" GridPane.rowIndex="1">
+                  <Button fx:id="removePyramidLevelButton" maxHeight="16.0" maxWidth="16.0" minHeight="16.0" minWidth="16.0" mnemonicParsing="false" prefHeight="16.0" prefWidth="16.0" text="x" GridPane.columnIndex="1" GridPane.rowIndex="1">
                      <font>
                         <Font size="6.0" />
                      </font>

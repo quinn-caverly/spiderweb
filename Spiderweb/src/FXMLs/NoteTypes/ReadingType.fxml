@@ -6,45 +6,50 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<AnchorPane fx:id="standardTypeRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="851.0" style="-fx-border-color: #444447; -fx-background-color: #2F2F2F; -fx-border-width: 3;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmlcontrollers.notetypes.ReadingTypeNoteController">
+<AnchorPane fx:id="readingTypeRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="619.0" prefWidth="851.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmlcontrollers.notetypes.ReadingTypeNoteController">
    <children>
-      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+      <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
          <children>
-            <AnchorPane fx:id="parentOfScrollPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+            <VBox prefHeight="200.0" prefWidth="100.0" HBox.hgrow="ALWAYS">
                <children>
-                  <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                     <content>
-                        <AnchorPane fx:id="marginKeeper" prefHeight="458.0" prefWidth="841.0">
-                           <children>
-                              <VBox fx:id="collectorVBox" layoutX="321.0" layoutY="99.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
-                           </children>
-                        </AnchorPane>
-                     </content>
-                  </ScrollPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane maxHeight="120.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
-               <children>
-                  <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                  <AnchorPane fx:id="parentOfScrollPane" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
                      <children>
-                        <AnchorPane maxHeight="20.0" minHeight="20.0" prefHeight="200.0" prefWidth="200.0" />
-                        <HBox prefHeight="100.0" prefWidth="200.0">
-                           <children>
-                              <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="addAnalysisButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Analysis" HBox.hgrow="ALWAYS" />
-                              <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="addBothButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Quote and Analysis" HBox.hgrow="ALWAYS" />
-                              <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
-                              <Button fx:id="addQuoteButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Quote" HBox.hgrow="ALWAYS" />
-                              <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
-                           </children>
-                        </HBox>
-                        <AnchorPane maxHeight="55.0" minHeight="55.0" prefHeight="200.0" prefWidth="200.0" />
+                        <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <content>
+                              <AnchorPane fx:id="marginKeeper" prefHeight="458.0" prefWidth="841.0">
+                                 <children>
+                                    <VBox fx:id="collectorVBox" layoutX="321.0" layoutY="99.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
+                                 </children>
+                              </AnchorPane>
+                           </content>
+                        </ScrollPane>
                      </children>
-                  </VBox>
+                  </AnchorPane>
+                  <AnchorPane maxHeight="120.0" prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                     <children>
+                        <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <AnchorPane maxHeight="20.0" minHeight="20.0" prefHeight="200.0" prefWidth="200.0" />
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addAnalysisButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Analysis" HBox.hgrow="ALWAYS" />
+                                    <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addBothButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Quote and Analysis" HBox.hgrow="ALWAYS" />
+                                    <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
+                                    <Button fx:id="addQuoteButton" mnemonicParsing="false" prefHeight="123.0" prefWidth="10000.0" text="Add Quote" HBox.hgrow="ALWAYS" />
+                                    <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
+                                 </children>
+                              </HBox>
+                              <AnchorPane maxHeight="85.0" minHeight="85.0" prefHeight="200.0" prefWidth="200.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
                </children>
-            </AnchorPane>
+            </VBox>
+            <AnchorPane maxWidth="40.0" minWidth="40.0" prefHeight="200.0" prefWidth="200.0" />
          </children>
-      </VBox>
+      </HBox>
    </children>
 </AnchorPane>

@@ -66,9 +66,9 @@
                                       <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
                                     </content>
                                        <content>
-                                          <AnchorPane fx:id="parentOfMarginKeeper" prefHeight="549.0" prefWidth="421.0">
+                                          <AnchorPane fx:id="parentOfMarginKeeper" prefHeight="100.0">
                                              <children>
-                                                <AnchorPane fx:id="marginKeeper" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="100.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
+                                                <AnchorPane fx:id="marginKeeper" prefHeight="474.0" prefWidth="331.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
                                                    <children>
                                                       <AnchorPane fx:id="imagePool" onDragDropped="#handleFileDropIntoImagePool" onDragOver="#dragOverDroppableIndicator" prefHeight="531.0" prefWidth="209.0" />
                                                    </children>
@@ -134,7 +134,7 @@
                         </VBox>
                      </items>
                   </SplitPane>
-                  <AnchorPane minHeight="50.0" prefHeight="50.0" prefWidth="200.0" />
+                  <AnchorPane minHeight="60.0" prefHeight="60.0" prefWidth="200.0" />
                </children>
             </VBox>
             <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />

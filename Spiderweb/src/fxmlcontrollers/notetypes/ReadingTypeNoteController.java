@@ -180,8 +180,8 @@ public class ReadingTypeNoteController implements Initializable {
 			anchor.setMaxHeight(150);
 			anchor.setMinHeight(150);
 			
-			//the quote notes are a lighter gray for differentiation
-			textArea.setStyle("-fx-background-color: #686868; -fx-control-inner-background: #686868;");
+			//color has to be set here instead of CSS because analysis and quote boxes do not have unique ids as they share the same fxml
+			textArea.setStyle("-fx-background-color: rgba(47, 47, 47, 0.7); -fx-text-fill: #f6e5c3;");
 			
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
@@ -238,10 +238,9 @@ public class ReadingTypeNoteController implements Initializable {
 			anchor.setMaxHeight(200);
 			anchor.setMinHeight(200);
 			
-			//this is the quote text area, so it matches its color
-			quoteSide.setStyle("-fx-background-color: #686868; -fx-control-inner-background: #686868;");
-			
-			
+			//color has to be set here instead of CSS because analysis and quote boxes do not have unique ids as they share the same fxml
+			quoteSide.setStyle("-fx-background-color: rgba(47, 47, 47, 0.7); -fx-text-fill: #f6e5c3;");
+
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(4);
 			GridPane buttonGrid = (GridPane) buttonAnchor.getChildren().get(0);

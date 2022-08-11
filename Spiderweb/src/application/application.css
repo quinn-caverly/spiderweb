@@ -20,11 +20,22 @@
     src: url("RobotoMono-SemiBold.ttf"),
 }
 
+/* colormash
+-light: #f6e5c3;
+-sharp: #d7b262;
+ */
 
+/* (246, 229, 195) */
+/* (215, 178, 98) */
+
+/* water 
+    -light: #CCCCCC;
+    -sharp: #00639B;
+ */
 
 .root{
-    -light: #f6e5c3; /* (246, 229, 195) */
-    -sharp: #d7b262; /* (215, 178, 98) */
+	-light: #f6e5c3; /* (246, 229, 195) */
+	-sharp: #d7b262; /* (215, 178, 98) */
     -green: #596A63; /* (89, 106, 99) */
     -red: #782B19; /* (120, 43, 25) */
     -dark-gray:  #2F2F2F; /* (47, 47, 47) */
@@ -39,12 +50,6 @@
     
     -hlight-gradient: linear-gradient(to bottom, #1dbbdd44, #93f9b944); 
     
-    -fx-background-image: url("colormash.png");
-    -fx-background-repeat: repeat;
-    -fx-background-size:cover;  
-    -fx-padding: 10px 15px;
-    -fx-background-radius: 10px; 
-    
  	-fx-font-family: "Roboto Mono Semibold";
 
     
@@ -53,8 +58,16 @@
     -fx-faint-focus-color:rgba(246, 229, 195, 0.3);
 }
 
-/*********************** temporary section */
+#mainVBox {
+    -fx-background-image: url("colormash.png"); /* "colormash.png" is other */
+    -fx-background-repeat: repeat;
+    -fx-background-size:cover;  
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 10px; 
+}
 
+
+/*********************** temporary section */
 
 
 /* A note about CSS: if there is a group assignment of properties and one property is not applicable, it is not applied to any object */
@@ -80,7 +93,6 @@
 	
 	-fx-background-radius: 10px;
 }
-
 
 .split-pane:horizontal > .split-pane-divider {
 	-fx-background-color: -main-gradient-vertical;
@@ -163,9 +175,6 @@ tab-content-area — StackPane
  	
  	-fx-background-color:  rgba(47, 47, 47, 0.7);
  	-fx-background-radius: 7px;
- 	
- 	-fx-background-insets: 0 2em 0 0, 1 2em 1 1, 2 2em 0 0;
-	-fx-padding: 0.083333em 5em 0.083333em 0.5em;
 }
 
 #noteTabPane > .tab-header-area > .headers-region > .tab:hover {
@@ -205,7 +214,7 @@ tab-content-area — StackPane
 
 #titleArea {
 	/*-fx-background-color: rgba(120, 43, 25, 0.65);	*/
-	-fx-background-color: rgba(246, 229, 195, 0.8);
+	-fx-background-color: rgba(246, 229, 195, 0.8);	
 }
 
 #titleArea:hover {
@@ -225,13 +234,31 @@ tab-content-area — StackPane
 
 
 #standardTypeTabPane > .tab-header-area {
-	-fx-background-color:transparent;
+	-fx-background-color: transparent;
 }
 
 #standardTypeTabPane > .tab-header-area > .headers-region {
 	-fx-background-color: transparent;
 }
 
+
+/******** Images Tab */
+
+#imagePool {
+	-fx-background-color: rgba(246, 229, 195, 0.8);
+	-fx-background-radius: 5px;
+}
+
+/******** Pyramid Tab */
+
+#pyramidLevelTextArea {
+	-fx-background-color: rgba(246, 229, 195, 0.8);
+	-fx-background-radius: 5px;	
+}
+
+#removePyramidLevelButton {
+	
+}
 
 /*******************************************************************************
  *                                                                             *
@@ -258,9 +285,20 @@ tab-content-area — StackPane
 
 }
 
+/*******************************************************************************
+ *                                                                             *
+ * Reading Note                                                                *
+ *                                                                             *
+ ******************************************************************************/
 
- /* (246, 229, 195) */
-/* (215, 178, 98) */
+#readingTypeRoot .text-area {
+	-fx-background-color: rgba(246, 229, 195, 0.8);
+	
+	-fx-background-radius: 5px;
+	
+	-fx-text-fill: -pop;
+}
+
 
 
 /*******************************************************************************
@@ -313,15 +351,112 @@ tab-content-area — StackPane
  }
  
  .button:hover {
- 	-fx-font-size: 13.2px;
+	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 80%, -sharp 80%, -sharp  100%);
+ 	-fx-border-width: 3.5px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+
+}
+ 
+ /*******************************************************************************
+ *                                                                             *
+ * Function Box Items                                                          *
+ *                                                                             *
+ ******************************************************************************/
+ 
+#newNoteNameVBox .text-field, #renameNoteVBox .text-field, #deleteNoteVBox .text-field {
+ 	-fx-background-color: rgba(47, 47, 47, 0.3);
+ 	-fx-text-fill: #fff;
+ 	-fx-prompt-text-fill: rgba(256, 256, 256, 0.5);	
+}
+
+#newNoteNameVBox .combo-box, #renameNoteVBox .combo-box {
+ 	-fx-background-color: rgba(47, 47, 47, 0.3);
+}
+
+#deleteNoteVBox .label {
+ 	-fx-background-color: rgba(47, 47, 47, 0.3);	
+ 	-fx-background-radius: 3.5px;
+}
+ 
+#newNoteNameVBox .combo-box > .combo-box-popup {
+
+}
+
+#newNoteNameVBox .combo-box > .combo-box-popup > .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:focused {
+
+}
+ 
+ /*******************************************************************************
+ *                                                                             *
+ * List View / Cells                                                           *
+ *                                                                             *
+ ******************************************************************************/
+ 
+ .list-view {
+ 	-fx-background-color: rgba(47, 47, 47, 1); 	
  }
  
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell{
+ 	-fx-text-fill: #fff;
+}
  
- 
- 
- 
- 
- 
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+ 	-fx-background-color: rgba(246, 229, 195, 0.5);
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * PopupMenu                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.context-menu {
+ 	-fx-background-color: rgba(47, 47, 47, 1); 	
+    -fx-background-insets: 0, 1;
+    -fx-padding: 0.333333em 0.083333em 0.333333em 0.083333em; /* 4 1 8 1 */
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+}
+
+.context-menu > * > .menu-item > .label {
+	-fx-text-fill: #fff;
+	-fx-font-family: "Roboto Mono Semibold";
+}
+
+.context-menu > * > .menu-item:hover {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+.context-menu > * > .menu-item:focused {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+.context-menu > * > .menu-item > .label:hover {
+ 	-fx-color: rgba(246, 229, 195, 0.3);
+}
+
+
+.context-menu .separator:horizontal .line {
+ 	-fx-color: rgba(246, 229, 195, 0.3);
+ 	-fx-min-height: 3px;
+    -fx-border-insets: 1 0 0 0;
+}
+.context-menu > .scroll-arrow {
+    -fx-padding: 0.416667em 0.416667em 0.416667em 0.416667em; /* 5 */
+    -fx-background-color: transparent;
+}
+.context-menu > .scroll-arrow:hover {
+    -fx-background: -fx-selection-bar;
+    -fx-background-color: -fx-background;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+
 
 /*
 #exitButton {

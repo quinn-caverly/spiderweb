@@ -7,19 +7,20 @@
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.VBox?>
 
-<VBox minHeight="140.0" prefHeight="100.0" prefWidth="1000.0" style="-fx-background-color: #2F2F2F;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+
+<VBox fx:id="newNoteNameVBox" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane prefHeight="43.0" prefWidth="1000.0" style="-fx-background-color: #2F2F2F;" VBox.vgrow="ALWAYS">
+      <AnchorPane prefHeight="43.0" prefWidth="1000.0" VBox.vgrow="ALWAYS">
          <children>
-            <TextField promptText="New Directory Name" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
+            <TextField fx:id="newNoteTextField" promptText="New Directory Name" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
          </children>
       </AnchorPane>
-      <AnchorPane prefHeight="43.0" prefWidth="1000.0" style="-fx-background-color: #2F2F2F;">
+      <AnchorPane prefHeight="43.0" prefWidth="1000.0">
          <children>
             <ComboBox prefWidth="150.0" promptText="Type Of Note" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0" />
          </children>
       </AnchorPane>
-      <VBox prefHeight="200.0" prefWidth="100.0">
+      <VBox prefHeight="60.0" prefWidth="100.0">
          <children>
             <AnchorPane minHeight="10.0" prefHeight="10.0" prefWidth="200.0" />
             <HBox minHeight="20.0" prefHeight="20.0" prefWidth="200.0">

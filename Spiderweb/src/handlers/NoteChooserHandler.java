@@ -480,9 +480,6 @@ public class NoteChooserHandler {
 	        
 	        MenuItem newDirectory = new MenuItem("New Directory");
 	        treeViewContextMenu.getItems().add(newDirectory);
-	        
-	        SeparatorMenuItem sepMenuItem = new SeparatorMenuItem();
-	        treeViewContextMenu.getItems().add(sepMenuItem);
 	                
 	        MenuItem openNote = new MenuItem("Open");
 	        treeViewContextMenu.getItems().add(openNote);
@@ -492,9 +489,6 @@ public class NoteChooserHandler {
 	        
 	        MenuItem deleteNote = new MenuItem("Delete");
 	        treeViewContextMenu.getItems().add(deleteNote);
-	        
-	        SeparatorMenuItem sepMenuItem2 = new SeparatorMenuItem();
-	        treeViewContextMenu.getItems().add(sepMenuItem2);
 	        
 	        MenuItem pinToOpened = new MenuItem("Pin To Opened");
 	        treeViewContextMenu.getItems().add(pinToOpened);
@@ -550,7 +544,7 @@ public class NoteChooserHandler {
 	        			functionBox.getChildren().clear();
 	        			functionBox.getChildren().add(newNoteName);
 	        			
-	        			functionBox.setMinHeight(140);
+	        			functionBox.setMinHeight(145);
 	        			
         				AnchorPane comboBoxAnchor = (AnchorPane) newNoteName.getChildren().get(1);
         				
