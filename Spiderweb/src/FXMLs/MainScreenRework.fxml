@@ -17,8 +17,6 @@
   <children>
       <AnchorPane minHeight="50.0" prefHeight="200.0" prefWidth="200.0">
          <children>
-            <Button fx:id="exitButton" layoutX="764.0" layoutY="7.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="x" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
-            <Button fx:id="exitButton1" layoutX="774.0" layoutY="17.0" mnemonicParsing="false" onAction="#handleCloseButtonAction" text="-" AnchorPane.rightAnchor="45.0" AnchorPane.topAnchor="5.0" />
             <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" AnchorPane.topAnchor="0.0">
                <children>
                   <Label fx:id="sLabel" text="S" />
@@ -103,8 +101,8 @@
                                     <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
                                 </rowConstraints>
                                  <children>
-                                    <Button fx:id="similarNotesButton" mnemonicParsing="false" onAction="#handleSimilarNotesButton" prefHeight="25.0" prefWidth="76.0" text="similar" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
-                                    <Button fx:id="pinnedNotesButton" mnemonicParsing="false" onAction="#handlePinnedNotesButton" prefHeight="25.0" prefWidth="76.0" text="pinned" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                                    <Button fx:id="similarNotesButton" minWidth="100.0" mnemonicParsing="false" onAction="#handleSimilarNotesButton" prefHeight="25.0" prefWidth="76.0" text="similar" GridPane.columnIndex="1" GridPane.hgrow="ALWAYS" GridPane.rowIndex="1" GridPane.vgrow="ALWAYS" />
+                                    <Button fx:id="pinnedNotesButton" minWidth="100.0" mnemonicParsing="false" onAction="#handlePinnedNotesButton" prefHeight="25.0" prefWidth="76.0" text="pinned" GridPane.columnIndex="1" GridPane.rowIndex="3" />
                                  </children>
                               </GridPane>
                            </children>

@@ -1,18 +1,15 @@
 package fxmlcontrollers;
 
 import application.MasterReference;
-import handlers.NoteChooserHandler.Note;
 import javafx.fxml.FXML;
 import javafx.scene.control.Label;
 import javafx.scene.control.SplitPane;
-import javafx.scene.control.TreeItem;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class SimilarNotesNodeController {
 	
 	private MasterReference mR;
-	private TreeItem<Note> treeItem;
 	
 	@FXML
 	AnchorPane root;
@@ -26,10 +23,6 @@ public class SimilarNotesNodeController {
 	
 	public void setMasterReference(MasterReference mR) {
 		this.mR = mR;
-	}
-	
-	public void setTreeItem(TreeItem<Note> treeItem) {
-		this.treeItem = treeItem;
 	}
 	
 	//has to take root as an argument because can only access fxml components from initialize me

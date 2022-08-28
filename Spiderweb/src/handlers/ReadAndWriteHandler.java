@@ -665,8 +665,6 @@ public class ReadAndWriteHandler {
 			StandardTypeNoteController stnc = (StandardTypeNoteController) treeItem.getValue().getController();
 			
 			stnc.getTitleArea().setText(textField.getText());
-			
-			System.out.println(stnc.getTitleArea().getText());
 		}
 		}
     }

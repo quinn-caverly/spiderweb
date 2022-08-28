@@ -68,9 +68,9 @@
                                        <content>
                                           <AnchorPane fx:id="parentOfMarginKeeper" prefHeight="100.0">
                                              <children>
-                                                <AnchorPane fx:id="marginKeeper" prefHeight="474.0" prefWidth="331.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
+                                                <AnchorPane fx:id="marginKeeper" prefHeight="474.0" prefWidth="331.0" AnchorPane.bottomAnchor="140.0" AnchorPane.leftAnchor="40.0" AnchorPane.rightAnchor="40.0" AnchorPane.topAnchor="20.0">
                                                    <children>
-                                                      <AnchorPane fx:id="imagePool" onDragDropped="#handleFileDropIntoImagePool" onDragOver="#dragOverDroppableIndicator" prefHeight="531.0" prefWidth="209.0" />
+                                                      <AnchorPane fx:id="imagePool" onDragDropped="#handleFileDropIntoImagePool" onDragOver="#dragOverDroppableIndicator" />
                                                    </children>
                                                 </AnchorPane>
                                              </children>

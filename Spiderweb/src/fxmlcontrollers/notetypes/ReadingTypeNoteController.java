@@ -21,8 +21,6 @@ import javafx.scene.layout.VBox;
 import overriders.AnchorForReadingType;
 
 public class ReadingTypeNoteController implements Initializable {
-
-	private MasterReference mR;
 	
 	@FXML
 	private Button addQuoteButton;
@@ -41,6 +39,8 @@ public class ReadingTypeNoteController implements Initializable {
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
+		
+		
 		//has to bind the marginKeeper's heights and widths because this cannot be done easily in SceneBuilder
 		marginKeeper.minWidthProperty().bind(parentOfScrollPane.widthProperty());
 		marginKeeper.maxWidthProperty().bind(parentOfScrollPane.widthProperty());
@@ -49,8 +49,6 @@ public class ReadingTypeNoteController implements Initializable {
 		marginKeeper.minHeightProperty().bind(collectorVBox.heightProperty());
 		marginKeeper.maxHeightProperty().bind(collectorVBox.heightProperty());
 		
-		
-
 		
         //When the Add Analysis Button is Pushed
         addAnalysisButton.setOnAction(new EventHandler<ActionEvent>() { 
@@ -87,12 +85,6 @@ public class ReadingTypeNoteController implements Initializable {
 		public void handle(ActionEvent event) {
 
 			collectorVBox.getChildren().remove(anchor);
-			
-			try {
-				mR.saveCurrentNote();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
 			
 		}});
 	}
@@ -310,11 +302,6 @@ public class ReadingTypeNoteController implements Initializable {
 			}
 		}
 		return sumContents;
-	}
-	
-	
-	public void setMasterReference(MasterReference mR) {
-		this.mR = mR;
 	}
 
 	public VBox getCollectorVBox() {

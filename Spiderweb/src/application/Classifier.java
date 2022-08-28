@@ -1,16 +1,32 @@
 package application;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.text.BreakIterator;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Properties;
 import java.util.Scanner;
 
+import edu.mit.jwi.Dictionary;
+import edu.mit.jwi.IDictionary;
+import edu.mit.jwi.item.IIndexWord;
+import edu.mit.jwi.item.ISynset;
+import edu.mit.jwi.item.ISynsetID;
+import edu.mit.jwi.item.IWord;
+import edu.mit.jwi.item.IWordID;
+import edu.mit.jwi.item.POS;
+import edu.mit.jwi.item.Pointer;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
@@ -58,10 +74,6 @@ public class Classifier {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-		
-		//System.out.println(scoreDictionary.get("nietzche"));
-		//System.out.println(scoreDictionary.get("than"));
-		//System.out.println(scoreDictionary.get("find"));
 
 	}
 	
@@ -102,21 +114,16 @@ public class Classifier {
 	
 	public void evaluateAndSortTreeItems(ArrayList<TreeItem<Note>> listOfTreeItems) {
 		
-		/*
-        for (Map.Entry<String, ArrayList<Double>> entry : tunedDictionary.entrySet()) {
-        	System.out.println(entry.getKey() + " " + entry.getValue());
-        }
-		*/
-		
+		testWordNet();
 		
 		for (TreeItem<Note> treeItem : listOfTreeItems) {
 						
 			Note currentNote = treeItem.getValue();
 			String contents = getContents(currentNote);
 			
-			
-			
 			List<String> listOfWords = convertContentsToList(contents);
+			
+			runThroughPipeline(contents);
 
 			//creates a new dictionary which is a copy of the tunedDictionary as it will be modified 
 			Map<String, ArrayList<Double>> availableWordsToMatchDictionary = new HashMap<String, ArrayList<Double>>();
@@ -150,7 +157,6 @@ public class Classifier {
 
 			currentNote.setScoreWithNoteBeingClassified(score);
 			
-			System.out.println(currentNote.getName() + " : " + score.toString());
 		}		
 				
 		Collections.sort(listOfTreeItems, new SortByScore());
@@ -160,9 +166,8 @@ public class Classifier {
 	}
 	
 	
-	
 	public List<String> convertContentsToList(String contents) {
-		
+			
 		contents = contents.toLowerCase();
 		
 		contents = contents.replace("/n", " ");
@@ -186,6 +191,168 @@ public class Classifier {
 		
 		return listOfWords;
 	}
+	
+	
+	//this is the equivalent of convertContentsToList but using a StanfordNLP pipeline
+	public void runThroughPipeline(String contents) {
+		
+		List<String> listOfWords = runTokenization(contents);
+		
+		Map<String, Integer> wordCountDic = countWords(listOfWords);
+		
+		//at this point, if there are no entries in the wordCountDic, the note should be excluded
+		
+		if (!wordCountDic.isEmpty()) {
+			
+			//System.out.println(wordCountDic);
+
+		}
+		
+		
+	}
+	
+	
+	//the tokenization step turns the raw string contents into a list of words 
+	public List<String> runTokenization(String contents) {
+		
+		//edits contents
+		contents = contents.toLowerCase();
+		
+		contents = contents.replace("/n", " ");
+		contents = contents.replace("\n", " ");
+		contents = contents.replace(".", " ");
+		
+		
+		//converts to list
+	    BreakIterator breakIterator = BreakIterator.getWordInstance();
+		
+	    List<String> listOfWords = new ArrayList<String>();
+	    
+	    breakIterator.setText(contents);
+	    int lastIndex = breakIterator.first();
+	    
+	    while (BreakIterator.DONE != lastIndex) {
+	        int firstIndex = lastIndex;
+	        lastIndex = breakIterator.next();
+	        if (lastIndex != BreakIterator.DONE && Character.isLetterOrDigit(contents.charAt(firstIndex))) {
+	        	listOfWords.add(contents.substring(firstIndex, lastIndex));
+	        }
+	    }
+		
+		return listOfWords;
+	}
+	
+	
+	//returns a dictionary which contains a key for each word in the original list and the value is how many times that word appeared
+	public Map<String, Integer> countWords(List<String> listOfOriginals) {
+		
+		Map<String, Integer> wordCountDic = new HashMap<String, Integer>();
+		
+		for (String word : listOfOriginals) {
+			
+			//if dic contains the word, ups value by 1
+			if (wordCountDic.containsKey(word)) {
+				wordCountDic.replace(word, wordCountDic.get(word) + 1);
+			}
+			
+			//if not present, adds it with value 1
+			else {
+				wordCountDic.put(word, 1);
+			}
+			
+		}
+		
+		return wordCountDic;
+	}
+	
+	
+	
+	public void testWordNet() {
+		
+		// construct the URL to the Wordnet dictionary directory
+	    String path = "C:\\Users\\quinn\\Desktop\\SpiderWeb Developing Files\\dict";
+	    URL url = null;
+	    
+	    try{ url = new URL("file", null, path); } 
+	    catch(MalformedURLException e){ e.printStackTrace(); }
+	    
+	    if(url == null) return;
+	    
+	    
+	    ArrayList<String> listOfFirstLevelSimilars = new ArrayList<String>();
+	    ArrayList<String> listOfSecondLevelSimilars = new ArrayList<String>();
+	    
+	    // construct the dictionary object and open it
+	    IDictionary dict = new Dictionary(url);
+	    try {
+			dict.open();
+			
+			IIndexWord idxWord = dict.getIndexWord("war", POS.NOUN);
+			IWordID wordID = idxWord.getWordIDs().get(0); //1st meaning
+			IWord word = dict.getWord(wordID);
+			ISynset synset = word.getSynset();
+			
+			//these are the related words
+			for (IWord synsetWord :synset.getWords()) {
+				listOfFirstLevelSimilars.add(synsetWord.getLemma());
+			}
+			
+			//these are the sets of the related words to the original synset
+			for (ISynsetID relatedSynsetID : synset.getRelatedSynsets()) {
+				
+				ISynset relatedSynset = dict.getSynset(relatedSynsetID);
+				
+				for (IWord w : relatedSynset.getWords()) {
+					listOfSecondLevelSimilars.add(w.getLemma());
+				}				
+				
+				
+				
+//				for (IWord w : synset.getWords()) {
+//					System.out.println(w.getLemma());
+//				}
+//				
+//				List < ISynsetID > hypernyms = synset.getRelatedSynsets(Pointer.HYPERNYM);
+//				
+//				List<IWord> words;
+//				
+//				System.out.println("\nhypernyms;\n");
+//				
+//				for (ISynsetID sid : hypernyms) {
+//					words = dict.getSynset(sid).getWords();
+//					
+//					for (Iterator<IWord> i = words.iterator(); i.hasNext();) {
+//						
+//						System.out.print(i.next().getLemma() + " ");
+//						
+//					}
+//				}
+				
+				
+			}
+			
+		    ArrayList<String> listOfSecondLevelSimilarsNoUnderscores = new ArrayList<String>();
+
+		    for (String secondLevelWord : listOfSecondLevelSimilars) {
+		    	
+		    	if (!secondLevelWord.contains("_")) {
+		    		listOfSecondLevelSimilarsNoUnderscores.add(secondLevelWord);
+		    	}
+		    	
+		    }
+			
+			System.out.println(listOfFirstLevelSimilars);
+			System.out.println(listOfSecondLevelSimilars);
+
+			
+
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
 	
 	//a comparator for finding the notes with the highest score
 	class SortByScore implements Comparator<TreeItem<Note>> {

@@ -8,21 +8,14 @@ import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 
 import fxmlcontrollers.MainClassController;
-import fxmlcontrollers.TreeViewCellController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
-import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import handlers.ClassifierHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
-import handlers.NoteChooserHandler.NoteControl;
 import handlers.PinnedNotesHandler;
 import handlers.ReadAndWriteHandler;
-import javafx.beans.binding.DoubleExpression;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -41,7 +34,6 @@ import javafx.scene.layout.VBox;
 import javafx.stage.DirectoryChooser;
 import javafx.stage.Stage;
 import overriders.TypeTab;
-import representers.CurrentNoteRepresenter;
 
 public class MasterReference {
 	
@@ -58,9 +50,7 @@ public class MasterReference {
 	
 	private ReadingTypeNoteController readingTypeNoteController;
 	
-	
-	private CurrentNoteRepresenter currentNoteRepresenter;
-	
+		
 	private Classifier classifier;
 		
 	private final String dataFilePath = "src/Data/directories.txt";
@@ -96,11 +86,10 @@ public class MasterReference {
 		
 		
 		//handlers
-		currentNoteRepresenter = new CurrentNoteRepresenter(this); 
 		raw = new ReadAndWriteHandler(this);
 		
 		
-		classifier = new Classifier(this);
+		classifier = new Classifier(this);		
 
 		
 		noteChooserHandler.initialize();
@@ -654,10 +643,6 @@ public class MasterReference {
 
 	public ClassifierHandler getClassifierHandler() {
 		return classifierHandler;
-	}
-	
-	public CurrentNoteRepresenter getCurrentNoteRepresenter() {
-		return currentNoteRepresenter;
 	}
 
 	public String getDataFilePath() {

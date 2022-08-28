@@ -284,16 +284,13 @@ public class StandardTypeNoteController implements Initializable{
 	
 	
 	
-	private void initializeImagePool() {
-		parentOfMarginKeeper.getChildren().clear();
-		
-		parentOfMarginKeeper.getChildren().add(marginKeeper);
-		
+	private void initializeImagePool() {		
 		imagePool.prefWidthProperty().bind(marginKeeper.widthProperty());
 		imagePool.prefHeightProperty().bind(marginKeeper.heightProperty());
 			
-		imagePool.maxWidthProperty().bind(marginKeeper.heightProperty().divide(goldenRatio));
-		imagePool.maxHeightProperty().bind(marginKeeper.widthProperty().multiply(goldenRatio));
+		imagePool.maxWidthProperty().bind(marginKeeper.heightProperty().multiply(goldenRatio));
+		imagePool.maxHeightProperty().bind(marginKeeper.widthProperty().divide(goldenRatio));
+
 			
 		//centers the imagePool by taking (width of parent - width of child) / 2
 		imagePool.translateXProperty()

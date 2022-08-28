@@ -296,6 +296,13 @@ public class MainClassController implements Initializable {
 		
 		//handles the quotes/author on the bottom bar
 		setQuote();
+		
+		//open the app with these disabled
+		toggleQuotes();
+		toggleEdgar();
+		
+		//this effectively disables the Spiderweb top label
+		mainVBox.getChildren().remove(0);
 	}
 	
 	//getters

@@ -37,7 +37,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import representers.CurrentNoteRepresenter;
 import javafx.util.Callback;
 
 public class NoteChooserHandler {	
@@ -53,7 +52,6 @@ public class NoteChooserHandler {
 	private HBox functionBox;
 	private Pane textSectionPane;
 	private FunctionBoxRepresenter functionBoxRepresenter;
-	private CurrentNoteRepresenter currentNoteRepresenter;
 	
 	private static final Set<String> ALLOWEDCHARACTERS = Set.of(
 			"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"
@@ -1054,7 +1052,6 @@ public class NoteChooserHandler {
 		//because not all classes in mR are created at same time
 		//this is run after the instances exist so that they can be referenced
 
-		currentNoteRepresenter = mR.getCurrentNoteRepresenter();
 		this.treeView = mCC.getNoteChooser();
 		this.functionBox = mCC.getFunctionBox();
 		this.textSectionPane = mCC.getTextSectionPane();

@@ -20,6 +20,11 @@
     src: url("RobotoMono-SemiBold.ttf"),
 }
 
+/* "Bebas Neue" */
+@font-face {
+    src: url("BebasNeue-Regular.ttf"),
+}
+
 /* colormash
 -light: #f6e5c3;
 -sharp: #d7b262;
@@ -40,6 +45,8 @@
     -red: #782B19; /* (120, 43, 25) */
     -dark-gray:  #2F2F2F; /* (47, 47, 47) */
     
+    -scroll-bar-thumb-color: rgba(47, 47, 47, 0.9);
+    
     
     -smooth: #4F0000;	
     -pop: #001A1F;	
@@ -50,9 +57,8 @@
     
     -hlight-gradient: linear-gradient(to bottom, #1dbbdd44, #93f9b944); 
     
- 	-fx-font-family: "Roboto Mono Semibold";
 
-    
+    -fx-font-size: 15px;
     
     -fx-focus-color: rgba(246, 229, 195, 0.5);
     -fx-faint-focus-color:rgba(246, 229, 195, 0.3);
@@ -61,7 +67,7 @@
 #mainVBox {
     -fx-background-image: url("colormash.png"); /* "colormash.png" is other */
     -fx-background-repeat: repeat;
-    -fx-background-size:cover;  
+    -fx-background-size:cover;   
     -fx-padding: 10px 15px;
     -fx-background-radius: 10px; 
 }
@@ -106,14 +112,6 @@
 
 #bottomBarMiddleLabel, #bottomBarRightLabel {
 	 -fx-text-fill: transparent;
-}
-
-#edgarQuote {
-	-fx-font-size: 20px;
-	
-	-fx-font-family: 'Abril Fatface';
-	-fx-font-family: "Bungee Shade";
-    -fx-text-fill: #131313;
 }
 
 /*******************************************************************************
@@ -213,8 +211,7 @@ tab-content-area — StackPane
  ******************************************************************************/
 
 #titleArea {
-	/*-fx-background-color: rgba(120, 43, 25, 0.65);	*/
-	-fx-background-color: rgba(246, 229, 195, 0.8);	
+	-fx-background-color: rgba(246, 229, 195, 0.8);
 }
 
 #titleArea:hover {
@@ -225,6 +222,10 @@ tab-content-area — StackPane
 }
 
 #mainTextArea:hover {
+}
+
+#standardTypeRoot .scroll-bar > .thumb  {
+	-fx-background-color: -scroll-bar-thumb-color; 
 }
 
 
@@ -240,6 +241,8 @@ tab-content-area — StackPane
 #standardTypeTabPane > .tab-header-area > .headers-region {
 	-fx-background-color: transparent;
 }
+
+
 
 
 /******** Images Tab */
@@ -272,6 +275,9 @@ tab-content-area — StackPane
 	-fx-background-radius: 5px;
 }
 
+#dailyTypeRoot .scroll-bar > .thumb  {
+	-fx-background-color: -scroll-bar-thumb-color; 
+}
 
 #brainstormingSection {
 
@@ -298,7 +304,6 @@ tab-content-area — StackPane
 	
 	-fx-text-fill: -pop;
 }
-
 
 
 /*******************************************************************************
@@ -351,11 +356,17 @@ tab-content-area — StackPane
  }
  
  .button:hover {
-	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 80%, -sharp 80%, -sharp  100%);
+	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 60%, -sharp 60%, -sharp  100%);
  	-fx-border-width: 3.5px;
  	
- 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-color:  rgba(47, 47, 47, 0.8);
+}
 
+.button:pressed {
+	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 90%, -sharp 90%, -sharp  100%);
+ 	-fx-border-width: 3.7px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 1);	
 }
  
  /*******************************************************************************
@@ -456,6 +467,27 @@ tab-content-area — StackPane
     -fx-text-fill: -fx-text-background-color;
 }
 
+
+/*******************************************************************************
+ *                                                                             *
+ * Quotes                                                                      *
+ *                                                                             *
+ ******************************************************************************/
+ 
+ #edgarQuote {
+	-fx-font-size: 33px;
+	
+	-fx-font-family: "Bebas Neue";
+    -fx-text-fill: rgba(246, 229, 195, 0.8);
+}
+ 
+#bottomBarMiddleLabel, #bottomBarRightLabel {
+	-fx-font-size: 22.5px;
+	
+	-fx-font-family: "Bebas Neue";
+    -fx-text-fill: rgba(246, 229, 195, 0.8);
+}
+ 
 
 
 /*

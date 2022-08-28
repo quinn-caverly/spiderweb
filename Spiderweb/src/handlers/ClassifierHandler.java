@@ -22,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import overriders.TypeTab;
-import representers.CurrentNoteRepresenter;
 
 public class ClassifierHandler {
 	
@@ -51,7 +50,6 @@ public class ClassifierHandler {
 	ClassifierDisplayHandler classifierDisplayHandler;
 	
 	NoteChooserHandler noteChooserHandler;
-	CurrentNoteRepresenter currentNoteRepresenter;
 	TreeView<Note> treeView;
 	
 	TextArea mainTextArea;
@@ -82,9 +80,7 @@ public class ClassifierHandler {
 	
 	public void newNoteOpenedProcedure() {
 		//can get the reference to the treeView and currentlyOpenedNote from the noteChooserHandler
-		
-		//has to be reassigned because currentNoteRepresenter is sometimes null
-		
+				
 		TypeTab typeTab = (TypeTab) mCC.getNoteTabPane().getSelectionModel().getSelectedItem();
 		TreeItem<Note> currentItem = typeTab.getTreeItem();
 		
