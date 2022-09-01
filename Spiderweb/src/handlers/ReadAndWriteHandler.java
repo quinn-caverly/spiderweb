@@ -318,13 +318,18 @@ public class ReadAndWriteHandler {
     
     
     
-    
+    /*
+     * this method is called by mR, creates the reference to the actually contents of note so it can be opened quickly 
+     * also has the task of populating the map of each note with the output from the pipeline
+     */
     public void initializeAllNotes() {
     	ArrayList<TreeItem<Note>> listOfTreeItems = mR.getClassifierHandler().createListOfTreeItems();
     	
     	for (TreeItem<Note> treeItem : listOfTreeItems) {
     	
     		initializeNote(treeItem);
+    		
+    		mR.getPipeline().runThroughPipeline(treeItem);
     	}
 
     }

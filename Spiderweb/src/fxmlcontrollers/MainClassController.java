@@ -285,7 +285,6 @@ public class MainClassController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		mR = new MasterReference(this);
-		mR.setMainClassController(this);
 		
 		classifierHandler = mR.getClassifierHandler();
 		

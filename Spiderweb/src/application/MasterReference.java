@@ -40,18 +40,16 @@ public class MasterReference {
     private final Double goldenRatio = (double) (1+Math.sqrt(5))/2;
     private Double similarNotesButtonFontSize = (double) 8;
 	
-	private MainClassController mCC;
+	private final MainClassController mCC;
 	
-	private NoteChooserHandler noteChooserHandler;
-	private ClassifierHandler classifierHandler;
-	private ReadAndWriteHandler raw;
-	private PinnedNotesHandler pinnedNotesHandler;
-
-	
-	private ReadingTypeNoteController readingTypeNoteController;
-	
+	private final NoteChooserHandler noteChooserHandler;
+	private final ClassifierHandler classifierHandler;
+	private final ReadAndWriteHandler raw;
+	private final PinnedNotesHandler pinnedNotesHandler;	
 		
-	private Classifier classifier;
+	private final Classifier classifier;
+	private final PipelineNLP pipeline;
+	private final PipelineConsolidator pipelineConsolidator;
 		
 	private final String dataFilePath = "src/Data/directories.txt";
 	private final String lastUsedIDFilePath = "src/Data/lastUsedID.txt";
@@ -90,13 +88,19 @@ public class MasterReference {
 		
 		
 		classifier = new Classifier(this);		
-
+		pipeline = new PipelineNLP();
+		pipelineConsolidator = new PipelineConsolidator(this);
+		
 		
 		noteChooserHandler.initialize();
+				
 		classifierHandler.initialize();
 		
 		
-		//listener for what the currently viewed tab is
+		/*
+		 * this is the catalyst for the changing of the
+		 * pinned note and similar notes hboxes
+		 */
 		TabPane noteTabPane = mCC.getNoteTabPane();
 		noteTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal)->{
 			//if the newtab is null, just needs to clear the hBoxes
@@ -109,7 +113,8 @@ public class MasterReference {
 			//a new note has been selected by the tabPane
 			else if (oldVal != newVal) {
 				//changes the values in the similarNotesHBox
-				classifierHandler.newNoteOpenedProcedure();
+				//classifierHandler.newNoteOpenedProcedure();
+				pipelineConsolidator.newNoteOpenedProcedure();
 				//changes the values in the pinnedNotesHBox
 				pinnedNotesHandler.newNoteOpenedProcedure();
 			}
@@ -120,14 +125,11 @@ public class MasterReference {
 		mCC.getLeftVBoxOfMainSplit().maxWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 
-
 		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
 		setTreeCellStyles();
 		
 		//the notes are effectively all opened and initialized but are not added to the tabPane, then when the note is to be added to the tabpane it simply populates the tab with the pre-existing root
 		raw.initializeAllNotes();
-		
-		
 		
 	}
 	
@@ -288,8 +290,9 @@ public class MasterReference {
 	}
 	
 	
-	
-	//for saving all notes that are open in the tabPane
+	/*
+	 * saves all notes that are open in the tabPane
+	 */
 	public void saveAllNotes() throws IOException {
 		
 		TabPane noteTabPane = mCC.getNoteTabPane();
@@ -302,8 +305,9 @@ public class MasterReference {
 	}
 	
 	
-	///
-	//finds the current note by finding which element is selected currently in the tabPane
+	/*
+	 * saves only the note which is currently opened on the tabPane
+	 */
 	public void saveCurrentNote() throws IOException {
 		//there could be no tabs in the tabPane
 		TabPane noteTabPane = mCC.getNoteTabPane();
@@ -318,10 +322,15 @@ public class MasterReference {
 		}
 	}	
 	
+	/*
+	 * both saveCurrentNote() and saveAllNotes() lead to this function
+	 * also serves the purpose of reassigning the classifierMap of the note
+	 */
 	public void saveNote(TreeItem<Note> treeItem) throws IOException {
 		raw.startSaveToLocal(treeItem);
+		
+		pipeline.runThroughPipeline(treeItem);
 	}
-	///
 	
 	public void renameCurrentNote() throws IOException {
 		//there could be no tabs in the tabPane
@@ -621,24 +630,8 @@ public class MasterReference {
 		return mCC;
 	}
 
-	public void setMainClassController(MainClassController mainClassController) {
-		this.mCC = mainClassController;
-	}
-
-	public ReadingTypeNoteController getReadingTypeNoteController() {
-		return readingTypeNoteController;
-	}
-
-	public void setReadingTypeNoteController(ReadingTypeNoteController readingTypeNoteController) {
-		this.readingTypeNoteController = readingTypeNoteController;
-	}
-
 	public NoteChooserHandler getNoteChooserHandler() {
 		return noteChooserHandler;
-	}
-
-	public void setNoteChooserHandler(NoteChooserHandler noteChooserHandler) {
-		this.noteChooserHandler = noteChooserHandler;
 	}
 
 	public ClassifierHandler getClassifierHandler() {
@@ -678,6 +671,9 @@ public class MasterReference {
 		return buttonIconImageView;
 	}
 
-	
+
+	public PipelineNLP getPipeline() {
+		return pipeline;
+	}
 	
 }

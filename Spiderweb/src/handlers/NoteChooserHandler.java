@@ -10,8 +10,11 @@ import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
+import java.util.TreeMap;
+
 import application.MasterReference;
 import fxmlcontrollers.MainClassController;
 import fxmlcontrollers.TreeViewCellController;
@@ -103,6 +106,9 @@ public class NoteChooserHandler {
 	    
 	    //so that the note is not initialized twice
 	    private boolean isInitialized = false;
+	    
+	    
+	    private TreeMap<String, Double> classifierMap;
 	    
 	    public Note(String name, String filePath, String typeOfNote){	    	
 	        this.name = name;
@@ -425,7 +431,14 @@ public class NoteChooserHandler {
 		public void setInitialized(boolean isInitialized) {
 			this.isInitialized = isInitialized;
 		}
-		
+
+		public TreeMap<String, Double> getClassifierMap() {
+			return classifierMap;
+		}
+
+		public void setClassifierMap(TreeMap<String, Double> classifierMap) {
+			this.classifierMap = classifierMap;
+		}
 		
 	}
 	

@@ -87,26 +87,23 @@ public class ClassifierHandler {
 				
 		ArrayList<TreeItem<Note>> listOfNotes = createListOfTreeItems();
 		
-		mR.getClassifier().tuneClassifier(currentItem);
-		mR.getClassifier().evaluateAndSortTreeItems(listOfNotes);
+		//mR.getClassifier().evaluateAndSortTreeItems(listOfNotes);
+		
+		mR.getPipeline().runThroughPipeline(currentItem);
 
 		mCC.getSimilarNotesHBox().getChildren().clear();
-		addItemsToSimilarNotesHBox(listOfNotes, currentItem);
+		//addItemsToSimilarNotesHBox(listOfNotes, currentItem);
 	}
 	
-	//this provides the list of potentially similar notes (in the form of the treeItem)
-	//takes the ultimate encapsulating note
-	//if no item is provided, it defaults to the rootItem of the treeView
-	public ArrayList<TreeItem<Note>> createListOfTreeItems() {			
-		return createListOfTreeItems(treeView.getRoot());
-	}
-	
-	public ArrayList<TreeItem<Note>> createListOfTreeItems(TreeItem<Note> ultimateEncapsulatingItem) {
-		//does not include the rootItem in the list
+	/*
+	 * takes all of the treeItems "under" the root node
+	 */
+	public ArrayList<TreeItem<Note>> createListOfTreeItems() {
+		TreeItem<Note> ultimateEncapsulatingTreeItem = treeView.getRoot();
 		
 		ArrayList<TreeItem<Note>> masterList = new ArrayList<TreeItem<Note>>();
 				
-		for (TreeItem<Note> currentItem: ultimateEncapsulatingItem.getChildren()) {
+		for (TreeItem<Note> currentItem: ultimateEncapsulatingTreeItem.getChildren()) {
 			createListOfTreeItemsHelper(currentItem, masterList);
 		}
 		return masterList;
@@ -130,14 +127,6 @@ public class ClassifierHandler {
 		
 		//removes the opened note so it is not displayed in the HBox
 		listOfNotes.remove(openedItem);
-				
-		//score logic, 10 point scale
-		
-		//if a note has 50% of the entire possible score (the score determined by classifying the note by itself)
-		//then it is given a 10, 45% a 9, etc.
-		
-		//if more than 50%, given a 10
-		
 		
 		
 		for (TreeItem<Note> currentTreeItem : listOfNotes) {

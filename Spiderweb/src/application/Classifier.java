@@ -37,11 +37,14 @@ public class Classifier {
 	
 	private MasterReference mR;
 	
+	private PipelineNLP pipeline;
+	
 	private Map<String, Double> scoreDictionary;
 	private Map<String, ArrayList<Double>> tunedDictionary;
 	
 	public Classifier(MasterReference mR) {
 		this.mR = mR;
+		pipeline = new PipelineNLP();
 		
 		File csvFile = new File("src/Data/unigram_freq.csv");
 		scoreDictionary = new HashMap<String, Double>();
@@ -113,9 +116,7 @@ public class Classifier {
 
 	
 	public void evaluateAndSortTreeItems(ArrayList<TreeItem<Note>> listOfTreeItems) {
-		
-		testWordNet();
-		
+				
 		for (TreeItem<Note> treeItem : listOfTreeItems) {
 						
 			Note currentNote = treeItem.getValue();
@@ -123,7 +124,6 @@ public class Classifier {
 			
 			List<String> listOfWords = convertContentsToList(contents);
 			
-			runThroughPipeline(contents);
 
 			//creates a new dictionary which is a copy of the tunedDictionary as it will be modified 
 			Map<String, ArrayList<Double>> availableWordsToMatchDictionary = new HashMap<String, ArrayList<Double>>();
@@ -158,7 +158,7 @@ public class Classifier {
 			currentNote.setScoreWithNoteBeingClassified(score);
 			
 		}		
-				
+						
 		Collections.sort(listOfTreeItems, new SortByScore());
 		
 		//reverses the list, so the most relevant values will be on the left
@@ -196,6 +196,10 @@ public class Classifier {
 	//this is the equivalent of convertContentsToList but using a StanfordNLP pipeline
 	public void runThroughPipeline(String contents) {
 		
+		//pipeline.separateSentences(contents);
+		
+		pipeline.createListOfTokenElements(pipeline.separateTokens(pipeline.separateSentences(contents)));
+		
 		List<String> listOfWords = runTokenization(contents);
 		
 		Map<String, Integer> wordCountDic = countWords(listOfWords);
@@ -207,9 +211,9 @@ public class Classifier {
 			//System.out.println(wordCountDic);
 
 		}
-		
-		
 	}
+	
+	
 	
 	
 	//the tokenization step turns the raw string contents into a list of words 
@@ -269,8 +273,8 @@ public class Classifier {
 	
 	public void testWordNet() {
 		
-		// construct the URL to the Wordnet dictionary directory
-	    String path = "C:\\Users\\quinn\\Desktop\\SpiderWeb Developing Files\\dict";
+	    String path = "lib/wordnetdict";
+
 	    URL url = null;
 	    
 	    try{ url = new URL("file", null, path); } 
@@ -307,28 +311,8 @@ public class Classifier {
 				}				
 				
 				
-				
-//				for (IWord w : synset.getWords()) {
-//					System.out.println(w.getLemma());
-//				}
-//				
-//				List < ISynsetID > hypernyms = synset.getRelatedSynsets(Pointer.HYPERNYM);
-//				
-//				List<IWord> words;
-//				
-//				System.out.println("\nhypernyms;\n");
-//				
-//				for (ISynsetID sid : hypernyms) {
-//					words = dict.getSynset(sid).getWords();
-//					
-//					for (Iterator<IWord> i = words.iterator(); i.hasNext();) {
-//						
-//						System.out.print(i.next().getLemma() + " ");
-//						
-//					}
-//				}
-				
-				
+			
+								
 			}
 			
 		    ArrayList<String> listOfSecondLevelSimilarsNoUnderscores = new ArrayList<String>();
@@ -351,6 +335,15 @@ public class Classifier {
 			e.printStackTrace();
 		}
 	}
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
