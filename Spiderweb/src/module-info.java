@@ -1,4 +1,4 @@
-module zzzz {
+module quinncaverly {
 	requires javafx.controls;
 	requires javafx.fxml;
 	requires javafx.graphics;
@@ -13,5 +13,4 @@ module zzzz {
 	opens handlers to javafx.graphics, javafx.fxml;
 	opens fxmlcontrollers.notetypes to javafx.fxml;
 	opens fxmlcontrollers.notetypes.subtypes to javafx.fxml;
-	
 }
