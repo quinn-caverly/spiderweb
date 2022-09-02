@@ -63,8 +63,8 @@ public class PipelineConsolidator {
 	/*
 	 * takes all of the treeItems "under" the root node
 	 */
-	private ArrayList<TreeItem<Note>> createListOfTreeItems() {
-		TreeItem<Note> ultimateEncapsulatingTreeItem = mR.getNoteChooserHandler().getTreeView().getRoot();
+	public ArrayList<TreeItem<Note>> createListOfTreeItems() {
+		TreeItem<Note> ultimateEncapsulatingTreeItem = mR.getMainClassController().getNoteChooser().getRoot();
 		
 		ArrayList<TreeItem<Note>> masterList = new ArrayList<TreeItem<Note>>();
 				

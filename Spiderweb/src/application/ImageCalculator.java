@@ -1,9 +1,6 @@
 package application;
 
-import java.lang.reflect.Array;
-
 import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
 public class ImageCalculator {

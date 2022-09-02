@@ -26,7 +26,9 @@ import overriders.AnchorForReadingType;
 import overriders.FluidImageWrapper;
 import overriders.TypeTab;
 
-//for handling operations in which information needs to be read and wrote to files from the local machine
+/*
+ * class handles operations where information needs to be read from and written to the local file system
+ */
 public class ReadAndWriteHandler {
 	MasterReference mR;
 	
@@ -34,8 +36,10 @@ public class ReadAndWriteHandler {
 		this.mR = mR;
 	}
 	
-	//has to formost check what the note type is
-	//then send the note to its specific type for the process of saving it to the file
+	/*
+	 * checks what type the note is
+	 * then sends that note type to its specific method for being saved
+	 */
 	public void startSaveToLocal(TreeItem<Note> treeItem) throws IOException {
 		Note note = treeItem.getValue();
 		note.setFullSaved(true);
@@ -81,8 +85,6 @@ public class ReadAndWriteHandler {
 	}
 	
 	
-	
-    //for saving the standard type notes to the local machine
     public void saveStandardNote(TreeItem<Note> currentTreeItem) throws IOException {
     	
 		Note note = currentTreeItem.getValue();
@@ -190,7 +192,6 @@ public class ReadAndWriteHandler {
     
     
     
-    //for saving the daily type notes to the local machine
     public void saveDailyNote(TreeItem<Note> currentTreeItem) throws IOException {
 		Note note = currentTreeItem.getValue();
 		DailyTypeNoteController dtnc = (DailyTypeNoteController) note.getController();
@@ -232,7 +233,6 @@ public class ReadAndWriteHandler {
     }
     
     
-    //for saving the daily type notes to the local machine
     public void saveReadingNote(TreeItem<Note> currentTreeItem) throws IOException {
 		Note note = currentTreeItem.getValue();
 		ReadingTypeNoteController rtnc = (ReadingTypeNoteController) note.getController();	
@@ -247,12 +247,13 @@ public class ReadAndWriteHandler {
     	}
     	readingDirectory.mkdir();
 		
-    	
-		//each node will have a type once it is cast, depending on the type, slightly different save procedures will be run
-    	//in order, the nodes in the area will start at 0 then count up by integers. 
-    		//analysis file will just have contents of analysis.txt
-    		//quote will have quote.txt
-    		//both file will have both text files contained
+    	/* each node will have a type once it is cast, depending on the type, slightly different save procedures will be run
+    	 * in order, the nodes in the area will start at 0 then count up by integers. 
+    	 * 
+    	 * 	analysis file will just have contents of analysis.txt
+    	 * 	quote will have quote.txt
+    	 * 	both file will have both text files contained
+    	 */
 		
     	Integer index = 0;
     	
@@ -312,18 +313,12 @@ public class ReadAndWriteHandler {
     }
     
     
-    
-    
-    
-    
-    
-    
     /*
      * this method is called by mR, creates the reference to the actually contents of note so it can be opened quickly 
      * also has the task of populating the map of each note with the output from the pipeline
      */
     public void initializeAllNotes() {
-    	ArrayList<TreeItem<Note>> listOfTreeItems = mR.getClassifierHandler().createListOfTreeItems();
+    	ArrayList<TreeItem<Note>> listOfTreeItems = mR.getPipelineConsolidator().createListOfTreeItems();
     	
     	for (TreeItem<Note> treeItem : listOfTreeItems) {
     	
@@ -334,6 +329,10 @@ public class ReadAndWriteHandler {
 
     }
     
+    /*
+     * this is run on program start so that files do not need to be read from 
+     * the system when they are opened, is also necessary for the NLP element
+     */
     public void initializeNote(TreeItem<Note> treeItem) {
     	
     	Note note = treeItem.getValue();
@@ -368,11 +367,11 @@ public class ReadAndWriteHandler {
     }
     
     
-    
-    
-    //has methods for the different types of notes
-    //the different methods will assign the values of the components of the scene
-    //adds the scene to the tabPane
+    /*
+     * contains methods for the different note types
+     * said methods will populate the components of the note
+     * then the note is added to the tabPane
+     */
     public void startOpenFromLocal(TreeItem<Note> treeItem) {
     	Note note = treeItem.getValue();
     	AnchorPane root = note.getRoot();
@@ -401,7 +400,9 @@ public class ReadAndWriteHandler {
     	noteTabPane.getTabs().add(newTab);
     }
     
-    //reads the local file if the note isFullSaved
+    /*
+     * if the note is full saved, reads the local file to get contents of note
+     */
     public void openStandardNote(TreeItem<Note> treeItem) throws IOException {      	
     	    	
 		Note note = treeItem.getValue();
@@ -595,7 +596,10 @@ public class ReadAndWriteHandler {
     }
     
     
-    
+    /*
+     * is mostly the same for all note types
+     * standard type note has the txt file named as the name of note, this is accounted for
+     */
     public void startRenameNote(TreeItem<Note> treeItem, TextField textField) {
     	
 		Note noteToBeRenamed = treeItem.getValue();
@@ -622,7 +626,7 @@ public class ReadAndWriteHandler {
 		
 		for (String str: strArray) {
 			str = str.toLowerCase();
-			if (mR.getNoteChooserHandler().getAllowedcharacters().contains(str) == false) {
+			if (NoteChooserHandler.getAllowedcharacters().contains(str) == false) {
 				failed = true;
 				break;
 			}
@@ -633,67 +637,67 @@ public class ReadAndWriteHandler {
 		}
 		
 		else {
+				
+			File currentFile = new File(noteToBeRenamed.getCurrentFilePath());
+			currentFile.renameTo(newPotentialFile);
 			
-		File currentFile = new File(noteToBeRenamed.getCurrentFilePath());
-		currentFile.renameTo(newPotentialFile);
-		
-		if (noteToBeRenamed.getTypeOfNote() == "Standard" || noteToBeRenamed.isFullSaved()) {
-			File txtFileToBeRenamed = new File(noteToBeRenamed.getCurrentFilePath() + "/self/" + noteToBeRenamed.getName() + ".txt");
-			File txtFileToRenameInto = new File(noteToBeRenamed.getCurrentFilePath() + "/self/" + textField.getText() + ".txt");
+			if (noteToBeRenamed.getTypeOfNote() == "Standard" || noteToBeRenamed.isFullSaved()) {
+				File txtFileToBeRenamed = new File(noteToBeRenamed.getCurrentFilePath() + "/self/" + noteToBeRenamed.getName() + ".txt");
+				File txtFileToRenameInto = new File(noteToBeRenamed.getCurrentFilePath() + "/self/" + textField.getText() + ".txt");
+				
+				txtFileToBeRenamed.renameTo(txtFileToRenameInto);
+			}
+	
 			
-			txtFileToBeRenamed.renameTo(txtFileToRenameInto);
-		}
-
-		
-		//changes the treeItem to match the new value
-		treeItem.setValue(mR.getNoteChooserHandler().new Note(textField.getText(), encapsulatingFilePath + textField.getText(), noteToBeRenamed.getTypeOfNote()));
-		
-		//reopens the note so that the title and text area now are consistent
-		try {
-			mR.openNote(treeItem);
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		
-		//removes the function box
-		mR.getNoteChooserHandler().resetFunctionBox();
-		
-		//applies the set styles so new note conforms
-		//(inefficient)
-		mR.setTreeCellStyles();
-		
-		//opens and closes so that everything readjusts
-		
-		//for standard notes, adjusts the title area
-		if (treeItem.getValue().getTypeOfNote() == "Standard") {
+			//changes the treeItem to match the new value
+			treeItem.setValue(mR.getNoteChooserHandler().new Note(textField.getText(), encapsulatingFilePath + textField.getText(), noteToBeRenamed.getTypeOfNote()));
 			
-			StandardTypeNoteController stnc = (StandardTypeNoteController) treeItem.getValue().getController();
+			//reopens the note so that the title and text area now are consistent
+			try {
+				mR.openNote(treeItem);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 			
-			stnc.getTitleArea().setText(textField.getText());
-		}
+			//removes the function box
+			mR.getNoteChooserHandler().resetFunctionBox();
+			
+			//applies the set styles so new note conforms
+			//(inefficient)
+			mR.setTreeCellStyles();
+			
+			//opens and closes so that everything readjusts
+			
+			//for standard notes, adjusts the title area
+			if (treeItem.getValue().getTypeOfNote() == "Standard") {
+				
+				StandardTypeNoteController stnc = (StandardTypeNoteController) treeItem.getValue().getController();
+				
+				stnc.getTitleArea().setText(textField.getText());
+			}
 		}
     }
     
     
 	
-	
+	/*
+	 * a bridge to the recursive helper
+	 */
 	public void deleteNoteOnLocal(TreeItem<Note> treeItem) {
-		
 		File file = new File(treeItem.getValue().getCurrentFilePath());
-		
 		if (file.exists()) {
-			
 			deleteDirectory(file);
-			
 		}
 	}
     
     
-	//directories cannot be deleted if they contain files
-	//this is a recursive workaround
+	/*
+	 * folders cannot be deleted if they contain files
+	 * this is a recursive function for deleting the files they contain first
+	 * and then deleting the folder
+	 */
 	public static void deleteDirectory(File file) {
-		//deletes children
-		if (file.isDirectory()) {
+		if (file.isDirectory()) { //deletes children
 			File[] children = file.listFiles();
 			if (children != null) {
 				for (File entry: children) {
@@ -701,7 +705,6 @@ public class ReadAndWriteHandler {
 				}
 			}
 		}
-		//deletes the file
 		file.delete();
 	}
 }

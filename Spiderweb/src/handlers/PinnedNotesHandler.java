@@ -45,7 +45,7 @@ public class PinnedNotesHandler {
 		ArrayList<Integer> listOfPinnedIDs = note.getListOfPinnedIDs();
 		
 		ArrayList<TreeItem<Note>> listOfPinnedTreeItems = new ArrayList<TreeItem<Note>>();
-		ArrayList<TreeItem<Note>> listOfTreeItems = mR.getClassifierHandler().createListOfTreeItems();
+		ArrayList<TreeItem<Note>> listOfTreeItems = mR.getPipelineConsolidator().createListOfTreeItems();
 		
 
 		for (TreeItem<Note> treeItem : listOfTreeItems) {
@@ -77,7 +77,7 @@ public class PinnedNotesHandler {
             		textArea.setStyle("-fx-font-size: "+mR.getSimilarNotesButtonFontSize().toString()+";");
             		
             		//the classifier handler defined this function, could move the function to masterReference for centrality, staying for now
-            		mR.getClassifierHandler().setButtonIcon(button, currentTreeItem);
+            		mR.getPipelineConsolidator().setButtonIcon(button, currentTreeItem);
 
         			EventHandler<ActionEvent> onButtonOnePressed = (new EventHandler<ActionEvent>() { 
         				@Override

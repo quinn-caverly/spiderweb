@@ -10,8 +10,6 @@ import java.nio.file.Paths;
 import java.util.ArrayList;
 
 import fxmlcontrollers.MainClassController;
-import fxmlcontrollers.notetypes.ReadingTypeNoteController;
-import handlers.ClassifierHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
 import handlers.PinnedNotesHandler;
@@ -43,16 +41,14 @@ public class MasterReference {
 	private final MainClassController mCC;
 	
 	private final NoteChooserHandler noteChooserHandler;
-	private final ClassifierHandler classifierHandler;
 	private final ReadAndWriteHandler raw;
 	private final PinnedNotesHandler pinnedNotesHandler;	
 		
-	private final Classifier classifier;
 	private final PipelineNLP pipeline;
 	private final PipelineConsolidator pipelineConsolidator;
 		
-	private final String dataFilePath = "src/Data/directories.txt";
-	private final String lastUsedIDFilePath = "src/Data/lastUsedID.txt";
+	private final String dataFilePath = "lib/data/directories.txt";
+	private final String lastUsedIDFilePath = "lib/data/lastUsedID.txt";
 	
 	private ImageView buttonIconImageView;
 
@@ -76,10 +72,8 @@ public class MasterReference {
 		}
 		
 		
-		
 		//initializes the handlers which are not location specific
 		noteChooserHandler = new NoteChooserHandler(this);
-		classifierHandler = new ClassifierHandler(this);
 		pinnedNotesHandler = new PinnedNotesHandler(this);
 		
 		
@@ -87,15 +81,11 @@ public class MasterReference {
 		raw = new ReadAndWriteHandler(this);
 		
 		
-		classifier = new Classifier(this);		
 		pipeline = new PipelineNLP();
 		pipelineConsolidator = new PipelineConsolidator(this);
 		
 		
-		noteChooserHandler.initialize();
-				
-		classifierHandler.initialize();
-		
+		noteChooserHandler.initialize();		
 		
 		/*
 		 * this is the catalyst for the changing of the
@@ -113,7 +103,6 @@ public class MasterReference {
 			//a new note has been selected by the tabPane
 			else if (oldVal != newVal) {
 				//changes the values in the similarNotesHBox
-				//classifierHandler.newNoteOpenedProcedure();
 				pipelineConsolidator.newNoteOpenedProcedure();
 				//changes the values in the pinnedNotesHBox
 				pinnedNotesHandler.newNoteOpenedProcedure();
@@ -364,8 +353,6 @@ public class MasterReference {
 			Button confirmButton = (Button) buttonHBox.getChildren().get(3);
 
 			
-			Note note = treeItem.getValue();
-			
 			mCC.getFunctionBox().getChildren().clear();
 			mCC.getFunctionBox().getChildren().add(root);
 			
@@ -415,7 +402,7 @@ public class MasterReference {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DeleteNote.fxml"));
 		try {
 			//the button will be disabled if a specific note is not selected
-			TreeItem<Note> selectedTreeItem = noteChooserHandler.getTreeView().getSelectionModel().getSelectedItem();
+			TreeItem<Note> selectedTreeItem = mCC.getNoteChooser().getSelectionModel().getSelectedItem();
 			
 			Note selectedNote = selectedTreeItem.getValue();
 			
@@ -480,7 +467,7 @@ public class MasterReference {
 			
 			TypeTab tab = (TypeTab) selectedTab;
 			
-			noteChooserHandler.getTreeView().getSelectionModel().select(tab.getTreeItem());
+			mCC.getNoteChooser().getSelectionModel().select(tab.getTreeItem());
 		}
 	}
 	
@@ -542,7 +529,7 @@ public class MasterReference {
         //makes a default folder called, Default, Standard type
 		TreeItem<Note> defaultFolder = new TreeItem<Note>(noteChooserHandler.new Note("Default", rootItem.getValue().getFilePath() + "/children/Default", "Standard"));
         
-		TreeView noteChooser = mCC.getNoteChooser();
+		TreeView<Note> noteChooser = mCC.getNoteChooser();
 		VBox parentOfTreeView = mCC.getParentOfTreeView();
 		HBox superParentOfTreeView = mCC.getSuperParentOfTreeView();
 		
@@ -561,7 +548,7 @@ public class MasterReference {
 	//this should also be created when a new note is created and treecells are modified generally because the styles of those cells may change
 	public void setTreeCellStyles() {
 		
-		ArrayList<TreeItem<Note>> listOfTreeItems = classifierHandler.createListOfTreeItems();
+		ArrayList<TreeItem<Note>> listOfTreeItems = pipelineConsolidator.createListOfTreeItems();
 		
 		
 		for (TreeItem<Note> treeItem : listOfTreeItems) {
@@ -634,10 +621,6 @@ public class MasterReference {
 		return noteChooserHandler;
 	}
 
-	public ClassifierHandler getClassifierHandler() {
-		return classifierHandler;
-	}
-
 	public String getDataFilePath() {
 		return dataFilePath;
 	}
@@ -646,34 +629,28 @@ public class MasterReference {
 		return lastUsedIDFilePath;
 	}
 
-
-	public Classifier getClassifier() {
-		return classifier;
-	}
-
-
 	public Double getSimilarNotesButtonFontSize() {
 		return similarNotesButtonFontSize;
 	}
-
 
 	public void setSimilarNotesButtonFontSize(Double similarNotesButtonFontSize) {
 		this.similarNotesButtonFontSize = similarNotesButtonFontSize;
 	}
 
-
 	public ReadAndWriteHandler getRaw() {
 		return raw;
 	}
 	
-
 	public ImageView getButtonIconImageView() {
 		return buttonIconImageView;
 	}
 
-
 	public PipelineNLP getPipeline() {
 		return pipeline;
+	}
+
+	public PipelineConsolidator getPipelineConsolidator() {
+		return pipelineConsolidator;
 	}
 	
 }

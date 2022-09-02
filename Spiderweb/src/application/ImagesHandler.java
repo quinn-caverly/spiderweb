@@ -8,7 +8,6 @@ import java.util.Iterator;
 import javax.imageio.ImageIO;
 
 import javafx.embed.swing.SwingFXUtils;
-import javafx.fxml.FXML;
 import javafx.scene.image.ImageView;
 
 public class ImagesHandler {

@@ -1,8 +1,5 @@
 package fxmlcontrollers;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.Random;
@@ -10,8 +7,6 @@ import java.util.ResourceBundle;
 
 import application.MasterReference;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
-import handlers.NoteChooserHandler;
-import handlers.ClassifierHandler;
 import handlers.NoteChooserHandler.Note;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -28,7 +23,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
-import javafx.scene.text.Font;
 import javafx.stage.Stage;
 
 
@@ -123,17 +117,7 @@ public class MainClassController implements Initializable {
     private Button exitButton;
     
     private HBox pinnedNotesHBox;
-
-    private ReadingTypeNoteController readingTypeNoteController;
     
-    @FXML
-   
-    private NoteChooserHandler noteChooserHandler;
-    private ClassifierHandler classifierHandler;
-    
-    //saves the current quote text and author so it will stay consistent when quotes toggled on and off
-    private String currentQuoteText;
-    private String currentQuoteAuthor;
     
     public void handleCloseButtonAction() {
         Stage stage = (Stage) exitButton.getScene().getWindow();
@@ -199,77 +183,8 @@ public class MainClassController implements Initializable {
 	public void renameNoteInMR() throws IOException {
 		mR.renameCurrentNote();
 	}
-	
-	//this adds / removes the large poe quote near the top of the window
-	public void toggleEdgar() {
-		
-		//if no parent, then it is currently not on the window
-		if (edgarQuote.getParent() == null) {
-			
-			mainVBox.getChildren().add(2, edgarAnchor0);
-			mainVBox.getChildren().add(2, edgarQuote);
-			mainVBox.getChildren().add(2, edgarAnchor1);
-		}
-		
-		else {
-			mainVBox.getChildren().remove(edgarAnchor0);
-			mainVBox.getChildren().remove(edgarQuote);
-			mainVBox.getChildren().remove(edgarAnchor1);
-		}
-	}
-	
-	
-	public void toggleQuotes() {
-		//if it has no text, then it is "off"
-		if (bottomBarMiddleLabel.getText() != "") {
-			
-			bottomBarMiddleLabel.setText("");
-			bottomBarRightLabel.setText("");
-			
-			//also needs to disable the new quote button
-			newQuoteButton.setDisable(true);
-			
-			
-		}
-		//if off then turn on
-		else {
-			//enables new quote button
-			newQuoteButton.setDisable(false);
 
-			bottomBarMiddleLabel.setText(currentQuoteText);
-			bottomBarRightLabel.setText(currentQuoteAuthor);
-		}
-	}
-	
-	
-	
-	public void setQuote() {
-		String[][] interestingQuotes = new String[][] { {"Those who dream by day are cognizant of many things which escape those who dream only by night.", "Edgar Allan Poe"}, 
-			{"There is nothing noble in being superior to your fellow man; true nobility is being superior to your former self.", "Ernest Hemingway"},
-			{"The world is a fine place and worth the fighting for, and I hate very much to leave it.", "Ernest Hemingway"},
-			{"We are what we repeatedly do. Excellence then is not an act, but a habit.", "Aristotle"}, 
-			{"Among other evils which being unarmed brings you, it causes you to be despised.", "Machiavelli"},
-			{"Better to reign in hell than serve in heav'n.", "John Milton"},
-			{"Let the boy win his spurs.", "Edward III, Battle of Crecy 1345"},
-			{"I am the King of Rome, and above grammar.", "Sigismund"},
-			{"He withdrew, himself wounded, and was compelled to return home inglorious, weeping - he who had once vainly hoped for the glory of a triumph.", "William of Apulia"},
-			{"You can't wake a person who is pretending to be asleep.", "Navajo proverb"},
-			{"When he judged himself- that was his supreme moment; let not the exalted one relapse again into his low estate!", "Nietzche"}
-		};
-			
-	    int rnd = new Random().nextInt(interestingQuotes.length);
-	    String[] chosenArray = interestingQuotes[rnd];
-	    
-	    bottomBarMiddleLabel.setText(chosenArray[0]);
-	    bottomBarRightLabel.setText("-" + chosenArray[1] + " ");
-	    
-	    currentQuoteText = chosenArray[0];
-	    currentQuoteAuthor = chosenArray[1];
-	}
-    
 
-    
-    
 	EventHandler<MouseEvent> onMouseClicked = (new EventHandler<MouseEvent>() { 
 		   public void handle(MouseEvent event) { 
 			   onMouseClicked(event);
@@ -285,20 +200,11 @@ public class MainClassController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		mR = new MasterReference(this);
-		
-		classifierHandler = mR.getClassifierHandler();
-		
-		pinnedNotesHBox = new HBox();
-		
+						
 		//sets the default open bottom thing as the similar notes and not pinned notes
 		handleSimilarNotesButton();
 		
-		//handles the quotes/author on the bottom bar
-		setQuote();
-		
-		//open the app with these disabled
-		toggleQuotes();
-		toggleEdgar();
+		pinnedNotesHBox = new HBox();
 		
 		//this effectively disables the Spiderweb top label
 		mainVBox.getChildren().remove(0);
@@ -398,19 +304,7 @@ public class MainClassController implements Initializable {
 	public Button getBalanceImagesButton() {
 		return balanceImagesButton;
 	}
-
-	public ReadingTypeNoteController getReadingTypeNoteController() {
-		return readingTypeNoteController;
-	}
-
-	public NoteChooserHandler getNoteChooserHandler() {
-		return noteChooserHandler;
-	}
-
-	public ClassifierHandler getClassifierHandler() {
-		return classifierHandler;
-	}
-
+	
 	public EventHandler<MouseEvent> getOnMouseClicked() {
 		return onMouseClicked;
 	}

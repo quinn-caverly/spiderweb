@@ -45,16 +45,10 @@ import javafx.util.Callback;
 public class NoteChooserHandler {	
 	//mainReference
 	MasterReference mR;
-	MainClassController mCC;
 	
 
 	private TreeView<Note> treeView;
-	private MainClassController mainClassController;
-	private VBox parentOfTreeView;
-	private HBox superParentOfTreeView;
 	private HBox functionBox;
-	private Pane textSectionPane;
-	private FunctionBoxRepresenter functionBoxRepresenter;
 	
 	private static final Set<String> ALLOWEDCHARACTERS = Set.of(
 			"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"
@@ -62,15 +56,12 @@ public class NoteChooserHandler {
 			, "1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "(", ")", "-", "_", ".", "!"
 		);
 
-	public TreeView<Note> getTreeView() {
-		return treeView;
-	}
-
-
 
 	public NoteChooserHandler(MasterReference mR) {
 		this.mR = mR;
-		mCC = mR.getMainClassController();
+		
+		this.treeView = mR.getMainClassController().getNoteChooser();
+		this.functionBox = mR.getMainClassController().getFunctionBox();
 	}
 
 	
@@ -241,6 +232,7 @@ public class NoteChooserHandler {
 	    					listOfPinnedIDs.add(Integer.valueOf(id));
 	    				}
 	    			}
+	    			in.close();
 				} catch (FileNotFoundException e) {
 					e.printStackTrace();
 				}
@@ -259,6 +251,7 @@ public class NoteChooserHandler {
 	    			while (in.hasNext()) {
 	    				lastUsedID += in.next();
 	    			}
+	    			in.close();
 	    				    			
 		        	Integer onePlus = Integer.valueOf(lastUsedID) + 1;
 	    			
@@ -289,6 +282,7 @@ public class NoteChooserHandler {
 	    			while (in.hasNext()) {
 	    				recordedID += in.next();
 	    			}
+	    			in.close();
 	    			
 	    			//sets the attribute to be the recorded ID value :)
 	    			id = Integer.valueOf(recordedID);
@@ -304,7 +298,7 @@ public class NoteChooserHandler {
 	    	
 	    	TreeItem<Note> thisTreeItem = null;
 	    	
-	    	for (TreeItem<Note> treeItem : mR.getClassifierHandler().createListOfTreeItems()) {
+	    	for (TreeItem<Note> treeItem : mR.getPipelineConsolidator().createListOfTreeItems()) {
 	    		
 	    		if (treeItem.getValue() == this) {
 	    			
@@ -337,6 +331,7 @@ public class NoteChooserHandler {
 					while (in.hasNext()) {
 						directoryPath += in.next();
 					}
+	    			in.close();
 				} catch (FileNotFoundException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -544,11 +539,7 @@ public class NoteChooserHandler {
 	        			if (selectedTreeItem == null) {
 	        				selectedTreeItem = treeView.getRoot();
 	        			}
-	        			
-	        			Note selectedNote = selectedTreeItem.getValue();
-	        			
-	        			functionBoxRepresenter = new FunctionBoxRepresenter();
-	        			functionBoxRepresenter.newNoteProcess(selectedTreeItem);
+	        				   
 	        			
 	        			VBox newNoteName = fxmlLoader.load();
 	        				        				        			
@@ -725,11 +716,6 @@ public class NoteChooserHandler {
         		try {
         			TreeItem<Note> rootItem = treeView.getRoot();;        			
         			
-        			Note selectedNote = rootItem.getValue();
-        			
-        			functionBoxRepresenter = new FunctionBoxRepresenter();
-        			functionBoxRepresenter.newNoteProcess(rootItem);
-        			
         			VBox newNoteName = fxmlLoader.load();
         				        				        			
         			functionBox.getChildren().clear();
@@ -831,14 +817,8 @@ public class NoteChooserHandler {
 	        super.updateItem(note, empty);
 	        if (note == null || empty) {
 	            setGraphic(null);
-	        } else {
-	        	
-	        	TreeViewCellController cellController = note.getCellController();
-	        	
+	        } else {	        	
 	        	setGraphic(note.getLoadedHBox());
-	        	
-	        	//NoteControl noteControl = new NoteControl(note);
-	            //setGraphic(noteControl);
 	        }
 	    }
 	    
@@ -890,9 +870,6 @@ public class NoteChooserHandler {
 	
 	//the default function for whenever the cancel button is pushed in a functionBox menu
 	public void cancelFunctionBoxOperation() {
-		
-		//resets the functionBoxRepresenter to null
-		functionBoxRepresenter = null;
 			
 		resetFunctionBox();
 	}
@@ -1042,9 +1019,9 @@ public class NoteChooserHandler {
 	//run when the directories.txt file is empty
 	public void handleWhenNoDirectoryHasBeenInitialized() {
 		//removes the TreeView and adds the button to add an initial directory
-		superParentOfTreeView.getChildren().clear();
+		mR.getMainClassController().getSuperParentOfTreeView().getChildren().clear();
 		Button createDirectory = new Button("Add Directory");
-		superParentOfTreeView.getChildren().add(createDirectory);
+		mR.getMainClassController().getSuperParentOfTreeView().getChildren().add(createDirectory);
 		
 		EventHandler<ActionEvent> onButtonPressed = (new EventHandler<ActionEvent>() { 
 			@Override
@@ -1062,15 +1039,6 @@ public class NoteChooserHandler {
 	
 	public void initialize() {
 		
-		//because not all classes in mR are created at same time
-		//this is run after the instances exist so that they can be referenced
-
-		this.treeView = mCC.getNoteChooser();
-		this.functionBox = mCC.getFunctionBox();
-		this.textSectionPane = mCC.getTextSectionPane();
-		this.mainClassController = mR.getMainClassController();
-			
-			
         treeView.setShowRoot(false);		
 		treeView.setEditable(true);
 				
@@ -1092,6 +1060,7 @@ public class NoteChooserHandler {
 			while (in.hasNext()) {
 				readInfo += in.next();
 			}
+			in.close();
 											
 			//if a directory has not been created
 			if (readInfo == "") {					
