@@ -7,16 +7,15 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
 import application.MasterReference;
-import fxmlcontrollers.MainClassController;
 import fxmlcontrollers.TreeViewCellController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
@@ -28,8 +27,9 @@ import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListCell;
+import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
-import javafx.scene.control.SeparatorMenuItem;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -38,7 +38,6 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
-import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.util.Callback;
 
@@ -46,8 +45,8 @@ public class NoteChooserHandler {
 	//mainReference
 	MasterReference mR;
 	
-
 	private TreeView<Note> treeView;
+	private ListView<Note> recencyList;
 	private HBox functionBox;
 	
 	private static final Set<String> ALLOWEDCHARACTERS = Set.of(
@@ -61,6 +60,8 @@ public class NoteChooserHandler {
 		this.mR = mR;
 		
 		this.treeView = mR.getMainClassController().getNoteChooser();
+		this.recencyList = mR.getMainClassController().getRecencyList();
+				
 		this.functionBox = mR.getMainClassController().getFunctionBox();
 	}
 
@@ -82,7 +83,8 @@ public class NoteChooserHandler {
 		
 		private TreeViewCellController cellController;
 		
-		private HBox loadedHBox;
+		private HBox treeViewHBox;
+		private HBox listViewHBox;
 
 	    private final String name;
 	    private final String filePath;
@@ -98,6 +100,7 @@ public class NoteChooserHandler {
 	    //so that the note is not initialized twice
 	    private boolean isInitialized = false;
 	    
+	    private Integer databaseId;
 	    
 	    private TreeMap<String, Double> classifierMap;
 	    
@@ -110,12 +113,12 @@ public class NoteChooserHandler {
 	        
 	        createSystemFiles();	        
 	        
+	        //loads the appearance of the note if it were the TreeView
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
-
 	    	try {
 				HBox loadedHBox = fxmlLoader.load();
 				
-				this.loadedHBox = loadedHBox;
+				this.treeViewHBox = loadedHBox;
 
 				ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
 				Label label = (Label) loadedHBox.getChildren().get(1);
@@ -128,10 +131,15 @@ public class NoteChooserHandler {
 				
 				loadedHBox.setMaxHeight(16);
 				loadedHBox.setMaxWidth(100);
-				
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
+	    	
+	    	//loads the appearance of the note if it were a ListView
+	    	//UNFINISHED
+	    	
+	    	
+	    	
 	        		
 
 	        if (typeOfNote == "Standard") {
@@ -399,8 +407,8 @@ public class NoteChooserHandler {
 			this.cellController = cellController;
 		}
 
-		public HBox getLoadedHBox() {
-			return loadedHBox;
+		public HBox getTreeViewHBox() {
+			return treeViewHBox;
 		}
 
 		public String getFilePath() {
@@ -433,6 +441,14 @@ public class NoteChooserHandler {
 
 		public void setClassifierMap(TreeMap<String, Double> classifierMap) {
 			this.classifierMap = classifierMap;
+		}
+
+		public Integer getDatabaseId() {
+			return databaseId;
+		}
+
+		public void setDatabaseId(Integer databaseId) {
+			this.databaseId = databaseId;
 		}
 		
 	}
@@ -471,6 +487,28 @@ public class NoteChooserHandler {
 				e.printStackTrace();
 			}
 	    }
+	}
+	
+	
+	public class RecencyListCell extends ListCell<Note>{
+
+		public RecencyListCell() {
+		}
+		
+		    @Override
+		    protected void updateItem(Note note, boolean empty) {
+		        super.updateItem(note, empty);
+		        if (note == null || empty) {
+		            setGraphic(null);
+		        } else {	        	
+		        	setGraphic(note.getTreeViewHBox());
+		        }
+		    }
+		    
+	        @Override
+	        public void startEdit() {
+	            super.startEdit();
+	        }
 	}
 	
 	
@@ -818,7 +856,7 @@ public class NoteChooserHandler {
 	        if (note == null || empty) {
 	            setGraphic(null);
 	        } else {	        	
-	        	setGraphic(note.getLoadedHBox());
+	        	setGraphic(note.getTreeViewHBox());
 	        }
 	    }
 	    
@@ -837,9 +875,6 @@ public class NoteChooserHandler {
 	}
 	
 
-	
-	
-	
 	public void openCurrentlySelectedNote() {
 		TreeItem<Note> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();			
 		try {
@@ -847,24 +882,6 @@ public class NoteChooserHandler {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}		
-	}
-	
-	
-	
-	
-	
-	//must be called every time the functionBox changes form
-	//stores attributes for the completion of functionBox functionalities
-	private class FunctionBoxRepresenter {
-		TreeItem<Note> encapsulatingNode;
-		
-		
-		public void newNoteProcess(TreeItem<Note> encapsulatingNode) {
-			this.encapsulatingNode = encapsulatingNode;
-		}
-		public TreeItem<Note> getEncapsulatingNode() {
-			return encapsulatingNode;
-		}
 	}
 	
 	
@@ -952,7 +969,21 @@ public class NoteChooserHandler {
 	}
 	
 	
+	//this will be run once we can already generate the list of tree items through the PipelineConsolidator
+	public void createRecencyList() {
+		ArrayList<TreeItem<Note>> listOfTreeItems = mR.getPipelineConsolidator().createListOfTreeItems();
+				
+    	for (TreeItem<Note> treeItem : listOfTreeItems) {
+    		    		
+    		recencyList.getItems().add(treeItem.getValue());
+    		        	    		
+    	}
+	}
+
 	
+	
+	
+	//this method creates the legacy tree view
 	public void createTreeStructureFromLocal(String pathToMaster) {
 		TreeItem<Note> rootItem = new TreeItem<Note>(new Note("WebNotesSaveFile", pathToMaster, "Standard"));
         treeView.setRoot(rootItem);
@@ -999,6 +1030,15 @@ public class NoteChooserHandler {
 			fullSaved = true;
 		}
 		
+		try {
+			BasicFileAttributes attr = Files.readAttributes(currentItemFile.toPath(), BasicFileAttributes.class);
+			
+			//System.out.println(attr.creationTime().toInstant().toString());
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		//creates the currentItem and adds it to the children of the parent
 		Note currentNote = new Note(currentItemFile.getName(),filePath, typeOfNote);			
 		currentNote.setFullSaved(fullSaved);
@@ -1039,6 +1079,10 @@ public class NoteChooserHandler {
 	
 	public void initialize() {
 		
+		/*
+		 * handles the classic treeView initialization,
+		 * properties which could not be determined by Scene Builder in fxml
+		 */
         treeView.setShowRoot(false);		
 		treeView.setEditable(true);
 				
@@ -1048,6 +1092,11 @@ public class NoteChooserHandler {
                 return new NoteTreeCell();
             }
         });
+        
+        /*
+         * handles the recency tree initialization
+         */
+        recencyList.setCellFactory(lv -> new RecencyListCell());
 		
 		
 		FileInputStream fis;

@@ -26,5 +26,8 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
+	<classpathentry kind="lib" path="lib/derby/derby.jar"/>
+	<classpathentry kind="lib" path="lib/derby/derbyshared.jar"/>
+	<classpathentry kind="lib" path="lib/derby/derbytools.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

@@ -56,6 +56,7 @@ public class PipelineConsolidator {
 		
 		ArrayList<TreeItem<Note>> sortedListOfNotes = classifyAndSortNotes(listOfTreeItems, openedItem);
 		
+		mR.getMainClassController().getSimilarNotesHBox().getChildren().clear();
 		addItemsToSimilarNotesHBox(sortedListOfNotes);
 	}
 	

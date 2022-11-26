@@ -7,9 +7,16 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Paths;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 import fxmlcontrollers.MainClassController;
+import handlers.DatabaseHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
 import handlers.PinnedNotesHandler;
@@ -110,7 +117,6 @@ public class MasterReference {
 		});
 		
 		
-		
 		mCC.getLeftVBoxOfMainSplit().maxWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 
@@ -119,6 +125,51 @@ public class MasterReference {
 		
 		//the notes are effectively all opened and initialized but are not added to the tabPane, then when the note is to be added to the tabpane it simply populates the tab with the pre-existing root
 		raw.initializeAllNotes();
+
+		//DatabaseHandler.initializeDatabase();
+				
+		//DatabaseHandler.startSaveProtocol(this);
+		
+		//DatabaseHandler.startLoadProtocol(this);
+
+		/*
+		Integer noteIndex = 52; //50 is a reading note
+		System.out.println(pipelineConsolidator.createListOfTreeItems().get(noteIndex).getValue().getTypeOfNote());
+		DatabaseHandler.savePageToDatabase(pipelineConsolidator.createListOfTreeItems().get(noteIndex).getValue());
+		*/
+	}
+	
+	
+	
+	//this is temporary code which is testing the database: DELETE LATER
+	public void connectToDatabase() {
+		
+		
+		String connectionURL = "jdbc:derby:derby/db;create=true";
+		
+		Connection conn;
+		try {
+			conn = DriverManager.getConnection(connectionURL);
+			
+	        PreparedStatement statement = conn
+	                .prepareStatement("SELECT * from Employees");
+
+	        ResultSet resultSet = statement.executeQuery();
+	        
+	        System.out.println(resultSet);
+	        
+	        System.out.println(resultSet.getFetchSize());
+	        
+            while (resultSet.next()) {
+                System.out.println(resultSet.getString("City"));
+            }
+	        
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	
+
 		
 	}
 	
@@ -593,7 +644,7 @@ public class MasterReference {
 				}
 			}
 						
-			HBox loadedHBox = note.getLoadedHBox();
+			HBox loadedHBox = note.getTreeViewHBox();
 			
 			ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
 

@@ -152,12 +152,6 @@ public class PipelineNLP {
 		currentItem.getValue().setClassifierMap(classifierMap);
 	}
 	
-	public void temporaryTest(TreeMap<Double, String> classifierMap) {
-		
-		
-	}
-	
-	
 	
 	/*
 	 * Separates the raw text into sentences using OpenNLP

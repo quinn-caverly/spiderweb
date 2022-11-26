@@ -13,6 +13,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
@@ -115,6 +116,14 @@ public class MainClassController implements Initializable {
     private Button similarNotesButton;
     @FXML
     private Button exitButton;
+    @FXML
+    private Button refreshSimilarsButton;
+    @FXML
+    private Button switchTreeButton;
+    @FXML
+    private TabPane treeViewTabPane;
+    @FXML
+    private ListView<Note> recencyList;
     
     private HBox pinnedNotesHBox;
     
@@ -183,16 +192,37 @@ public class MainClassController implements Initializable {
 	public void renameNoteInMR() throws IOException {
 		mR.renameCurrentNote();
 	}
-
-
-	EventHandler<MouseEvent> onMouseClicked = (new EventHandler<MouseEvent>() { 
-		   public void handle(MouseEvent event) { 
-			   onMouseClicked(event);
-			   }});
 	
+	//switches between legacy tree view and the newer date-ranked note structure view
+	public void switchTreeViewTabPane() {
+		
+		//if index 0 is selected, we select 1
+		if (treeViewTabPane.getSelectionModel().getSelectedIndex() == 0) {
+			treeViewTabPane.getSelectionModel().select(1);
+			//generates the most recent version of the recency list
+			mR.getNoteChooserHandler().createRecencyList();
+			
+			//because this corresponds to the legacy treeView we change the message
+			switchTreeButton.setText("legacy tree");
+		}
+		else {
+			treeViewTabPane.getSelectionModel().select(0);
+			switchTreeButton.setText("recency tree");
+		}
+				
+	}
 	
-	public void onMouseClicked(MouseEvent event) {		
 
+	/*
+	 * called from the mainScreen, refreshes the similars, which essentially means
+	 * calling the function which is called when a note changes
+	 * 
+	 * it is necessary to save the note first because the pipeline uses the saved state of the note, 
+	 * not what it currently displayed in the text area
+	 */
+	public void refreshSimilars() throws IOException {
+		mR.saveCurrentNote();
+		mR.getPipelineConsolidator().newNoteOpenedProcedure();
 	}
 	
     
@@ -305,10 +335,6 @@ public class MainClassController implements Initializable {
 		return balanceImagesButton;
 	}
 	
-	public EventHandler<MouseEvent> getOnMouseClicked() {
-		return onMouseClicked;
-	}
-	
 	public TabPane getNoteTabPane() {
 		return noteTabPane;
 	}
@@ -348,6 +374,9 @@ public class MainClassController implements Initializable {
 	public Button getSimilarNotesButton() {
 		return similarNotesButton;
 	}
-	
+
+	public ListView<Note> getRecencyList() {
+		return recencyList;
+	}
 	
 }

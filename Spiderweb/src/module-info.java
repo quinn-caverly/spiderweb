@@ -7,6 +7,7 @@ module quinncaverly {
 	requires javafx.base;
 	requires edu.mit.jwi;
 	requires org.apache.opennlp.tools;
+	requires java.sql;
 	
 	opens application to javafx.graphics, javafx.fxml;
 	opens fxmlcontrollers to javafx.graphics, javafx.fxml;
