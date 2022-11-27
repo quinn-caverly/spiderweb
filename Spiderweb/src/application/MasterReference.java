@@ -134,12 +134,6 @@ public class MasterReference {
 		
 		DatabaseHandler.startLoadProtocol(this);
 		setTreeCellStyles();
-
-		/*
-		Integer noteIndex = 52; //50 is a reading note
-		System.out.println(pipelineConsolidator.createListOfTreeItems().get(noteIndex).getValue().getTypeOfNote());
-		DatabaseHandler.savePageToDatabase(pipelineConsolidator.createListOfTreeItems().get(noteIndex).getValue());
-		*/
 	}
 	
 	
