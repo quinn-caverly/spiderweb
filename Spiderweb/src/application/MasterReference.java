@@ -91,7 +91,7 @@ public class MasterReference {
 		pipeline = new PipelineNLP();
 		pipelineConsolidator = new PipelineConsolidator(this);
 		
-		
+		//TODO handle this
 		noteChooserHandler.initialize();		
 		
 		/*
@@ -120,17 +120,20 @@ public class MasterReference {
 		mCC.getLeftVBoxOfMainSplit().maxWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 
+		//TODO handle this
 		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
-		setTreeCellStyles();
+		//setTreeCellStyles();
 		
+		//TODO
 		//the notes are effectively all opened and initialized but are not added to the tabPane, then when the note is to be added to the tabpane it simply populates the tab with the pre-existing root
-		raw.initializeAllNotes();
+		//raw.initializeAllNotes();
 
 		//DatabaseHandler.initializeDatabase();
 				
 		//DatabaseHandler.startSaveProtocol(this);
 		
-		//DatabaseHandler.startLoadProtocol(this);
+		DatabaseHandler.startLoadProtocol(this);
+		setTreeCellStyles();
 
 		/*
 		Integer noteIndex = 52; //50 is a reading note

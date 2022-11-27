@@ -65,9 +65,237 @@ public class NoteChooserHandler {
 		this.functionBox = mR.getMainClassController().getFunctionBox();
 	}
 
-	
-	
-	
+
+	public class Note {
+		
+		//an id that uniquely identifies the note because the filepath cannot uniquely identify the note because it changes
+		private Integer id;
+		
+		//an Integer[] of the ids which are pinned to this note
+		private ArrayList<Integer> listOfPinnedIDs;
+		
+		//this is the root which is loaded from fxml which is added to the tabPane on open
+		private AnchorPane root;
+		
+		private Object controller;
+		
+		private TreeViewCellController cellController;
+		
+		private HBox treeViewHBox;
+		private HBox listViewHBox;
+
+	    private final String name;
+	    private final String typeOfNote;
+	    
+	    private String childrenFilePath;
+	    private String selfPath;
+	    
+	    private Double scoreWithNoteBeingClassified;
+	    
+	    private boolean isFullSaved = false;
+	    
+	    //so that the note is not initialized twice
+	    private boolean isInitialized = false;
+	    
+	    private Integer databaseId;
+	    private ArrayList<String> childrenIds;
+	    
+	    private TreeMap<String, Double> classifierMap;
+	    
+	    public Note(String name, String typeOfNote){	    	
+	        this.name = name;
+	        this.typeOfNote = typeOfNote;
+	        
+	        listOfPinnedIDs = new ArrayList<Integer>();
+	        	        
+	        //loads the appearance of the note if it were the TreeView
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
+	    	try {
+				HBox loadedHBox = fxmlLoader.load();
+				
+				this.treeViewHBox = loadedHBox;
+
+				ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
+				Label label = (Label) loadedHBox.getChildren().get(1);
+				
+				label.setText(name);
+				
+				InputStream is = new FileInputStream("src/images/SaveIcon.png");
+				Image saveIcon = new Image(is);
+				iconView.setImage(saveIcon);
+				
+				loadedHBox.setMaxHeight(16);
+				loadedHBox.setMaxWidth(100);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+	    	
+	    	//loads the appearance of the note if it were a ListView
+	    	//UNFINISHED
+	    	
+	    	
+	    	
+	        		
+
+	        if (typeOfNote == "Standard") {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/StandardType.fxml"));
+
+	        	try {
+					root = loader.load();
+					
+		        	StandardTypeNoteController stnc = loader.getController();
+		        	stnc.setMasterReference(mR);
+		        	
+		        	controller = stnc;
+		        	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	        
+	        else if (typeOfNote == "Daily") {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyType.fxml"));
+
+	        	try {
+					root = loader.load();
+					
+		        	DailyTypeNoteController dtnc = loader.getController();
+		        	
+		        	controller = dtnc;
+		        	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	        
+	        else if (typeOfNote == "Reading") {
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/ReadingType.fxml"));
+
+	        	try {
+					root = loader.load();
+					
+		        	ReadingTypeNoteController rtnc = loader.getController();
+		        	
+		        	controller = rtnc;
+		        	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	        
+	    }
+	    
+
+	    public String getName() {
+	        return name;
+	    }
+
+		public boolean isFullSaved() {
+			return isFullSaved;
+		}
+
+		public void setFullSaved(boolean isFullSaved) {
+			this.isFullSaved = isFullSaved;
+		}
+
+		public String getChildrenFilePath() {			
+			return childrenFilePath;
+		}
+
+		public void setChildrenFilePath(String childrenFilePath) {
+			this.childrenFilePath = childrenFilePath;
+		}
+
+		public String getSelfPath() {
+			return selfPath;
+		}
+
+		public void setSelfPath(String selfPath) {
+			this.selfPath = selfPath;
+		}
+
+		public String getTypeOfNote() {
+			return typeOfNote;
+		}
+
+		public AnchorPane getRoot() {
+			return root;
+		}
+		
+		public Object getController() {
+			return controller;
+		}
+
+		public Double getScoreWithNoteBeingClassified() {
+			return scoreWithNoteBeingClassified;
+		}
+
+		public void setScoreWithNoteBeingClassified(Double scoreWithNoteBeingClassified) {
+			this.scoreWithNoteBeingClassified = scoreWithNoteBeingClassified;
+		}
+
+		public TreeViewCellController getCellController() {
+			return cellController;
+		}
+
+		public void setCellController(TreeViewCellController cellController) {
+			this.cellController = cellController;
+		}
+
+		public HBox getTreeViewHBox() {
+			return treeViewHBox;
+		}
+
+		public Integer getId() {
+			return id;
+		}
+
+		public ArrayList<Integer> getListOfPinnedIDs() {
+			return listOfPinnedIDs;
+		}
+
+		public void setListOfPinnedIDs(ArrayList<Integer> listOfPinnedIDs) {
+			this.listOfPinnedIDs = listOfPinnedIDs;
+		}
+
+		public boolean isInitialized() {
+			return isInitialized;
+		}
+
+		public void setInitialized(boolean isInitialized) {
+			this.isInitialized = isInitialized;
+		}
+
+		public TreeMap<String, Double> getClassifierMap() {
+			return classifierMap;
+		}
+
+		public void setClassifierMap(TreeMap<String, Double> classifierMap) {
+			this.classifierMap = classifierMap;
+		}
+
+		public Integer getDatabaseId() {
+			return databaseId;
+		}
+
+		public void setDatabaseId(Integer databaseId) {
+			this.databaseId = databaseId;
+		}
+
+
+		public ArrayList<String> getChildrenIds() {
+			return childrenIds;
+		}
+
+
+		public void setChildrenIds(ArrayList<String> childrenIds) {
+			this.childrenIds = childrenIds;
+		}
+		
+	}
+
+	/*
+
 	public class Note {
 		
 		//an id that uniquely identifies the note because the filepath cannot uniquely identify the note because it changes
@@ -452,8 +680,7 @@ public class NoteChooserHandler {
 		}
 		
 	}
-	
-	
+*/
 
 	public class NoteControl extends HBox {
 		
@@ -1097,7 +1324,7 @@ public class NoteChooserHandler {
          * handles the recency tree initialization
          */
         recencyList.setCellFactory(lv -> new RecencyListCell());
-		
+		/*
 		
 		FileInputStream fis;
 		try {	
@@ -1124,6 +1351,7 @@ public class NoteChooserHandler {
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
+		*/
 	}
 
 

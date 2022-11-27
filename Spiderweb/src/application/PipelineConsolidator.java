@@ -60,6 +60,22 @@ public class PipelineConsolidator {
 		addItemsToSimilarNotesHBox(sortedListOfNotes);
 	}
 	
+	/*
+	 * takes all of the treeItems "under" the root node
+	 */
+	public ArrayList<TreeItem<Note>> createListOfTreeItemsWithRootNode() {
+		TreeItem<Note> ultimateEncapsulatingTreeItem = mR.getMainClassController().getNoteChooser().getRoot();
+		
+		ArrayList<TreeItem<Note>> masterList = new ArrayList<TreeItem<Note>>();
+				
+		for (TreeItem<Note> currentItem: ultimateEncapsulatingTreeItem.getChildren()) {
+			createListOfTreeItemsHelper(currentItem, masterList);
+		}
+		
+		masterList.add(ultimateEncapsulatingTreeItem);
+		
+		return masterList;
+	}
 	
 	/*
 	 * takes all of the treeItems "under" the root node

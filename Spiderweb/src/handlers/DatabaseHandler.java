@@ -98,7 +98,7 @@ public final class DatabaseHandler {
 	 */
 	private static void startTreeViewSaveProtocol(MasterReference mR) {
 		
-		ArrayList<TreeItem<Note>> treeList = mR.getPipelineConsolidator().createListOfTreeItems();
+		ArrayList<TreeItem<Note>> treeList = mR.getPipelineConsolidator().createListOfTreeItemsWithRootNode();
 				
 		/*
 		 * this will save each page in the treeView to the database, and also gives each page an Id
@@ -126,13 +126,12 @@ public final class DatabaseHandler {
 		    statement.execute("CREATE TABLE NewTreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot SMALLINT)");
 		    
 			TreeItem<Note> rootNode = mR.getMainClassController().getNoteChooser().getRoot();
-		    
+					    
 			for (TreeItem<Note> treeItem : treeList) {
 				
 				String bitValue;
-				if (treeItem == rootNode) {
+				if (treeItem.equals(rootNode)) {
 					bitValue = "1";
-					System.out.println("root found");
 				}
 				else {
 					bitValue = "0";
@@ -585,17 +584,19 @@ public final class DatabaseHandler {
 		
 		ArrayList<ArrayList<String>> containerSequence = new ArrayList<ArrayList<String>>();
 		
-		String firstSplit[] = containerSequenceString.split(",");
-		
-		for (String innerString : firstSplit) {
+		if (containerSequenceString.length() != 0) {
+			String firstSplit[] = containerSequenceString.split(",");
 			
-			String secondSplit[] = innerString.split("-");
-			
-			ArrayList<String> innerList = new ArrayList<String>();
-			innerList.add(secondSplit[0]);
-			innerList.add(secondSplit[1]);
+			for (String innerString : firstSplit) {
+				
+				String secondSplit[] = innerString.split("-");
+				
+				ArrayList<String> innerList = new ArrayList<String>();
+				innerList.add(secondSplit[0]);
+				innerList.add(secondSplit[1]);
 
-			containerSequence.add(innerList);
+				containerSequence.add(innerList);
+			}
 		}
 		
 		return containerSequence;
@@ -654,6 +655,13 @@ public final class DatabaseHandler {
 		
 	}
 	
+	/*
+	 * first, build all of the TreeItem<Note>
+	 * then, assign children by going through through CREATE TABLE TreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot CHAR(1))
+	 * make note of the root during previous step, set root at the end
+	 * 
+	 * the ChildrenSequence is a comma-separated list of the notes children, unordered
+	 */
 	private static void startTreeViewLoadProtocol(MasterReference mR) {
 		
 		try {
@@ -661,18 +669,59 @@ public final class DatabaseHandler {
 		    Statement statement = connection.createStatement();
 			
 			ArrayList<TreeItem<Note>> treeList = new ArrayList<TreeItem<Note>>();
+						
+			loadFromStandardPage(treeList, connection, mR);
+			loadFromLegacyDailyPage(treeList, connection, mR);
+			loadFromReadingPage(treeList, connection, mR);
+						
+			TreeItem<Note> rootItem = null;
 			
-			loadFromStandardPage(treeList, statement);
+		    ResultSet resultSet = statement.executeQuery("SELECT * FROM TreeViewStructure");
+		    while (resultSet.next()) {
+		    	
+		    	String childrenSequenceString = resultSet.getString("ChildrenSequence");
+		    	
+		    	ArrayList<String> childrenIds = new ArrayList<String>();
+		    	if (childrenSequenceString != null) {
+		    		for (String childId : childrenSequenceString.split(",")) {
+		    			childrenIds.add(childId);
+		    		}
+		    	}
+		    	
+		    	TreeItem<Note> parentItem = null;
+		    	Integer id = resultSet.getInt("Id");
+		    		    		
+		    	for (TreeItem<Note> treeItem : treeList) {		    		
+		    		if (treeItem.getValue().getDatabaseId().equals(id)) {
+		    			parentItem = treeItem;
+		    			break;
+		    		}
+		    	}
+		    	
+		    	if (parentItem == null) {
+		    		throw new Exception("An id which existed in one of the type pages does not exist in the main database.");
+		    	}
+		    	
+		    	for (TreeItem<Note> treeItem : treeList) {
+		    		if (childrenIds.contains(treeItem.getValue().getDatabaseId().toString())) {
+		    			parentItem.getChildren().add(treeItem);
+		    		}
+		    	}
+		    			    	
+		    	if (resultSet.getString("IsRoot").equals("1")) {
+		    		rootItem = parentItem;
+		    	}
+		    }
+		    		    
+		    mR.getMainClassController().getNoteChooser().setRoot(rootItem);
 			
 			connection.close();
 			
 		} catch (SQLException e) {
 			e.printStackTrace();
+		} catch (Exception e) {
+			e.printStackTrace();
 		}
-
-		
-		
-		
 	}
 	
 	/*
@@ -680,27 +729,128 @@ public final class DatabaseHandler {
 	 * 
 	 * the pyramidsequence implementation in Derby is currently unfinished
 	 */
-	private static void loadFromStandardPage(ArrayList<TreeItem<Note>> treeList, Statement statement) throws SQLException {
+	private static void loadFromStandardPage(ArrayList<TreeItem<Note>> treeList, Connection connection, MasterReference mR) throws SQLException {
 		
+	    Statement statement = connection.createStatement();
 	    ResultSet resultSet = statement.executeQuery("SELECT * FROM StandardPage");
 	    
 	    while (resultSet.next()) {
-	        
-	        System.out.println(resultSet.getString(1));
-	        System.out.println(resultSet.getString(2));
-	        System.out.println(resultSet.getString(3));
-	        System.out.println(resultSet.getString(4));
+	    		    	
+	    	Note standardNote = mR.getNoteChooserHandler().new Note(resultSet.getString("Title"),"Standard");
+			standardNote.setDatabaseId(resultSet.getInt("Id"));
+
+			StandardTypeNoteController stnc = (StandardTypeNoteController) standardNote.getController();
+			
+			stnc.getMainTextArea().setText(resultSet.getString("BoxContents"));
+						
+			treeList.add(new TreeItem<Note>(standardNote));
 	    }
-		
 	}
 	
-	private static void loadFromLegacyDailyPage(ArrayList<TreeItem<Note>> treeList) {
-		
+	/*
+	 * CREATE TABLE LegacyDailyPage (Id INT, Title VARCHAR(1000), LeftBoxContents VARCHAR(30000),
+	 * TopRightBoxContents VARCHAR(30000), BottomRightBoxContents VARCHAR(30000))
+	 * 
+	 * String LeftBoxContents = prepareStringForSQL(dtnc.getBrainstormingSection().getText());
+	 * String TopRightBoxContents = prepareStringForSQL(dtnc.getToDoSection().getText());
+	 * String BottomRightBoxContents = prepareStringForSQL(dtnc.getCalendarSection().getText());   
+	 */
+	private static void loadFromLegacyDailyPage(ArrayList<TreeItem<Note>> treeList, Connection connection, MasterReference mR) throws SQLException {
+	    
+	    Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery("SELECT * FROM LegacyDailyPage");
+	    
+		while (resultSet.next()) {
+				    	
+	    	Note legacyDailyNote = mR.getNoteChooserHandler().new Note(resultSet.getString("Title"),"Daily");
+	    	legacyDailyNote.setDatabaseId(resultSet.getInt("Id"));
+
+			DailyTypeNoteController dtnc = (DailyTypeNoteController) legacyDailyNote.getController();
+			
+			dtnc.getBrainstormingSection().setText(resultSet.getString("LeftBoxContents"));
+			dtnc.getToDoSection().setText(resultSet.getString("TopRightBoxContents"));
+			dtnc.getCalendarSection().setText(resultSet.getString("BottomRightBoxContents"));
+			
+			treeList.add(new TreeItem<Note>(legacyDailyNote));
+	    }
 	}
 	
-	private static void loadFromReadingPage(ArrayList<TreeItem<Note>> treeList) {
+	/*
+	 *CREATE TABLE ReadingPage (Id INT, Title VARCHAR(1000), ContainerSequence VARCHAR(1000))
+	 *
+	 *CREATE TABLE AnalysisContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000)) A
+	 *CREATE TABLE QuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000)) Q
+	 *CREATE TABLE AnalysisAndQuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, AnalysisContents VARCHAR(30000), QuoteContents VARCHAR(30000)) B
+	 *
+	 *first we will iterate through the resSet as normal, then there will be helper methods depending on which type the container is
+	 *
+	 */
+	private static void loadFromReadingPage(ArrayList<TreeItem<Note>> treeList, Connection connection, MasterReference mR) throws SQLException {
 		
+	    Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery("SELECT * FROM ReadingPage");
+			    
+		while (resultSet.next()) {
+				    	
+	    	Note readingNote = mR.getNoteChooserHandler().new Note(resultSet.getString("Title"),"Reading");
+	    	readingNote.setDatabaseId(resultSet.getInt("Id"));
+
+			ReadingTypeNoteController rtnc = (ReadingTypeNoteController) readingNote.getController();
+						
+			ArrayList<ArrayList<String>> containerSequence = decryptContainerSequence(resultSet.getString("ContainerSequence"));
+						
+			for (ArrayList<String> typeAndIdPair : containerSequence) {
+				
+				String type = typeAndIdPair.get(0);
+				String id = typeAndIdPair.get(1);
+
+				if (type.equals("A")) { //Analysis
+										
+					//having multiple statements with different queries can cause errors
+					Statement subStatement = connection.createStatement();
+				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM AnalysisContainer WHERE Id = " + id);
+				    
+				    if (resSet.next()) {
+						TextArea analysisTextArea = rtnc.pushAnalysisButton();
+
+						analysisTextArea.setText(resSet.getString("Contents"));
+				    }
+				}
+				else if (type.equals("Q")) { //Quote
+					
+					Statement subStatement = connection.createStatement();
+				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM QuoteContainer WHERE Id = " + id);
+				    
+				    if (resSet.next()) {
+						TextArea quoteTextArea = rtnc.pushAnalysisButton();
+
+						quoteTextArea.setText(resSet.getString("Contents"));
+				    }
+				}
+				else if (type.equals("B")) { //Both Analysis and Quote
+					
+					Statement subStatement = connection.createStatement();
+				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM AnalysisAndQuoteContainer WHERE Id = " + id);
+				    
+				    if (resSet.next()) {
+						ArrayList<TextArea> textAreaList = rtnc.pushBothButton();
+
+						//the indexes are hard-coded here
+						TextArea quoteTextArea = textAreaList.get(0);
+						TextArea analysisTextArea = textAreaList.get(1);
+						
+						quoteTextArea.setText(resSet.getString("QuoteContents"));
+						analysisTextArea.setText(resSet.getString("AnalysisContents"));
+				    }
+
+				}
+				else {
+					throw new SQLException("Something went wrong, Reading Page Container Type is not A, Q, or B");
+				}	
+			}
+			
+			treeList.add(new TreeItem<Note>(readingNote));
+	    }
 	}
-	
 	
 }
