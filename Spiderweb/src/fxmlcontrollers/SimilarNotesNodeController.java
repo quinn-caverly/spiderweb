@@ -27,11 +27,6 @@ public class SimilarNotesNodeController {
 	
 	//has to take root as an argument because can only access fxml components from initialize me
 	public void setSizeAndPosition(AnchorPane root) {
-		
-		SplitPane bottomSplit = mR.getMainClassController().getBottomSplit();
-		
-		root.maxHeightProperty().bind(bottomSplit.heightProperty());
-		root.minHeightProperty().bind(bottomSplit.heightProperty());
 
 		root.maxWidthProperty().bind(root.heightProperty());
 		root.setMinWidth(200);

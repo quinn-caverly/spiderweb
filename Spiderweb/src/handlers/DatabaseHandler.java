@@ -73,20 +73,28 @@ public final class DatabaseHandler {
 		   
 		    //for saving the treeView structure
 		    statement.executeUpdate("CREATE TABLE TreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot CHAR(1))");
+		    
+		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
 
-		    
-		    
 		    
 		    connection.close();
 		    
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 	}
 
 	public static void startSaveProtocol(MasterReference mR) {
+		
+		ArrayList<TreeItem<Note>> treeList = mR.getPipelineConsolidator().createListOfTreeItemsWithRootNode();
+		
+		/*
+		 * this will save each page in the treeView to the database, and also gives each page an Id
+		 */
+		for (TreeItem<Note> treeItem : treeList) {
+			DatabaseHandler.savePageToDatabase(treeItem.getValue());
+		}
 		
 		startTreeViewSaveProtocol(mR);
 		
@@ -96,16 +104,9 @@ public final class DatabaseHandler {
 	 * first saves all of the individual pages which are present in the treeView
 	 * then, it saves the structure of the treeView
 	 */
-	private static void startTreeViewSaveProtocol(MasterReference mR) {
+	public static void startTreeViewSaveProtocol(MasterReference mR) {
 		
 		ArrayList<TreeItem<Note>> treeList = mR.getPipelineConsolidator().createListOfTreeItemsWithRootNode();
-				
-		/*
-		 * this will save each page in the treeView to the database, and also gives each page an Id
-		 */
-		for (TreeItem<Note> treeItem : treeList) {
-			DatabaseHandler.savePageToDatabase(treeItem.getValue());
-		}
 		
 		/*
 		 * once each treeView page is saved, we use a breadth first search style implementation
@@ -177,8 +178,8 @@ public final class DatabaseHandler {
 	 * and therefore already has a time value so the time value will not be overridden
 	 * in the case of a page already having an id, it will only be saved to the type specific table
 	 */
-	private static void savePageToDatabase(Note page) {
-				
+	public static void savePageToDatabase(Note page) {
+						
 		Boolean failed = false;
 		//this will run if it needs to be saved to the general Page table
 		if (page.getDatabaseId() == null) {
@@ -651,6 +652,18 @@ public final class DatabaseHandler {
 	
 	public static void startLoadProtocol(MasterReference mR) {
 		
+		//TODO place temporary db updates here
+		
+		/*
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		*/
+		
 		startTreeViewLoadProtocol(mR);
 		
 	}
@@ -742,6 +755,7 @@ public final class DatabaseHandler {
 			StandardTypeNoteController stnc = (StandardTypeNoteController) standardNote.getController();
 			
 			stnc.getMainTextArea().setText(resultSet.getString("BoxContents"));
+			stnc.getTitleArea().setText(resultSet.getString("Title"));
 						
 			treeList.add(new TreeItem<Note>(standardNote));
 	    }
@@ -851,6 +865,64 @@ public final class DatabaseHandler {
 			
 			treeList.add(new TreeItem<Note>(readingNote));
 	    }
+	}
+	
+	public static void deletePageFromDatabase(Note note) throws Exception {
+		
+		//if it is null, then it does not yet exist in the database
+		if (note.getDatabaseId() != null) {
+			
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    statement.execute("DELETE FROM Page WHERE Id = " + note.getDatabaseId().toString());
+			
+			if (note.getTypeOfNote() == "Standard") {
+			    statement.execute("DELETE FROM StandardPage WHERE Id = " + note.getDatabaseId().toString());
+			}
+			else if (note.getTypeOfNote() == "Daily") {
+			    statement.execute("DELETE FROM LegacyDailyPage WHERE Id = " + note.getDatabaseId().toString());
+			}
+			//if it is a reading note then it contains sub tables which need to be handled first
+			else if (note.getTypeOfNote() == "Reading") {
+				ResultSet resultSet = statement.executeQuery("SELECT * FROM ReadingPage WHERE Id =" + note.getDatabaseId().toString());
+
+				while (resultSet.next()) { //this will only run once unless there is a problem
+								
+					ArrayList<ArrayList<String>> containerSequence = decryptContainerSequence(resultSet.getString("ContainerSequence"));
+								
+					for (ArrayList<String> typeAndIdPair : containerSequence) {
+						
+						String type = typeAndIdPair.get(0);
+						String id = typeAndIdPair.get(1);
+
+						if (type.equals("A")) { //Analysis				
+							Statement subStatement = connection.createStatement();
+						    subStatement.execute("DELETE FROM AnalysisContainer WHERE Id = " + id);
+						}
+						else if (type.equals("Q")) { //Quote
+							Statement subStatement = connection.createStatement();
+						    subStatement.execute("DELETE FROM QuoteContainer WHERE Id = " + id);
+						}
+						else if (type.equals("B")) { //Both Analysis and Quote
+							Statement subStatement = connection.createStatement();
+						    subStatement.execute("DELETE FROM AnalysisAndQuoteContainer WHERE Id = " + id);
+						}
+						else {
+							throw new SQLException("Something went wrong, Reading Page Container Type is not A, Q, or B");
+						}	
+					}
+			    }
+				
+				statement.execute("DELETE FROM ReadingPage WHERE Id = " + note.getDatabaseId().toString());
+			}
+			
+			else {
+				throw new Exception("note is not one of the valid types when deleting from database.");
+			}
+		}
+		
+		
 	}
 	
 }

@@ -16,6 +16,7 @@ import java.sql.Statement;
 import java.util.ArrayList;
 
 import fxmlcontrollers.MainClassController;
+import fxmlcontrollers.notetypes.DailyScrollController;
 import handlers.DatabaseHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
@@ -58,6 +59,13 @@ public class MasterReference {
 	private final String lastUsedIDFilePath = "lib/data/lastUsedID.txt";
 	
 	private ImageView buttonIconImageView;
+	
+	private Boolean bottomSectionEnabled = true;
+	//if the bottom section is disabled then re-enabled while the same note is still open,
+	//then it should not start the procedure because it will cause slight lag
+	//this will be set to false when a new note opens, set to true when the bottom section is disabled, if there is
+	//a note which is currently open
+	private Boolean bottomSectionShouldKeepContents = false;
 
 	
 	//mR has to take mCC so that it is connected to the program
@@ -91,7 +99,6 @@ public class MasterReference {
 		pipeline = new PipelineNLP();
 		pipelineConsolidator = new PipelineConsolidator(this);
 		
-		//TODO handle this
 		noteChooserHandler.initialize();		
 		
 		/*
@@ -100,6 +107,10 @@ public class MasterReference {
 		 */
 		TabPane noteTabPane = mCC.getNoteTabPane();
 		noteTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldVal, newVal)->{
+			
+			//if note changes to anything even a null value this should be set false
+			bottomSectionShouldKeepContents = false;
+			
 			//if the newtab is null, just needs to clear the hBoxes
 			if (newVal == null) {
 				mCC.getPinnedNotesHBox().getChildren().clear();
@@ -109,85 +120,44 @@ public class MasterReference {
 			
 			//a new note has been selected by the tabPane
 			else if (oldVal != newVal) {
-				//changes the values in the similarNotesHBox
-				pipelineConsolidator.newNoteOpenedProcedure();
-				//changes the values in the pinnedNotesHBox
-				pinnedNotesHandler.newNoteOpenedProcedure();
+				
+				if (bottomSectionEnabled == true) {
+					//changes the values in the similarNotesHBox
+					pipelineConsolidator.newNoteOpenedProcedure();
+					//changes the values in the pinnedNotesHBox
+					pinnedNotesHandler.newNoteOpenedProcedure();
+				}
 			}
 		});
 		
 		
 		mCC.getLeftVBoxOfMainSplit().maxWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
-
-		//TODO handle this
-		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
-		//setTreeCellStyles();
 		
-		//TODO
-		//the notes are effectively all opened and initialized but are not added to the tabPane, then when the note is to be added to the tabpane it simply populates the tab with the pre-existing root
-		//raw.initializeAllNotes();
+		
+		
 
+		//TODO this code should be moved to an actual location will be necessary if I ever decide to make 
+		//the jar exportable 
 		//DatabaseHandler.initializeDatabase();
 				
 		//DatabaseHandler.startSaveProtocol(this);
 		
 		DatabaseHandler.startLoadProtocol(this);
+		
+    	for (TreeItem<Note> treeItem : pipelineConsolidator.createListOfTreeItems()) {
+    		pipeline.runThroughPipeline(treeItem.getValue());
+    	}
+    	
+		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
 		setTreeCellStyles();
 	}
-	
-	
-	
-	//this is temporary code which is testing the database: DELETE LATER
-	public void connectToDatabase() {
-		
-		
-		String connectionURL = "jdbc:derby:derby/db;create=true";
-		
-		Connection conn;
-		try {
-			conn = DriverManager.getConnection(connectionURL);
-			
-	        PreparedStatement statement = conn
-	                .prepareStatement("SELECT * from Employees");
 
-	        ResultSet resultSet = statement.executeQuery();
-	        
-	        System.out.println(resultSet);
-	        
-	        System.out.println(resultSet.getFetchSize());
-	        
-            while (resultSet.next()) {
-                System.out.println(resultSet.getString("City"));
-            }
-	        
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	
-
-		
-	}
 	
 	
 	//opens a note which can be selected in multiple different ways
 	//eventually adds the note to the noteTabPane
 	public void openNote(TreeItem<Note> treeItem) throws IOException {
-		//need to check if the note is already opened
-		
-		TabPane noteTabPane = mCC.getNoteTabPane();
-		
-		ArrayList<TreeItem<Note>> treeItemList = new ArrayList<TreeItem<Note>>();
-		
-		for (Tab tab : noteTabPane.getTabs()) {
-			TypeTab typeTab = (TypeTab) tab;
-			
-			TreeItem<Note> openedTreeItem = typeTab.getTreeItem();
-			
-			treeItemList.add(openedTreeItem);
-		}
-		
 		
 		//expands all of the note's parents
 		TreeItem<Note> currentTreeItem = treeItem;
@@ -202,34 +172,50 @@ public class MasterReference {
 		//selects the note which was just opened in the treeView
 		mCC.getNoteChooser().getSelectionModel().select(treeItem);
 		
-		
-		//if the note is already opened in the tabPane
-		//it sets the tab which was tried to be opened twice to the tabpane's currently selected tab
-		
-		if (treeItemList.contains(treeItem) == false) {			
-			raw.startOpenFromLocal(treeItem);
-		}
-		
-		for (Tab tab : noteTabPane.getTabs()) {
-			
-			TypeTab typeTab = (TypeTab) tab;
-			
-			if (treeItem == typeTab.getTreeItem()) {
-				noteTabPane.getSelectionModel().select(tab);	
-			}
-		}	
-		
-		//opens the pinnedNotesMenu if there are contents there
-		
-		if (mCC.getPinnedNotesHBox().getChildren().size() != 0) {
-			mCC.handlePinnedNotesButton();
-		}	
+	   	Note note = treeItem.getValue();
+    	AnchorPane root = note.getRoot();
+    	
+    	root.maxWidthProperty().bind(mCC.getNoteTabPane().widthProperty());
+    	root.minWidthProperty().bind(mCC.getNoteTabPane().widthProperty());
+    	
+    	root.maxHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
+    	root.minHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
+    	
+    	TypeTab newTab = new TypeTab(note.getName(), root, treeItem);
+    	
+    	mCC.getNoteTabPane().getTabs().add(newTab);
+    	
+		mCC.getNoteTabPane().getSelectionModel().select(newTab);
 	}
 	
 	
-	//closes a note
+	/*
+	 * a separate but similar method is needed because scrolls are not treeItems
+	 */
+	public void openNote(Note dailyScroll) {
+		
+		mCC.getDailyPageList().getSelectionModel().select(dailyScroll);
+		
+		AnchorPane root = dailyScroll.getRoot();
+		
+    	root.maxWidthProperty().bind(mCC.getNoteTabPane().widthProperty());
+    	root.minWidthProperty().bind(mCC.getNoteTabPane().widthProperty());
+    	
+    	root.maxHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
+    	root.minHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
+    	
+    	TypeTab newTab = new TypeTab(dailyScroll.getName(), root, dailyScroll);
+    	
+    	DailyScrollController dsc = (DailyScrollController) dailyScroll.getController();
+    	dsc.initialize(null, null);
+    	
+    	mCC.getNoteTabPane().getTabs().add(newTab);
+    	
+		mCC.getNoteTabPane().getSelectionModel().select(newTab);
+	}
+	
+	
 	public void closeNote(TreeItem<Note> treeItem) throws IOException {
-		//need to check if the note is already opened
 		
 		TabPane noteTabPane = mCC.getNoteTabPane();
 		
@@ -242,9 +228,6 @@ public class MasterReference {
 			
 			treeItemList.add(openedTreeItem);
 		}
-		
-		//if the note is already opened in the tabPane
-		//it sets the tab which was tried to be opened twice to the tabpane's currently selected tab
 		
 		if (treeItemList.contains(treeItem)) {
 			for (Tab tab : noteTabPane.getTabs()) {
@@ -259,7 +242,6 @@ public class MasterReference {
 	}
 	
 	
-	//changes name of the tab
 	public void renameTab(TreeItem<Note> treeItem, String newName) throws IOException {
 		//need to check if the note is already opened
 		
@@ -364,9 +346,9 @@ public class MasterReference {
 	 * also serves the purpose of reassigning the classifierMap of the note
 	 */
 	public void saveNote(TreeItem<Note> treeItem) throws IOException {
-		raw.startSaveToLocal(treeItem);
+		DatabaseHandler.savePageToDatabase(treeItem.getValue());
 		
-		pipeline.runThroughPipeline(treeItem);
+		pipeline.runThroughPipeline(treeItem.getValue());
 	}
 	
 	public void renameCurrentNote() throws IOException {
@@ -486,14 +468,22 @@ public class MasterReference {
 					
 					noteChooserHandler.cancelFunctionBoxOperation();
 					
-					//deletes the files on local
-					raw.deleteNoteOnLocal(treeItem);
-					
-					//then removes from the treeView
-					treeItem.getParent().getChildren().remove(treeItem);
-					
 					//then removes from the tabPane
 					removeTab(treeItem);
+					
+					//deletes the files on local
+					try {
+						DatabaseHandler.deletePageFromDatabase(treeItem.getValue());
+						
+						//then removes from the treeView
+						treeItem.getParent().getChildren().remove(treeItem);
+						
+						//because the treeview structure has changed, sends a call to the database handler
+						DatabaseHandler.startTreeViewSaveProtocol(MasterReference.this);
+					} catch (Exception e) {
+						e.printStackTrace();
+					}
+					
 				}});
 			confirmButton.setOnAction(onConfirmPressed);
 		} catch (IOException e) {
@@ -553,44 +543,6 @@ public class MasterReference {
 		}
 	}
 	
-	
-	//this is for when no file location has been created
-	//opens the OS's directory chooser and creates a Web Notes Save File
-	public void createDirectory() throws IOException {
-		Stage stage = (Stage) mCC.getMainVBox().getScene().getWindow();
-		
-		//opens a Directory Chooser and saves the path
-		DirectoryChooser dc = new DirectoryChooser();
-		File chosenFile = dc.showDialog(stage);
-		
-		if (chosenFile != null) {
-		
-		String chosenDirectory = chosenFile.toString();
-		
-		String masterPath = chosenDirectory + "/WebNotesSaveFile";
-				
-		//creates the root, defaults it to Standard
-		TreeItem<Note> rootItem = new TreeItem<Note>(noteChooserHandler.new Note("WebNotesSaveFile", masterPath, "Standard"));
-		
-    	Files.writeString(Paths.get(dataFilePath), masterPath);
-        
-        //makes a default folder called, Default, Standard type
-		TreeItem<Note> defaultFolder = new TreeItem<Note>(noteChooserHandler.new Note("Default", rootItem.getValue().getFilePath() + "/children/Default", "Standard"));
-        
-		TreeView<Note> noteChooser = mCC.getNoteChooser();
-		VBox parentOfTreeView = mCC.getParentOfTreeView();
-		HBox superParentOfTreeView = mCC.getSuperParentOfTreeView();
-		
-		
-		noteChooser.setRoot(rootItem);
-		noteChooser.getRoot().getChildren().add(defaultFolder);
-		noteChooser.setShowRoot(false);
-        
-        //re-adds the treeView and Buttons to the GUI
-        superParentOfTreeView.getChildren().clear();
-        superParentOfTreeView.getChildren().add(parentOfTreeView);    
-		}
-	}
 
 	//this method has to be called after the whole tree has been created
 	//this should also be created when a new note is created and treecells are modified generally because the styles of those cells may change
@@ -659,6 +611,20 @@ public class MasterReference {
 	}
 	
 	
+	/*
+	 * this method is for if the bottom section was disabled and has become enabled it needs to establish itself
+	 */
+	public void establishBottomSplit() {
+		
+		//if there is a currently selected note, must handle this
+		//the listener defined above will automatically handle when a new note is opened
+		if ((TypeTab) mCC.getNoteTabPane().getSelectionModel().getSelectedItem() != null) {
+			//changes the values in the similarNotesHBox
+			pipelineConsolidator.newNoteOpenedProcedure();
+			//changes the values in the pinnedNotesHBox
+			pinnedNotesHandler.newNoteOpenedProcedure();
+		}
+	}
 	
 	
 	public MainClassController getMainClassController() {
@@ -700,5 +666,20 @@ public class MasterReference {
 	public PipelineConsolidator getPipelineConsolidator() {
 		return pipelineConsolidator;
 	}
-	
+
+	public Boolean getBottomSectionEnabled() {
+		return bottomSectionEnabled;
+	}
+
+	public void setBottomSectionEnabled(Boolean bottomSectionEnabled) {
+		this.bottomSectionEnabled = bottomSectionEnabled;
+	}
+
+	public Boolean getBottomSectionShouldKeepContents() {
+		return bottomSectionShouldKeepContents;
+	}
+
+	public void setBottomSectionShouldKeepContents(Boolean bottomSectionShouldKeepContents) {
+		this.bottomSectionShouldKeepContents = bottomSectionShouldKeepContents;
+	}
 }

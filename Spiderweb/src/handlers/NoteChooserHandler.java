@@ -17,6 +17,7 @@ import java.util.TreeMap;
 
 import application.MasterReference;
 import fxmlcontrollers.TreeViewCellController;
+import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
@@ -60,7 +61,6 @@ public class NoteChooserHandler {
 		this.mR = mR;
 		
 		this.treeView = mR.getMainClassController().getNoteChooser();
-		this.recencyList = mR.getMainClassController().getRecencyList();
 				
 		this.functionBox = mR.getMainClassController().getFunctionBox();
 	}
@@ -129,12 +129,6 @@ public class NoteChooserHandler {
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-	    	
-	    	//loads the appearance of the note if it were a ListView
-	    	//UNFINISHED
-	    	
-	    	
-	    	
 	        		
 
 	        if (typeOfNote == "Standard") {
@@ -177,7 +171,25 @@ public class NoteChooserHandler {
 		        	ReadingTypeNoteController rtnc = loader.getController();
 		        	
 		        	controller = rtnc;
-		        	
+		        			        	
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	        
+	        else if (typeOfNote == "DailyScroll") {
+	        	
+	        	System.out.println("dailyscroll");
+	        	
+				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyScroll.fxml"));
+
+	        	try {
+					root = loader.load();
+					
+					DailyScrollController dsc = loader.getController();
+							        	
+		        	controller = dsc;
+		        			        	
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -294,393 +306,6 @@ public class NoteChooserHandler {
 		
 	}
 
-	/*
-
-	public class Note {
-		
-		//an id that uniquely identifies the note because the filepath cannot uniquely identify the note because it changes
-		private Integer id;
-		
-		//an Integer[] of the ids which are pinned to this note
-		private ArrayList<Integer> listOfPinnedIDs;
-		
-		//this is the root which is loaded from fxml which is added to the tabPane on open
-		private AnchorPane root;
-		
-		private Object controller;
-		
-		private TreeViewCellController cellController;
-		
-		private HBox treeViewHBox;
-		private HBox listViewHBox;
-
-	    private final String name;
-	    private final String filePath;
-	    private final String typeOfNote;
-	    
-	    private String childrenFilePath;
-	    private String selfPath;
-	    
-	    private Double scoreWithNoteBeingClassified;
-	    
-	    private boolean isFullSaved = false;
-	    
-	    //so that the note is not initialized twice
-	    private boolean isInitialized = false;
-	    
-	    private Integer databaseId;
-	    
-	    private TreeMap<String, Double> classifierMap;
-	    
-	    public Note(String name, String filePath, String typeOfNote){	    	
-	        this.name = name;
-	        this.filePath = filePath;
-	        this.typeOfNote = typeOfNote;
-	        
-	        listOfPinnedIDs = new ArrayList<Integer>();
-	        
-	        createSystemFiles();	        
-	        
-	        //loads the appearance of the note if it were the TreeView
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
-	    	try {
-				HBox loadedHBox = fxmlLoader.load();
-				
-				this.treeViewHBox = loadedHBox;
-
-				ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
-				Label label = (Label) loadedHBox.getChildren().get(1);
-				
-				label.setText(name);
-				
-				InputStream is = new FileInputStream("src/images/SaveIcon.png");
-				Image saveIcon = new Image(is);
-				iconView.setImage(saveIcon);
-				
-				loadedHBox.setMaxHeight(16);
-				loadedHBox.setMaxWidth(100);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-	    	
-	    	//loads the appearance of the note if it were a ListView
-	    	//UNFINISHED
-	    	
-	    	
-	    	
-	        		
-
-	        if (typeOfNote == "Standard") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/StandardType.fxml"));
-
-	        	try {
-					root = loader.load();
-					
-		        	StandardTypeNoteController stnc = loader.getController();
-		        	stnc.setMasterReference(mR);
-		        	
-		        	controller = stnc;
-		        	
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
-	        
-	        else if (typeOfNote == "Daily") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyType.fxml"));
-
-	        	try {
-					root = loader.load();
-					
-		        	DailyTypeNoteController dtnc = loader.getController();
-		        	
-		        	controller = dtnc;
-		        	
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
-	        
-	        else if (typeOfNote == "Reading") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/ReadingType.fxml"));
-
-	        	try {
-					root = loader.load();
-					
-		        	ReadingTypeNoteController rtnc = loader.getController();
-		        	
-		        	controller = rtnc;
-		        	
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	        }
-	        
-	    }
-	    
-		public void createSystemFiles() {
-			//format for local save:
-			//root file
-				//note file (title as name)
-				//file for children of note
-				//file for pinned notes
-				//txt file for id
-			
-	    	File rootFile = new File(filePath);
-	    	rootFile.mkdir();
-	    		    	
-	    	this.childrenFilePath = filePath + "/children";
-	    	this.selfPath = filePath + "/self";
-	    	
-	    	String pinnedPath = filePath + "/pinned.txt";
-	    	String idPath = filePath + "/id.txt";
-	    	
-	    	//if it is already made, essentially nothing happens here
-	    	File childrenFile = new File(childrenFilePath);
-	    	childrenFile.mkdir();
-	    	
-	    	File pinnedFile = new File(pinnedPath);
-	    	
-	    	//creates the pinnedFile if one does not exist
-	    	if (pinnedFile.exists() == false) {
-	    		try {
-					pinnedFile.createNewFile();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    	}
-	    	
-	    	//reads the ids which are pinned if it does
-	    	else {
-    			try {
-    	    		FileInputStream fis;
-        			String contents = "";
-        			
-					fis = new FileInputStream(pinnedPath);
-	    			Scanner in = new Scanner(fis);
-	    			while (in.hasNext()) {
-	    				contents += in.next();
-	    			}
-	    			//the ids are formatted as a comma separated list with no spaces on 1 line
-	    			if (contents != "") {
-	    				String[] listOfIDs = contents.split(",");
-	    				for (String id: listOfIDs) {
-	    					listOfPinnedIDs.add(Integer.valueOf(id));
-	    				}
-	    			}
-	    			in.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-	    	}
-	    		    	
-	    	//if there is no id.txt file, needs to create one based on the lastUsedID.txt file in the data folder
-	    	File idFile = new File(idPath);
-	    	if (idFile.exists() == false) {
-	    		try {
-		    		FileInputStream fis;
-	    			
-	    			String lastUsedID = "";
-	    			//populates lastUsedID based on the contents of the txt file
-	    			fis = new FileInputStream(mR.getLastUsedIDFilePath());
-	    			Scanner in = new Scanner(fis);
-	    			while (in.hasNext()) {
-	    				lastUsedID += in.next();
-	    			}
-	    			in.close();
-	    				    			
-		        	Integer onePlus = Integer.valueOf(lastUsedID) + 1;
-	    			
-	    			//writes to the id.txt file, the items ID
-					idFile.createNewFile();
-		        	Files.writeString(Paths.get(idPath), onePlus.toString());
-		        	
-		        	//updates the value here of what the notes id is
-		        	id = onePlus;
-		        	
-		        	//needs to update the lastUsedID.txt file because the lastUsedID has changed
-		        	Files.writeString(Paths.get(mR.getLastUsedIDFilePath()), onePlus.toString());
-
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-	    	}
-	    	
-	    	//if the file actually exists, then we just need to save the value here
-	    	else {
-    			//populates lastUsedID based on the contents of the txt file
-    			try {
-    	    		FileInputStream fis;
-        			String recordedID = "";
-        			
-					fis = new FileInputStream(idPath);
-	    			Scanner in = new Scanner(fis);
-	    			while (in.hasNext()) {
-	    				recordedID += in.next();
-	    			}
-	    			in.close();
-	    			
-	    			//sets the attribute to be the recorded ID value :)
-	    			id = Integer.valueOf(recordedID);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-	    	}
-		}
-		
-		//this will generate the filepath every time the function is called
-		//this is to avoid problems which will be caused if a parent item or the item itself is renamed or altered
-	    public String getCurrentFilePath() {
-	    	
-	    	TreeItem<Note> thisTreeItem = null;
-	    	
-	    	for (TreeItem<Note> treeItem : mR.getPipelineConsolidator().createListOfTreeItems()) {
-	    		
-	    		if (treeItem.getValue() == this) {
-	    			
-	    			thisTreeItem = treeItem;
-	    			
-	    		}
-	    	}
-	    	
-	    	if (thisTreeItem != null) {
-	    		
-	    		String filePath = getName();
-	    		
-	    		while (thisTreeItem.getParent() != mR.getMainClassController().getNoteChooser().getRoot()) {
-	    			filePath = thisTreeItem.getParent().getValue().getName() + "/children/" + filePath;
-	    			
-	    			thisTreeItem = thisTreeItem.getParent();
-	    		}
-	    		
-	    		//once it has reached the root value
-	    		
-	    		FileInputStream fis;
-	    		
-				String directoryPath = "";
-				
-				//populates readInfo
-				try {
-					fis = new FileInputStream(mR.getDataFilePath());
-					
-					Scanner in = new Scanner(fis);
-					while (in.hasNext()) {
-						directoryPath += in.next();
-					}
-	    			in.close();
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
-				}
-
-				filePath = directoryPath + "/" + filePath;
-	    	}	    	
-
-	        return filePath;
-	    }
-
-	    public String getName() {
-	        return name;
-	    }
-
-		public boolean isFullSaved() {
-			return isFullSaved;
-		}
-
-		public void setFullSaved(boolean isFullSaved) {
-			this.isFullSaved = isFullSaved;
-		}
-
-		public String getChildrenFilePath() {			
-			return childrenFilePath;
-		}
-
-		public void setChildrenFilePath(String childrenFilePath) {
-			this.childrenFilePath = childrenFilePath;
-		}
-
-		public String getSelfPath() {
-			return selfPath;
-		}
-
-		public void setSelfPath(String selfPath) {
-			this.selfPath = selfPath;
-		}
-
-		public String getTypeOfNote() {
-			return typeOfNote;
-		}
-
-		public AnchorPane getRoot() {
-			return root;
-		}
-		
-		public Object getController() {
-			return controller;
-		}
-
-		public Double getScoreWithNoteBeingClassified() {
-			return scoreWithNoteBeingClassified;
-		}
-
-		public void setScoreWithNoteBeingClassified(Double scoreWithNoteBeingClassified) {
-			this.scoreWithNoteBeingClassified = scoreWithNoteBeingClassified;
-		}
-
-		public TreeViewCellController getCellController() {
-			return cellController;
-		}
-
-		public void setCellController(TreeViewCellController cellController) {
-			this.cellController = cellController;
-		}
-
-		public HBox getTreeViewHBox() {
-			return treeViewHBox;
-		}
-
-		public String getFilePath() {
-			return filePath;
-		}
-
-		public Integer getId() {
-			return id;
-		}
-
-		public ArrayList<Integer> getListOfPinnedIDs() {
-			return listOfPinnedIDs;
-		}
-
-		public void setListOfPinnedIDs(ArrayList<Integer> listOfPinnedIDs) {
-			this.listOfPinnedIDs = listOfPinnedIDs;
-		}
-
-		public boolean isInitialized() {
-			return isInitialized;
-		}
-
-		public void setInitialized(boolean isInitialized) {
-			this.isInitialized = isInitialized;
-		}
-
-		public TreeMap<String, Double> getClassifierMap() {
-			return classifierMap;
-		}
-
-		public void setClassifierMap(TreeMap<String, Double> classifierMap) {
-			this.classifierMap = classifierMap;
-		}
-
-		public Integer getDatabaseId() {
-			return databaseId;
-		}
-
-		public void setDatabaseId(Integer databaseId) {
-			this.databaseId = databaseId;
-		}
-		
-	}
-*/
 
 	public class NoteControl extends HBox {
 		
@@ -737,7 +362,6 @@ public class NoteChooserHandler {
 	            super.startEdit();
 	        }
 	}
-	
 	
 	
 	public class NoteTreeCell extends TreeCell<Note>{
@@ -1178,15 +802,16 @@ public class NoteChooserHandler {
 			title = current;
 		}
 		
-		//creates new note and adds it to the tree
-		String pathToNewNote = encapsulatingNote.getFilePath() + "/children/" + title;
 		
-		TreeItem<Note> newNote = new TreeItem<Note>(new Note(title, pathToNewNote, typeOfNote));
+		TreeItem<Note> newNote = new TreeItem<Note>(new Note(title, typeOfNote));
 		
 		mR.saveNote(newNote);
 		
 		//adds to treeView structure
 		noteTreeItem.getChildren().add(newNote);
+		
+		//because the treeview structure has changed, sends a call to the database handler
+		DatabaseHandler.startTreeViewSaveProtocol(mR);
 		
 		mR.openNote(newNote);
 		
@@ -1206,103 +831,6 @@ public class NoteChooserHandler {
     		        	    		
     	}
 	}
-
-	
-	
-	
-	//this method creates the legacy tree view
-	public void createTreeStructureFromLocal(String pathToMaster) {
-		TreeItem<Note> rootItem = new TreeItem<Note>(new Note("WebNotesSaveFile", pathToMaster, "Standard"));
-        treeView.setRoot(rootItem);
-        
-		Note rootNote = rootItem.getValue();
-		
-		File masterFile = new File(rootNote.getChildrenFilePath());
-		
-		File[] listOfSubFiles = masterFile.listFiles();
-		
-		for (File file : listOfSubFiles) {
-			createTreeStructureFromLocalHelper(file.getPath(), rootItem);
-		}
-	}
-	
-	public void createTreeStructureFromLocalHelper(String filePath, TreeItem<Note> parentItem) {
-		
-		//first needs to create the treeItem for this note
-		File currentItemFile = new File(filePath);
-		File[] listOfContents = currentItemFile.listFiles();
-		
-		ArrayList<String> listOfFileNames = new ArrayList<String>();
-		for (File subfile : listOfContents) {
-			listOfFileNames.add(subfile.getName());
-		}
-		
-		//typeOfNote defaults to the parent's type
-		String typeOfNote = parentItem.getValue().getTypeOfNote();
-		//defaults to false, if there is no notetype file in the note, it will stay false, and type will default to parent's type
-		Boolean fullSaved = false;
-		
-		if (listOfFileNames.contains("Standard")) {
-			typeOfNote = "Standard";
-			fullSaved = true;
-		}
-		
-		else if (listOfFileNames.contains("Daily")) {
-			typeOfNote = "Daily";
-			fullSaved = true;
-		}
-		
-		else if (listOfFileNames.contains("Reading")) {
-			typeOfNote = "Reading";
-			fullSaved = true;
-		}
-		
-		try {
-			BasicFileAttributes attr = Files.readAttributes(currentItemFile.toPath(), BasicFileAttributes.class);
-			
-			//System.out.println(attr.creationTime().toInstant().toString());
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		
-		//creates the currentItem and adds it to the children of the parent
-		Note currentNote = new Note(currentItemFile.getName(),filePath, typeOfNote);			
-		currentNote.setFullSaved(fullSaved);
-		TreeItem<Note> currentItem = new TreeItem<Note>(currentNote);
-		parentItem.getChildren().add(currentItem);
-		
-		//handles the children
-		File currentItemChildrenFile = new File(filePath + "/children");
-		File[] listOfChildren = currentItemChildrenFile.listFiles();
-		
-		//for each child of the current note, it runs the same recursive process
-		for (File child : listOfChildren) {
-			createTreeStructureFromLocalHelper(child.getPath(), currentItem);
-		}
-	}
-	
-	
-	//run when the directories.txt file is empty
-	public void handleWhenNoDirectoryHasBeenInitialized() {
-		//removes the TreeView and adds the button to add an initial directory
-		mR.getMainClassController().getSuperParentOfTreeView().getChildren().clear();
-		Button createDirectory = new Button("Add Directory");
-		mR.getMainClassController().getSuperParentOfTreeView().getChildren().add(createDirectory);
-		
-		EventHandler<ActionEvent> onButtonPressed = (new EventHandler<ActionEvent>() { 
-			@Override
-			public void handle(ActionEvent arg0) {
-				   try {
-					mR.createDirectory();;
-				} catch (IOException e) {
-					e.printStackTrace();
-				}							
-			}});
-		
-		createDirectory.setOnAction(onButtonPressed);
-	}
-	
 	
 	public void initialize() {
 		
@@ -1323,35 +851,7 @@ public class NoteChooserHandler {
         /*
          * handles the recency tree initialization
          */
-        recencyList.setCellFactory(lv -> new RecencyListCell());
-		/*
-		
-		FileInputStream fis;
-		try {	
-			String readInfo = "";
-			
-			//populates readInfo
-			fis = new FileInputStream(mR.getDataFilePath());
-			Scanner in = new Scanner(fis);
-			while (in.hasNext()) {
-				readInfo += in.next();
-			}
-			in.close();
-											
-			//if a directory has not been created
-			if (readInfo == "") {					
-				handleWhenNoDirectoryHasBeenInitialized();
-			}
-			
-			//if directory has been initialized, reads directories into the TreeView
-			else {
-				createTreeStructureFromLocal(readInfo);
-			}
-			
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		*/
+        mR.getMainClassController().getDailyPageList().setCellFactory(lv -> new RecencyListCell());
 	}
 
 
@@ -1359,6 +859,4 @@ public class NoteChooserHandler {
 	public static Set<String> getAllowedcharacters() {
 		return ALLOWEDCHARACTERS;
 	}
-	
-	
 }

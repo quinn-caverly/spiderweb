@@ -137,9 +137,9 @@ public class PipelineNLP {
 	 * generate classifierMap (matrix)
 	 */
 	
-	public void runThroughPipeline(TreeItem<Note> currentItem) {
+	public void runThroughPipeline(Note currentNote) {
 		
-		String[] separateSentence = separateSentences(getContents(currentItem.getValue()));
+		String[] separateSentence = separateSentences(getContents(currentNote));
 		
 		ArrayList<String[]> sentencesOfTokens = separateTokens(separateSentence);
 		
@@ -149,7 +149,7 @@ public class PipelineNLP {
 		
 		TreeMap<String, Double> classifierMap = returnClassifierMap(tokenElementList);
 		
-		currentItem.getValue().setClassifierMap(classifierMap);
+		currentNote.setClassifierMap(classifierMap);
 	}
 	
 	

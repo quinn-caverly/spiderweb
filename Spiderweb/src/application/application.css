@@ -345,9 +345,7 @@ tab-content-area — StackPane
  	-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -light;
  	-fx-font-size: 13px;
- 	
- 	-fx-min-height: 35px;
- 	
+ 	 	
 	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 30%, -sharp 30%, -sharp  100%);
  	-fx-border-radius: 5px;
  	-fx-border-width: 3px;
@@ -368,6 +366,37 @@ tab-content-area — StackPane
  	-fx-border-width: 3.7px;
  	
  	-fx-background-color:  rgba(47, 47, 47, 1);	
+}
+
+/*
+the custom buttons
+*/
+
+ #bottomSplitButton, #leftButton, #buttonBelowNoteChooser, #bottomRightButton,
+ #dailyScrollTopLeftButton, #dailyScrollTopRightButton, #whenNeededButton,
+ #longTermGoalSectionButton, shortTermGoalSectionButton {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -light;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+
+ 
+ #bottomSplitButton:hover, #leftButton:hover, #buttonBelowNoteChooser:hover, #bottomRightButton:hover,
+ #dailyScrollTopLeftButton:hover, #dailyScrollTopRightButton:hover, #whenNeededButton:hover,
+ #longTermGoalSectionButton:hover, shortTermGoalSectionButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.95);
+}
+
+ #bottomSplitButton:pressed, #leftButton:pressed, #buttonBelowNoteChooser:pressed, #bottomRightButton:pressed,
+ #dailyScrollTopLeftButton:pressed, #dailyScrollTopRightButton:pressed, #whenNeededButton:pressed,
+ #longTermGoalSectionButton:pressed, shortTermGoalSectionButton:pressed  {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
 }
  
  /*******************************************************************************
@@ -480,10 +509,163 @@ tab-content-area — StackPane
  
  
  
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll Specific                                                       *
+ *                                                                             *
+ ******************************************************************************/
+ 
+ /*
+ * To do section
+ */
+ #toDoSectionNodeDeleteButton {
+  	-fx-border-radius: 0px;
+  	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(65, 65, 65, 0.9);
+ 	-fx-background-radius: 4px;
+ }
+ #toDoSectionNodeDeleteButton:hover {
+  	-fx-background-color:  rgba(120, 43, 25, 0.85);
+ }
+ #toDoSectionNodeDeleteButton:pressed {
+  	-fx-background-color:  rgba(120, 43, 25, 0.95);
+ }
+ 
+ /*
+ * the three buttons
+ */
+ .test {
+  	-fx-background-color:  rgba(78, 96, 145, 0.1);
+ }
+ 
+ #toDoSectionNodeLockButton {
+  	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(78, 96, 145, 0.8);
+ 	-fx-background-radius: 7px;
+ }
+ #toDoSectionNodeLockButton:hover {
+ 	-fx-background-color:  rgba(78, 96, 145, 0.95);
+ }
+ #toDoSectionNodeLockButton:pressed {
+ 	-fx-background-color:  rgba(78, 96, 145, 1);
+ }
+ 
+ #toDoSectionNodeCheckButton {
+  	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(85, 145, 78, 0.8);
+ 	-fx-background-radius: 7px;
+ }
+ #toDoSectionNodeCheckButton:hover {
+ 	-fx-background-color:  rgba(85, 145, 78, 0.95);
+ }
+ #toDoSectionNodeCheckButton:pressed {
+ 	-fx-background-color:  rgba(85, 145, 78, 1);
+ }
+
+ 
+/*
+* section backgrounds and styles
+*/
+ #dailyScrollToDoSection {
+ 	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 8px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(160, 160, 160, 0.9);
+	-fx-background-radius: 10px;
+ }
+ 
+ #longTermGoalSection {
+ 	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 8px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(158, 83, 54, 0.75);
+	-fx-background-radius: 10px;
+ }
+ 
+ #shortTermGoalSection {
+ 	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 8px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(207, 151, 68, 0.75);
+	-fx-background-radius: 10px;
+ }
  
  
+ /*
+ * toDoSectionButtons
+ */
+ #toDoSectionNodeReflectButton, #toDoSectionTempButton {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -light;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(65, 65, 65, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+
  
+ #toDoSectionNodeReflectButton:hover,
+ #toDoSectionTempButton:hover {
+ 	-fx-background-color:  rgba(65, 65, 65, 0.95);
+}
+
+ #toDoSectionNodeReflectButton:pressed,
+ #toDoSectionTempButton:pressed {
+ 	-fx-background-color:  rgba(65, 65, 65, 1);	
+}
+
+
+#toDoSectionTextField, #reflectionTextArea {
+	-fx-background-color: rgba(47, 47, 47, 0.6);
+ 	-fx-text-fill: #fff;
+ 	-fx-prompt-text-fill: rgba(256, 256, 256, 0.5);
+}
+
+#reflectionTextArea {
+	-fx-background-color: rgba(47, 47, 47, 0.75);
+ 	-fx-text-fill: #fff;
+ 	
+ 	-fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+
+/*
+* goal section buttons
+*/
+
+ #longTermGoalSectionButton, #shortTermGoalSectionButton {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -light;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 6px;
+ }
+
  
+ #longTermGoalSectionButton:hover, #shortTermGoalSectionButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.95);
+}
+
+
+ #longTermGoalSectionButton:pressed, #shortTermGoalSectionButton:pressed  {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
+}
  
  
  

@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ScrollPane?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="dailyScrollRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmlcontrollers.notetypes.DailyScrollController">
+   <children>
+      <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane maxHeight="15.0" minHeight="15.0" prefHeight="0.0">
+               <children>
+                  <HBox fx:id="topButtonHolder" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="5.0">
+                     <children>
+                        <Button fx:id="dailyScrollTopLeftButton" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" onAction="#dailyScrollTopLeftButtonPushed" prefWidth="10000.0" />
+                        <AnchorPane fx:id="topButtonMarginMaker" minWidth="5.0" />
+                        <Button fx:id="dailyScrollTopRightButton" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" onAction="#dailyScrollTopRightButtonPushed" prefWidth="10000.0" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="whenNeededButton" maxHeight="15.0" minHeight="15.0" mnemonicParsing="false" onAction="#whenNeededButtonPushed" prefWidth="10000.0" />
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="200.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+               <children>
+                  <HBox fx:id="parentOfScrollPanes" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                     <children>
+                        <AnchorPane fx:id="parentOfLeftScrollPane" prefHeight="200.0" prefWidth="10000.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fx:id="leftScrollPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0">
+                                <content>
+                                  <AnchorPane fx:id="leftMarginKeeper" minHeight="0.0" minWidth="0.0" prefHeight="463.0" prefWidth="353.0">
+                                       <children>
+                                          <VBox fx:id="leftCollectorVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <AnchorPane fx:id="longTermGoalSection" prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Button fx:id="longTermGoalSectionButton" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </children></AnchorPane>
+                                                <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
+                                                <AnchorPane fx:id="shortTermGoalSection" prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Button fx:id="shortTermGoalSectionButton" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                   </children>
+                                                </AnchorPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                        <AnchorPane fx:id="parentOfRightScrollPane" prefHeight="200.0" prefWidth="10000.0" HBox.hgrow="ALWAYS">
+                           <children>
+                              <ScrollPane fx:id="rightScrollPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
+                                <content>
+                                  <AnchorPane fx:id="rightMarginKeeper" minHeight="0.0" minWidth="0.0" prefHeight="1000.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox fx:id="rightCollectorVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <AnchorPane fx:id="dailyScrollToDoSection" prefHeight="200.0">
+                                                   <children>
+                                                      <AnchorPane fx:id="toDoSectionButtonBarAnchor" maxHeight="30.0" minHeight="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Button fx:id="toDoSectionTempButton" mnemonicParsing="false" onAction="#toDoSectionButtonPushed" prefHeight="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <VBox fx:id="toDoVBox" maxHeight="200.0" minHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />
+                                                   </children></AnchorPane>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </ScrollPane>
+                           </children>
+                        </AnchorPane>
+                     </children>
+                  </HBox>
+               </children>
+            </AnchorPane>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

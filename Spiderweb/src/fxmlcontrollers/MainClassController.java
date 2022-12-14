@@ -25,6 +25,7 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
+import overriders.TypeTab;
 
 
 public class MainClassController implements Initializable {
@@ -89,9 +90,13 @@ public class MainClassController implements Initializable {
     @FXML
     private HBox similarNotesHBox;
     @FXML
-    private SplitPane bottomSplit;
+    private HBox classifierHBox;
+    @FXML
+    private VBox bottomSplitVBox;
     @FXML
     private VBox leftVBoxOfMainSplit;
+    @FXML
+    private HBox leftHBoxOfMainSplit;
     @FXML
     private SplitPane verticalSplitPane;
     @FXML
@@ -111,10 +116,6 @@ public class MainClassController implements Initializable {
     @FXML
     private AnchorPane edgarAnchor1;
     @FXML
-    private Button pinnedNotesButton;
-    @FXML
-    private Button similarNotesButton;
-    @FXML
     private Button exitButton;
     @FXML
     private Button refreshSimilarsButton;
@@ -123,7 +124,21 @@ public class MainClassController implements Initializable {
     @FXML
     private TabPane treeViewTabPane;
     @FXML
-    private ListView<Note> recencyList;
+    private ListView<Note> dailyPageList;
+    @FXML
+    private Button bottomSplitButton;
+	@FXML
+    private AnchorPane classifierHoldingAnchor;
+    @FXML
+    private AnchorPane treeHoldingAnchor;
+    @FXML
+    private Button buttonBelowNoteChooser;
+    @FXML
+    private Button newDailyPageButton;
+    @FXML
+    private ScrollPane dailyPageListScrollPane;
+    @FXML
+    private VBox vBoxHolderOfDailyPageList;
     
     private HBox pinnedNotesHBox;
     
@@ -133,20 +148,18 @@ public class MainClassController implements Initializable {
         stage.close();
     }
     
-    public void handlePinnedNotesButton() {
-    	similarNotesButton.setDisable(false);
-    	
-		switchingScrollPane.setContent(pinnedNotesHBox);
-
-    	pinnedNotesButton.setDisable(true);
-    }
+    private Boolean similarNotesEnabled = true;
     
-    public void handleSimilarNotesButton() {
-    	pinnedNotesButton.setDisable(false);
+    public void handleBottomRightButton() {
     	
-		switchingScrollPane.setContent(similarNotesHBox);
-
-    	similarNotesButton.setDisable(true);
+    	if (similarNotesEnabled == true) {
+    		switchingScrollPane.setContent(pinnedNotesHBox);
+    		similarNotesEnabled = false;
+    	}
+    	else {
+    		switchingScrollPane.setContent(similarNotesHBox);
+    		similarNotesEnabled = true;
+    	}
     }
     
     public void pinNoteInMR() {
@@ -208,8 +221,80 @@ public class MainClassController implements Initializable {
 		else {
 			treeViewTabPane.getSelectionModel().select(0);
 			switchTreeButton.setText("recency tree");
+		}		
+	}
+	
+	public void buttonBelowNoteChooserPushed() {
+		if (treeViewTabPane.getSelectionModel().getSelectedIndex() == 0) {
+			treeViewTabPane.getSelectionModel().select(1);
 		}
+		else {
+			treeViewTabPane.getSelectionModel().select(0);
+		}
+	}
+	
+	
+	public void leftButtonPushed() {
+		
+		if (leftHBoxOfMainSplit.getChildren().contains(leftVBoxOfMainSplit)) { //then need to remove it
+			leftHBoxOfMainSplit.getChildren().remove(leftVBoxOfMainSplit);
+			
+			//this leaves just enough space for the button
+			treeHoldingAnchor.setMaxWidth(30);
+
+			mainSplitPane.setDividerPosition(0, 0);
+		}
+		else { //then need to add it
+			leftHBoxOfMainSplit.getChildren().add(1, leftVBoxOfMainSplit);
+			
+			treeHoldingAnchor.setMaxWidth(600); //the max size for this is arbitrary
+
+			mainSplitPane.setDividerPosition(0, 0.225);
+		}
+	}
+	
+	
+	public void bottomSplitButtonPushed() {
+		
+		if (bottomSplitVBox.getChildren().contains(classifierHBox)) { //then need to remove it
+			bottomSplitVBox.getChildren().remove(classifierHBox);
+			mR.setBottomSectionEnabled(false);
+			verticalSplitPane.setDividerPosition(0, 1);
+			
+			//this leaves just enough space for the button
+			classifierHoldingAnchor.setMaxHeight(30);
+			
+			if ((TypeTab) noteTabPane.getSelectionModel().getSelectedItem() != null) {
+				mR.setBottomSectionShouldKeepContents(true);
+			}
+		}
+		else { //then need to add it
+			classifierHoldingAnchor.setMaxHeight(270); //button anchor is 30, anchor holding classifier is 240...
+			
+			bottomSplitVBox.getChildren().add(0, classifierHBox); //it will always be the last element so no index needed
+			mR.setBottomSectionEnabled(true);
+			
+			//this is intentionally very large, because the bottom section has a maximum height, this essentially pulls it up to the maximum height
+			//it will not actually go to halfway of the window
+			verticalSplitPane.setDividerPosition(0, 0.5);
+			
+			if (((TypeTab) noteTabPane.getSelectionModel().getSelectedItem() != null) && mR.getBottomSectionShouldKeepContents() == false) {
+				//changes the values in the similarNotesHBox
+				mR.getPipelineConsolidator().newNoteOpenedProcedure();
+				//changes the values in the pinnedNotesHBox
+				mR.getPipelineConsolidator().newNoteOpenedProcedure();
+			}
+		}
+	}
+	
+	public void newDailyPageButtonPushed() {
+		
+		Note newDailyScroll = mR.getNoteChooserHandler().new Note("Test", "DailyScroll");
 				
+		dailyPageList.getItems().add(newDailyScroll);
+		
+		mR.openNote(newDailyScroll);
+		
 	}
 	
 
@@ -230,18 +315,25 @@ public class MainClassController implements Initializable {
 	public void initialize(URL arg0, ResourceBundle arg1) {
 		
 		mR = new MasterReference(this);
-						
-		//sets the default open bottom thing as the similar notes and not pinned notes
-		handleSimilarNotesButton();
-		
+								
 		pinnedNotesHBox = new HBox();
 		
 		//this effectively disables the Spiderweb top label
 		mainVBox.getChildren().remove(0);
+		
+		bottomSplitButtonPushed();
+		
+		
+		dailyPageListScrollPane.maxWidthProperty().bind(vBoxHolderOfDailyPageList.widthProperty());
+		dailyPageListScrollPane.minWidthProperty().bind(vBoxHolderOfDailyPageList.widthProperty());
+		
+		dailyPageListScrollPane.setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);		
+		//leftVBoxOfMainSplit
+		
+		vBoxHolderOfDailyPageList.maxWidthProperty().bind(leftVBoxOfMainSplit.widthProperty());
+		vBoxHolderOfDailyPageList.minWidthProperty().bind(leftVBoxOfMainSplit.widthProperty());
 	}
-	
-	//getters
-	
+		
 
 	public TextArea getMainTextArea() {
 		return mainTextArea;
@@ -351,10 +443,6 @@ public class MainClassController implements Initializable {
 		return similarNotesHBox;
 	}
 
-	public SplitPane getBottomSplit() {
-		return bottomSplit;
-	}
-
 	public VBox getLeftVBoxOfMainSplit() {
 		return leftVBoxOfMainSplit;
 	}
@@ -366,17 +454,9 @@ public class MainClassController implements Initializable {
 	public HBox getPinnedNotesHBox() {
 		return pinnedNotesHBox;
 	}
-
-	public Button getPinnedNotesButton() {
-		return pinnedNotesButton;
-	}
-
-	public Button getSimilarNotesButton() {
-		return similarNotesButton;
-	}
-
-	public ListView<Note> getRecencyList() {
-		return recencyList;
-	}
 	
+    public ListView<Note> getDailyPageList() {
+		return dailyPageList;
+	}
+
 }

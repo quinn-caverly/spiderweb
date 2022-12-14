@@ -37,9 +37,7 @@ public class ReadingTypeNoteController implements Initializable {
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
-		
-		
-		
+			
 		//has to bind the marginKeeper's heights and widths because this cannot be done easily in SceneBuilder
 		marginKeeper.minWidthProperty().bind(parentOfScrollPane.widthProperty());
 		marginKeeper.maxWidthProperty().bind(parentOfScrollPane.widthProperty());
