@@ -208,6 +208,7 @@ public class MasterReference {
     	
     	DailyScrollController dsc = (DailyScrollController) dailyScroll.getController();
     	dsc.initialize(null, null);
+    	dsc.loadFromLongTermGoalDatabase();
     	
     	mCC.getNoteTabPane().getTabs().add(newTab);
     	

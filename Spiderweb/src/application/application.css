@@ -374,7 +374,8 @@ the custom buttons
 
  #bottomSplitButton, #leftButton, #buttonBelowNoteChooser, #bottomRightButton,
  #dailyScrollTopLeftButton, #dailyScrollTopRightButton, #whenNeededButton,
- #longTermGoalSectionButton, shortTermGoalSectionButton {
+ #longTermGoalSectionButton, #shortTermGoalSectionButton, #saveButton, #saveAllButton,
+ #refreshSimilarsButton, #newDailyPageButton {
  	-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -light;
  	-fx-font-size: 13px;
@@ -389,13 +390,15 @@ the custom buttons
  
  #bottomSplitButton:hover, #leftButton:hover, #buttonBelowNoteChooser:hover, #bottomRightButton:hover,
  #dailyScrollTopLeftButton:hover, #dailyScrollTopRightButton:hover, #whenNeededButton:hover,
- #longTermGoalSectionButton:hover, shortTermGoalSectionButton:hover {
+ #longTermGoalSectionButton:hover, #shortTermGoalSectionButton:hover, #saveButton:hover, #saveAllButton:hover,
+ #refreshSimilarsButton:hover, #newDailyPageButton:hover {
  	-fx-background-color:  rgba(44, 44, 44, 0.95);
 }
 
  #bottomSplitButton:pressed, #leftButton:pressed, #buttonBelowNoteChooser:pressed, #bottomRightButton:pressed,
  #dailyScrollTopLeftButton:pressed, #dailyScrollTopRightButton:pressed, #whenNeededButton:pressed,
- #longTermGoalSectionButton:pressed, shortTermGoalSectionButton:pressed  {
+ #longTermGoalSectionButton:pressed, #shortTermGoalSectionButton:pressed, #saveButton:pressed, #saveAllButton:pressed,
+ #refreshSimilarsButton:pressed, #newDailyPageButton:pressed {
  	-fx-background-color:  rgba(40, 40, 40, 1);	
 }
  
@@ -598,6 +601,15 @@ the custom buttons
 	-fx-background-radius: 10px;
  }
  
+ #bookSection {
+ 	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 8px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(251, 255, 140, 0.5);
+	-fx-background-radius: 10px;
+ }
+ 
  
  /*
  * toDoSectionButtons
@@ -644,8 +656,7 @@ the custom buttons
 /*
 * goal section buttons
 */
-
- #longTermGoalSectionButton, #shortTermGoalSectionButton {
+ #longTermGoalSectionActionButton, #longTermGoalSectionDeleteButton {
  	-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -light;
  	-fx-font-size: 13px;
@@ -653,18 +664,39 @@ the custom buttons
  	-fx-border-radius: 5px;
  	-fx-border-width: 0px;
  	
- 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-color:  rgba(47, 47, 47, 0.8);
+ 	-fx-background-radius: 6px;
+ }
+
+ #longTermGoalSectionActionButton:hover, #longTermGoalSectionDeleteButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.9);
+}
+
+
+ #longTermGoalSectionActionButton:pressed, #longTermGoalSectionDeleteButton:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 0.95);	
+}
+
+ #shortTermGoalSectionButton {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -light;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.8);
  	-fx-background-radius: 6px;
  }
 
  
- #longTermGoalSectionButton:hover, #shortTermGoalSectionButton:hover {
- 	-fx-background-color:  rgba(44, 44, 44, 0.95);
+ #shortTermGoalSectionButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.9);
 }
 
 
- #longTermGoalSectionButton:pressed, #shortTermGoalSectionButton:pressed  {
- 	-fx-background-color:  rgba(40, 40, 40, 1);	
+ #shortTermGoalSectionButton:pressed  {
+ 	-fx-background-color:  rgba(40, 40, 40, 0.95);	
 }
  
  

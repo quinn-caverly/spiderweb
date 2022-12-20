@@ -38,20 +38,24 @@
                                                    <children>
                                                       <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Button fx:id="longTermGoalSectionButton" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                            <Button fx:id="longTermGoalSectionButton" mnemonicParsing="false" onAction="#longTermGoalSectionButtonPushed" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
+                                                      <VBox fx:id="longTermGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
                                                    </children></AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
                                                 <AnchorPane fx:id="shortTermGoalSection" prefHeight="200.0" prefWidth="200.0">
                                                    <children>
                                                       <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Button fx:id="shortTermGoalSectionButton" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                            <Button fx:id="shortTermGoalSectionButton" mnemonicParsing="false" onAction="#shortTermGoalSectionButtonPushed" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
+                                                      <VBox fx:id="shortTermGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
                                                    </children>
                                                 </AnchorPane>
+                                                <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
+                                                <AnchorPane fx:id="bookSection" prefHeight="200.0" prefWidth="200.0" />
                                              </children>
                                           </VBox>
                                        </children>

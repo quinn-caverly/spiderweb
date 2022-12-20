@@ -1,9 +1,5 @@
 package handlers;
 
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -11,7 +7,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.Arrays;
 
 import application.MasterReference;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
@@ -75,6 +70,9 @@ public final class DatabaseHandler {
 		    statement.executeUpdate("CREATE TABLE TreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot CHAR(1))");
 		    
 		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
+		    
+		    
+		    statement.executeUpdate("CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)");
 
 		    
 		    connection.close();
@@ -658,7 +656,7 @@ public final class DatabaseHandler {
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
-		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
+		    statement.executeUpdate("CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)");
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -921,8 +919,88 @@ public final class DatabaseHandler {
 				throw new Exception("note is not one of the valid types when deleting from database.");
 			}
 		}
-		
-		
 	}
+	
+	/*
+	 * CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)
+	 * 
+	 * this method will only be run on creation of new element, elements won't be updated
+	 */
+	public static void saveToLongTermGoalTable(String description, String day, String month, String calendarYear) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+			statement.executeUpdate("INSERT INTO LongTermGoalTable (Description, Day, Month, CalendarYear) VALUES ('"
+			+ prepareStringForSQL(description) + "', " + day + ", " + month +  ", " + calendarYear + ")");
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * goals can not be edited before they are deleted from the table
+	 * this method will find the element in table where the description matches, then deletes it
+	 */
+	public static void deleteFromLongTermGoalTable(String description) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+			
+			statement.execute("DELETE FROM LongTermGoalTable WHERE Description = '" + description + "'");
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}	
+	
+	/*
+	 * will return info to be handled by the DailyScrollController on initialization
+	 */
+	public static ArrayList<ArrayList<String>> loadFromLongTermGoalTable() {
+				
+		Connection connection;
+		try {
+			connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM LongTermGoalTable");
+			
+			ArrayList<ArrayList<String>> listOfLists = new ArrayList<ArrayList<String>>();
+			
+			/*
+			 * TODO, result set spitting duplicate values, hotfix because comprehensive fix
+			 * is too complicated to be worth it for now...
+			 */
+			
+			while (resultSet.next()) {
+								
+				ArrayList<String> currentList = new ArrayList<String>();
+				
+				currentList.add(resultSet.getString("Description"));
+				currentList.add(resultSet.getString("Day"));
+				currentList.add(resultSet.getString("Month"));
+				currentList.add(resultSet.getString("CalendarYear"));
+				
+				listOfLists.add(currentList);
+			}
+			
+			connection.close();
+			
+			return listOfLists;
+		    
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
+	}
+	
+	
 	
 }

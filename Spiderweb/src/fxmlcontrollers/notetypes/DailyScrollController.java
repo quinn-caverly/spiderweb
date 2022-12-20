@@ -2,10 +2,17 @@ package fxmlcontrollers.notetypes;
 
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
+import java.util.Set;
 
-import fxmlcontrollers.notetypes.subtypes.DailyScrollToDoSectionNodeController;
-import javafx.collections.ObservableList;
+import handlers.DatabaseHandler;
+import handlers.NoteChooserHandler;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -13,8 +20,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -70,6 +79,12 @@ public class DailyScrollController implements Initializable {
 	private Button shortTermGoalSectionButton;
 	@FXML
 	private Button longTermGoalSectionButton;
+	@FXML
+	private VBox longTermGoalSectionVBox;
+	@FXML
+	private VBox shortTermGoalSectionVBox;
+	@FXML
+	private AnchorPane bookSection;
 		
 	
 	@Override
@@ -115,10 +130,12 @@ public class DailyScrollController implements Initializable {
 		 */
 		shortTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		shortTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
-
-				
 		
-		
+		/*
+		 * book section
+		 */
+		bookSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		bookSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 	}
 	
 	/*
@@ -130,9 +147,6 @@ public class DailyScrollController implements Initializable {
 		
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
-		
-		
-		
 	}
 	
 	/*
@@ -196,7 +210,7 @@ public class DailyScrollController implements Initializable {
 			HBox rightSideHBox = (HBox) originalAnchor.getChildren().get(1);
 			Button deleteButton = (Button) rightSideHBox.getChildren().get(2);
 			
-			handleDeleteButtonListener(deleteButton, loadedNode);
+			handleDeleteButtonListener(deleteButton, loadedNode, toDoVBox);
 			
 			HBox leftSideHBox = (HBox) originalAnchor.getChildren().get(0);
 
@@ -219,7 +233,6 @@ public class DailyScrollController implements Initializable {
 			}
 			
 			adjustToDoSectionVBoxHeight();
-
 			
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -325,11 +338,11 @@ public class DailyScrollController implements Initializable {
 		}
 	}
 	
-	private void handleDeleteButtonListener(Button button, AnchorPane anchor) {
+	private void handleDeleteButtonListener(Button button, AnchorPane anchor, VBox vbox) {
         button.setOnAction(new EventHandler<ActionEvent>() { 
 		@Override
 		public void handle(ActionEvent event) {
-			toDoVBox.getChildren().remove(anchor);
+			vbox.getChildren().remove(anchor);
 			
 			adjustToDoSectionVBoxHeight();
 		}});
@@ -359,4 +372,232 @@ public class DailyScrollController implements Initializable {
 		}});
 	}
 	
+	
+	public void longTermGoalSectionButtonPushed() {
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LongTermGoalSectionNode.fxml"));
+		try {
+			AnchorPane loadedNode = fxmlLoader.load();
+									
+			longTermGoalSectionVBox.getChildren().add(loadedNode);
+			
+			Button deleteButton = (Button) loadedNode.getChildren().get(3);
+			handleDeleteButtonListener(deleteButton, loadedNode, longTermGoalSectionVBox);
+			
+			AnchorPane parentOfDescriptionTextField = (AnchorPane) loadedNode.getChildren().get(1);
+			TextField longTermGoalSectionDescriptionTextField = (TextField) parentOfDescriptionTextField.getChildren().get(0);
+			
+			AnchorPane parentOfInputTextField = (AnchorPane) loadedNode.getChildren().get(2);
+			TextField longTermGoalSectionDaysInputTextField = (TextField) parentOfInputTextField.getChildren().get(0);
+			
+			longTermGoalSectionDaysInputTextField.textProperty().addListener(new ChangeListener<String>() {
+			    @Override
+			    public void changed(ObservableValue<? extends String> observable, String oldValue, String newValue) {
+		            if (newValue.length() > 3) {
+		            	longTermGoalSectionDaysInputTextField.setText(oldValue);
+		            }
+		            if ((isInteger(newValue) == false) && (newValue.length() != 0)) {
+		            	longTermGoalSectionDaysInputTextField.setText(oldValue);
+		            }
+			    }
+			});
+			
+			loadedNode.maxWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+			loadedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+			
+			Button actionButton = (Button) loadedNode.getChildren().get(0);
+			
+			/*
+			 * if successful, this will also save the long term goal to the database, this section is consistent
+			 * throughout all scrolls, each will have identical long term goal sections
+			 */
+			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+	    		@Override
+	    		public void handle(ActionEvent event) {
+	    			//need to check if there is text in the description text field
+	    			//if the description text is good and number is good, then convert to "LongTermGoalSectionNodeLocked.fxml"
+    				Boolean valid = true;
+	    			
+	    			if (longTermGoalSectionDescriptionTextField.getText().length() > 0) {
+	    				Set<String> allowedCharacters = NoteChooserHandler.getAllowedcharacters();
+	    				
+	    				String contents = longTermGoalSectionDescriptionTextField.getText();
+	    				Integer counter = 0;
+	    				while (counter < contents.length()) {
+	    					if ((allowedCharacters.contains(String.valueOf(contents.charAt(counter)).toLowerCase()) == false)
+	    					&& (String.valueOf(contents.charAt(counter)).toLowerCase() != " ")) {
+	    						valid = false;
+	    					}
+	    					counter += 1;
+	    				}
+	    			}
+	    			
+	    			if (longTermGoalSectionDaysInputTextField.getText().length() > 0) {
+		    			if (Integer.valueOf(longTermGoalSectionDaysInputTextField.getText()) < 0) {
+		    				valid = false;
+		    			}
+	    			}
+	    			else {
+	    				valid = false;
+	    			}
+	    			
+	    			//TODO
+	    			//for now its okay for nothing to happen if valid == false
+	    			if (valid == true) {
+	    		        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LongTermGoalSectionNodeLocked.fxml"));
+	    				try {
+							AnchorPane lockedNode = fxmlLoader.load();
+							
+							AnchorPane parentOfDescriptionLabel = (AnchorPane) lockedNode.getChildren().get(1);
+							Label longTermGoalSectionDescriptionLabel = (Label) parentOfDescriptionLabel.getChildren().get(0);
+							
+							AnchorPane parentOfInputLabel = (AnchorPane) lockedNode.getChildren().get(2);
+							Label longTermGoalSectionDaysLabel = (Label) parentOfInputLabel.getChildren().get(0);
+							
+							longTermGoalSectionDescriptionLabel.setText(longTermGoalSectionDescriptionTextField.getText());
+							
+							LocalDate date = LocalDate.now();
+							LocalDate inTime = date.plusDays(Integer.valueOf(longTermGoalSectionDaysInputTextField.getText()));
+							DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
+							String stringDate = formatter.format(inTime);
+							
+							String[] dateArray = stringDate.split("-");
+							//converting to int then back to string removes the leading 0's
+							String dayString = Integer.valueOf(dateArray[0]).toString();
+							String monthString = Integer.valueOf(dateArray[1]).toString();
+							String yearString = Integer.valueOf(dateArray[2]).toString();
+							
+							Integer daysBetween = (int) ChronoUnit.DAYS.between(date, inTime);
+							longTermGoalSectionDaysLabel.setText(daysBetween.toString() + " days");
+							
+							DatabaseHandler.saveToLongTermGoalTable(longTermGoalSectionDescriptionTextField.getText(), dayString, monthString, yearString);
+							
+							Button actionButton = (Button) lockedNode.getChildren().get(0);
+							
+							handleLongTermGoalCompleteButton(actionButton, longTermGoalSectionDescriptionTextField.getText(), lockedNode);
+							
+							//need to remove the loadedNode from the vBox, replace it with lockedNode
+							Integer indexCounter = 0;
+							for (Node node : longTermGoalSectionVBox.getChildren()) {
+								if ((AnchorPane) node == loadedNode) {
+									longTermGoalSectionVBox.getChildren().remove(node);
+									break; //breaks out of for loop, ends counter of index counter on whatever index
+								}
+								indexCounter += 1;
+							}
+							
+							longTermGoalSectionVBox.getChildren().add(indexCounter, lockedNode);
+
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+	    			}
+	    		}
+	    	});
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	
+	public void shortTermGoalSectionButtonPushed() {
+		
+	}
+	
+	
+	/*
+	 * TODO the long term goals should be sorted by time until date somehow
+	 */
+	public void loadFromLongTermGoalDatabase() {
+		
+		ArrayList<ArrayList<String>> listOfLists = DatabaseHandler.loadFromLongTermGoalTable();
+		
+		/*
+		 * Description, Day, Month, Year
+		 */
+		
+		for (ArrayList<String> entry : listOfLists) {
+						
+			try {
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LongTermGoalSectionNodeLocked.fxml"));
+				AnchorPane lockedNode = fxmlLoader.load();
+				
+				AnchorPane parentOfDescriptionLabel = (AnchorPane) lockedNode.getChildren().get(1);
+				Label longTermGoalSectionDescriptionLabel = (Label) parentOfDescriptionLabel.getChildren().get(0);
+				
+				AnchorPane parentOfInputLabel = (AnchorPane) lockedNode.getChildren().get(2);
+				Label longTermGoalSectionDaysLabel = (Label) parentOfInputLabel.getChildren().get(0);
+				
+				longTermGoalSectionDescriptionLabel.setText(entry.get(0));
+				
+				LocalDate date = LocalDate.now();
+				LocalDate entryDate = LocalDate.of(Integer.valueOf(entry.get(3)), Integer.valueOf(entry.get(2)), Integer.valueOf(entry.get(1)));
+				
+				Integer daysBetween = (int) ChronoUnit.DAYS.between(date, entryDate);
+				longTermGoalSectionDaysLabel.setText(daysBetween.toString() + " days");
+								
+				Button actionButton = (Button) lockedNode.getChildren().get(0);
+				
+				handleLongTermGoalCompleteButton(actionButton, entry.get(0), lockedNode);
+				
+				longTermGoalSectionVBox.getChildren().add(lockedNode);
+				
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+	
+		
+	}
+	
+	//TODO finish this when I finalize this with database
+	private void handleLongTermGoalCompleteButton(Button button, String description, AnchorPane node) {
+		button.setOnAction(new EventHandler<ActionEvent>() { 
+    		@Override
+    		public void handle(ActionEvent event) {
+    			DatabaseHandler.deleteFromLongTermGoalTable(description);
+    			
+				Integer indexCounter = 0;
+				for (Node node : longTermGoalSectionVBox.getChildren()) {
+					if ((AnchorPane) node == node) {
+						longTermGoalSectionVBox.getChildren().remove(node);
+						break; //breaks out of for loop, ends counter of index counter on whatever index
+					}
+					indexCounter += 1;
+				}
+    		}
+		});
+	}
+	
+	
+	
+	
+	/*
+	 * https://stackoverflow.com/questions/237159/whats-the-best-way-to-check-if-a-string-represents-an-integer-in-java?page=1&tab=scoredesc#tab-top
+	 * 
+	 * leaving as public because might be useful in other classes?
+	 */
+	public static boolean isInteger(String str) {
+	    if (str == null) {
+	        return false;
+	    }
+	    int length = str.length();
+	    if (length == 0) {
+	        return true;
+	    }
+	    int i = 0;
+	    if (str.charAt(0) == '-') {
+	        if (length == 1) {
+	            return false;
+	        }
+	        i = 1;
+	    }
+	    for (; i < length; i++) {
+	        char c = str.charAt(i);
+	        if (c < '0' || c > '9') {
+	            return false;
+	        }
+	    }
+	    return true;
+	}
 }
