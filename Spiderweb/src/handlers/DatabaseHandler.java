@@ -438,7 +438,7 @@ public final class DatabaseHandler {
 			/*
 			 * ("CREATE TABLE AnalysisContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// A
 			 */
-			if (anchorSpecial.getType() == "Analysis") {
+			if (anchorSpecial.getType().equals("Analysis")) {
 				
 				VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea analysisTextArea = (TextArea) mainVBox.getChildren().get(1);
@@ -475,8 +475,8 @@ public final class DatabaseHandler {
 			/*
 			 * ("CREATE TABLE QuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// Q
 			 */
-			else if (anchorSpecial.getType() == "Quote") {
-				
+			else if (anchorSpecial.getType().equals("Quote")) {
+								
 				VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea quoteTextArea = (TextArea) mainVBox.getChildren().get(1);
 				String quoteString = prepareStringForSQL(quoteTextArea.getText());
@@ -511,7 +511,7 @@ public final class DatabaseHandler {
 			 */
 			//both is the legacy name which will be kept, before I had the idea of adding more types,
 			//which would make the type name of "Both" confusing, but nevertheless it is kept
-			else if (anchorSpecial.getType() == "Both") {
+			else if (anchorSpecial.getType().equals("Both")) {
 				
 				VBox quoteVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea quoteTextArea = (TextArea) quoteVBox.getChildren().get(1);
@@ -613,27 +613,27 @@ public final class DatabaseHandler {
 		/*
 		 * ("CREATE TABLE AnalysisContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// A
 		 */
-		if (innerList.get(0) == "A") {
+		if (innerList.get(0).equals("A")) {
 			statement.executeUpdate("DELETE FROM AnalysisContainer WHERE Id = " + innerList.get(1));
 		}
 		
 		/*
 		 * ("CREATE TABLE QuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// Q
 		 */
-		else if (innerList.get(0) == "Q") {
+		else if (innerList.get(0).equals("Q")) {
 			statement.executeUpdate("DELETE FROM QuoteContainer WHERE Id = " + innerList.get(1));
 		}
 		
 		/*
 		 * ("CREATE TABLE AnalysisAndQuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, AnalysisContents VARCHAR(30000), QuoteContents VARCHAR(30000))");// B
 		 */
-		else if (innerList.get(0) == "B") {
+		else if (innerList.get(0).equals("B")) {
 			statement.executeUpdate("DELETE FROM AnalysisAndQuoteContainer WHERE Id = " + innerList.get(1));
 
 		}
 		
 		else {
-			throw new SQLException("Something went wrong, table indicator for Respective Reading Page Table is no good.");
+			throw new SQLException("Something went wrong, table indicator for Respective Reading Page Table is no good: " + innerList.get(0));
 		}
 	}
 	
@@ -680,10 +680,10 @@ public final class DatabaseHandler {
 		    Statement statement = connection.createStatement();
 			
 			ArrayList<TreeItem<Note>> treeList = new ArrayList<TreeItem<Note>>();
-						
-			loadFromStandardPage(treeList, connection, mR);
-			loadFromLegacyDailyPage(treeList, connection, mR);
+					
 			loadFromReadingPage(treeList, connection, mR);
+			loadFromLegacyDailyPage(treeList, connection, mR);
+			loadFromStandardPage(treeList, connection, mR);
 						
 			TreeItem<Note> rootItem = null;
 			
@@ -834,7 +834,7 @@ public final class DatabaseHandler {
 				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM QuoteContainer WHERE Id = " + id);
 				    
 				    if (resSet.next()) {
-						TextArea quoteTextArea = rtnc.pushAnalysisButton();
+						TextArea quoteTextArea = rtnc.pushQuoteButton();
 
 						quoteTextArea.setText(resSet.getString("Contents"));
 				    }
@@ -973,11 +973,6 @@ public final class DatabaseHandler {
 			ResultSet resultSet = statement.executeQuery("SELECT * FROM LongTermGoalTable");
 			
 			ArrayList<ArrayList<String>> listOfLists = new ArrayList<ArrayList<String>>();
-			
-			/*
-			 * TODO, result set spitting duplicate values, hotfix because comprehensive fix
-			 * is too complicated to be worth it for now...
-			 */
 			
 			while (resultSet.next()) {
 								

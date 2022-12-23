@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.HBox?>
+
+<HBox fx:id="root" maxHeight="32.0" maxWidth="-Infinity" minHeight="32.0" minWidth="-Infinity" prefHeight="32.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1" fx:controller="fxmlcontrollers.TreeViewCellController">
+   <children>
+      <Label fx:id="cellLabel" prefHeight="10000.0" prefWidth="10000.0" text="Label" textAlignment="CENTER" textFill="#f0f0f0" HBox.hgrow="ALWAYS" />
+   </children>
+</HBox>

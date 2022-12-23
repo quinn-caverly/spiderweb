@@ -20,11 +20,14 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
@@ -34,6 +37,8 @@ public class DailyScrollController implements Initializable {
 	private static Integer heightOfReflectionSection = 70;
 	private static Integer heightOfClosedToDoSectionNode = 50;
 	private Boolean toDoSectionInExpandedMode = false;
+	//starts in expanded mode and is immediately closed on creation in order to efficiently reference elements
+	private Boolean weeklyGoalSectionInExpandedMode = true;
 	
 	@FXML
 	private AnchorPane dailyScrollRoot;
@@ -60,7 +65,7 @@ public class DailyScrollController implements Initializable {
 	@FXML
 	private AnchorPane longTermGoalSection;
 	@FXML
-	private AnchorPane shortTermGoalSection;
+	private AnchorPane weeklyGoalSection;
 	@FXML
 	private VBox toDoVBox;
 	@FXML
@@ -74,9 +79,9 @@ public class DailyScrollController implements Initializable {
 	@FXML
 	private AnchorPane topButtonMarginMaker;
 	@FXML
-	private Button toDoSectionTempButton;
+	private Button toDoSectionButton;
 	@FXML
-	private Button shortTermGoalSectionButton;
+	private Button weeklyGoalSectionButton;
 	@FXML
 	private Button longTermGoalSectionButton;
 	@FXML
@@ -85,6 +90,34 @@ public class DailyScrollController implements Initializable {
 	private VBox shortTermGoalSectionVBox;
 	@FXML
 	private AnchorPane bookSection;
+	@FXML
+	private AnchorPane weeklyGoalResetButtonAnchor;
+	@FXML
+	private AnchorPane weeklyGoalMainSectionAnchor;
+	@FXML
+	private Button weeklyGoalResetButton;
+	@FXML
+	private VBox weeklyGoalSectionVBox;
+	@FXML
+	private VBox weeklyGoalSectionLeftSideVBox;
+	@FXML
+	private VBox weeklyGoalSectionRightSideVBox;
+	@FXML
+	private AnchorPane weeklyGoalLineUpButtonHolder;
+	@FXML
+	private Button weeklyGoalLineUpButton;
+	@FXML
+	private HBox weeklyGoalSectionHBox;
+	@FXML
+	private AnchorPane weeklyGoalLeftSectionBorderAnchor;
+	@FXML
+	private AnchorPane weeklyGoalRightSectionBorderAnchor;
+	@FXML
+	private AnchorPane weeklyGoalSectionLeftSideSpacer;
+	@FXML
+	private AnchorPane weeklyGoalSectionRightSideSpacer;
+	
+	
 		
 	
 	@Override
@@ -124,13 +157,23 @@ public class DailyScrollController implements Initializable {
 		 */
 		longTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		longTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		loadFromLongTermGoalDatabase();
 		
 		/*
-		 * short term goal section
+		 * weekly goal section
 		 */
-		shortTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
-		shortTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		weeklyGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		weeklyGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
+		//TODO the 77.5 is an arbitrary number and may break if reformatting occurs
+		weeklyGoalSectionLeftSideSpacer.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
+		weeklyGoalSectionLeftSideSpacer.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
+
+		weeklyGoalSectionRightSideSpacer.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
+		weeklyGoalSectionRightSideSpacer.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
+		
+    	changeWeeklyGoalSectionMode();
+    	
 		/*
 		 * book section
 		 */
@@ -147,6 +190,8 @@ public class DailyScrollController implements Initializable {
 		
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
+		
+		changeWeeklyGoalSectionMode();
 	}
 	
 	/*
@@ -163,7 +208,6 @@ public class DailyScrollController implements Initializable {
 
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
-
 		
 		changeToDoSectionMode();
 	}
@@ -185,6 +229,9 @@ public class DailyScrollController implements Initializable {
 		
 		if (toDoSectionInExpandedMode == true) {
 			changeToDoSectionMode();
+		}
+		if (weeklyGoalSectionInExpandedMode == true) {
+			changeWeeklyGoalSectionMode();
 		}
 	}
 	
@@ -297,6 +344,28 @@ public class DailyScrollController implements Initializable {
 				dailyScrollToDoSection.setMaxHeight(toDoVBox.getMinHeight() + 40);
 			}
 		}
+	}
+	
+	//TODO incomplete
+	public void changeWeeklyGoalSectionMode() {
+		
+		if (weeklyGoalSectionInExpandedMode == false) {
+			weeklyGoalSectionInExpandedMode = true;
+			
+			weeklyGoalSectionVBox.getChildren().add(weeklyGoalResetButtonAnchor);
+			weeklyGoalLineUpButtonHolder.getChildren().add(weeklyGoalLineUpButton);
+			
+			
+		}
+		else { //removes the reset button, button to add more nodes on left side
+			weeklyGoalSectionInExpandedMode = false;
+			
+			weeklyGoalSectionVBox.getChildren().remove(weeklyGoalResetButtonAnchor); //potentially destructive static reference
+			weeklyGoalLineUpButtonHolder.getChildren().remove(weeklyGoalLineUpButton);
+			
+		}
+		
+		
 	}
 	
 	public void changeToDoSectionMode() {
@@ -500,15 +569,11 @@ public class DailyScrollController implements Initializable {
 	}
 	
 	
-	public void shortTermGoalSectionButtonPushed() {
-		
-	}
-	
 	
 	/*
 	 * TODO the long term goals should be sorted by time until date somehow
 	 */
-	public void loadFromLongTermGoalDatabase() {
+	private void loadFromLongTermGoalDatabase() {
 		
 		ArrayList<ArrayList<String>> listOfLists = DatabaseHandler.loadFromLongTermGoalTable();
 		
@@ -569,6 +634,137 @@ public class DailyScrollController implements Initializable {
 		});
 	}
 	
+	/*
+	 * weeklyGoalSectionCreationDeleteButton, weeklyGoalDescriptionTextField, weeklyGoalQuantityCombobox, weeklyGoalSectionCreationDeleteButton
+	 */
+	
+	public void weeklyGoalLineUpButtonPushed() {
+		
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionCreationStage.fxml"));
+			AnchorPane creationNode = fxmlLoader.load();
+			
+			Button weeklyGoalCreateButton = (Button) creationNode.getChildren().get(0);
+			
+			AnchorPane parentOfWeeklyGoalDescriptionTextField = (AnchorPane) creationNode.getChildren().get(1);
+			TextField weeklyGoalDescriptionTextField = (TextField) parentOfWeeklyGoalDescriptionTextField.getChildren().get(0);
+			
+			AnchorPane parentOfWeeklyGoalQuantityCombobox = (AnchorPane) creationNode.getChildren().get(2);
+			ComboBox weeklyGoalQuantityCombobox = (ComboBox) parentOfWeeklyGoalQuantityCombobox.getChildren().get(0);	
+			
+			weeklyGoalQuantityCombobox.getItems().add(1);
+			weeklyGoalQuantityCombobox.getItems().add(2);
+			weeklyGoalQuantityCombobox.getItems().add(3);
+			weeklyGoalQuantityCombobox.getItems().add(4);
+			weeklyGoalQuantityCombobox.getItems().add(5);
+			weeklyGoalQuantityCombobox.getItems().add(6);
+			weeklyGoalQuantityCombobox.getItems().add(7);
+			
+			weeklyGoalQuantityCombobox.getSelectionModel().select(0);
+			
+			Button weeklyGoalSectionCreationDeleteButton = (Button) creationNode.getChildren().get(3);
+			
+			handleWeeklyGoalSectionCreationDeleteButton(weeklyGoalSectionCreationDeleteButton, creationNode);
+			handleWeeklyGoalCreateButton(weeklyGoalCreateButton, weeklyGoalDescriptionTextField, weeklyGoalQuantityCombobox);
+			
+			creationNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
+			creationNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
+			
+			weeklyGoalSectionLeftSideVBox.getChildren().add(creationNode);
+		
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		
+	}
+	
+	//TODO incomplete
+	private void handleWeeklyGoalCreateButton(Button button, TextField textField, ComboBox comboBox) {
+		button.setOnAction(new EventHandler<ActionEvent>() { 
+    		@Override
+    		public void handle(ActionEvent event) {
+    			//need to check if there is text in the description text field
+    			//if the description text is good and number is good, then convert to "LongTermGoalSectionNodeLocked.fxml"
+				Boolean valid = true;
+    			
+    			if (textField.getText().length() > 0) {
+    				Set<String> allowedCharacters = NoteChooserHandler.getAllowedcharacters();
+    				
+    				String contents = textField.getText();
+    				Integer counter = 0;
+    				while (counter < contents.length()) {
+    					if ((allowedCharacters.contains(String.valueOf(contents.charAt(counter)).toLowerCase()) == false)
+    					&& (String.valueOf(contents.charAt(counter)).toLowerCase().equals(" ") == false)) {
+    						valid = false;
+    					}
+    					counter += 1;
+    				}
+    			}
+    			
+    			//TODO
+    			//for now its okay for nothing to happen if valid == false
+    			if (valid == true) {
+    				
+    				try {
+        				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionCreatedStage.fxml"));
+						AnchorPane createdNode = fxmlLoader.load();
+						
+						BorderPane borderPane = (BorderPane) createdNode.getChildren().get(0);
+						Label descriptionLabel = (Label) borderPane.getCenter();
+						
+						AnchorPane hboxHolder = (AnchorPane) createdNode.getChildren().get(1);
+						HBox cardHolderHBox = (HBox) hboxHolder.getChildren().get(0);
+						
+						descriptionLabel.setText(textField.getText());
+						
+						createdNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
+						createdNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
+						
+						weeklyGoalSectionLeftSideVBox.getChildren().add(createdNode);
+        				Integer count = (Integer) comboBox.getSelectionModel().getSelectedItem();
+						
+						for (int i = 0; i < count; i++) {
+	        				FXMLLoader subLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalLineupNode.fxml"));
+	        				AnchorPane lineupNode = subLoader.load();
+	        				
+	        				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(count));
+	        				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(count));
+	        				
+	        				lineupNode.setOnMouseClicked(new EventHandler<MouseEvent>() { 
+					    		@Override
+					    		public void handle(MouseEvent event) {
+					    			
+					    			System.out.println("test");
+					    			
+					    			}
+					    		});
+	        				
+	        				cardHolderHBox.getChildren().add(lineupNode);
+						}
+						
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+    				
+    				
+    			}
+    		}
+		});
+	}
+	
+	/*
+	 * because the node won't have been written to database yet, just removes it from the vBox
+	 */
+	private void handleWeeklyGoalSectionCreationDeleteButton(Button button, AnchorPane creationNode) {
+		
+		button.setOnAction(new EventHandler<ActionEvent>() { 
+    		@Override
+    		public void handle(ActionEvent event) {
+    			weeklyGoalSectionLeftSideVBox.getChildren().remove(creationNode);
+    		}
+		});
+	}
 	
 	
 	

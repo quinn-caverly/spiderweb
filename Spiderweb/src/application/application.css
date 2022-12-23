@@ -51,9 +51,14 @@
     -smooth: #4F0000;	
     -pop: #001A1F;	
 	
-    -main-gradient-vertical: linear-gradient(to bottom, transparent 0%, -sharp 25%, -sharp 75%, transparent  100%);
-    -main-gradient-horizontal: linear-gradient(to right, transparent 0%, -sharp 25%, -sharp 75%, transparent  100%);
-     
+    -main-gradient-vertical: linear-gradient(to bottom, transparent 2%, -sharp 25%, -sharp 75%, transparent  98%);
+    -main-gradient-horizontal: linear-gradient(to right, transparent 2%, -sharp 25%, -sharp 75%, transparent  98%);
+
+    -secondary-gradient-vertical: linear-gradient(to bottom, transparent 2%, #F2d7b262 25%, #F2d7b262 75%, transparent  98%);
+    -secondary-gradient-horizontal: linear-gradient(to right, transparent 2%, #F2d7b262 25%, #F2d7b262 75%, transparent  98%);     
+    
+    -tertiary-gradient-vertical: linear-gradient(to bottom, transparent 2%, rgba(210, 210, 210, 0.3) 25%, rgba(210, 210, 210, 0.3) 75%, transparent  98%);
+    -tertiary-gradient-horizontal: linear-gradient(to right, transparent 2%, rgba(210, 210, 210, 0.3) 25%, rgba(210, 210, 210, 0.3) 75%, transparent  98%);   
     
     -hlight-gradient: linear-gradient(to bottom, #1dbbdd44, #93f9b944); 
     
@@ -87,18 +92,22 @@
 
 
 .scroll-bar > .thumb  {
-	-fx-background-color: #F2d7b262; /* first 2 characters add opacity */
+	-fx-background-color: linear-gradient(to bottom, rgba(210, 210, 210, 0.3) 0%, rgba(210, 210, 210, 0.4) 25%, rgba(210, 210, 210, 0.4) 75%, rgba(210, 210, 210, 0.3) 100%); /* first 2 characters add opacity */
 	
-	-fx-background-radius: 10px;
+	-fx-background-radius: 5px;
 }
-
-#noteTabPane, #noteChooser, #switchingScrollPane, #recencyList {	
+/*
+* noteChooser and noteTabPane used to be here to create old look
+*/
+/*
+#switchingScrollPane, #recencyList {	
 	-fx-border-color: linear-gradient(to bottom, -light 0%, -light 30%, -sharp 30%, -sharp  100%);
 	-fx-border-width: 10px;
 	-fx-border-radius: 10px;
 	
 	-fx-background-radius: 10px;
 }
+
 
 .split-pane:horizontal > .split-pane-divider {
 	-fx-background-color: -main-gradient-vertical;
@@ -107,6 +116,17 @@
 
 .split-pane:vertical > .split-pane-divider {
 	-fx-background-color: -main-gradient-horizontal;
+	-fx-background-radius: 10px;
+}
+*/
+
+.split-pane:horizontal > .split-pane-divider {
+	-fx-background-color: -tertiary-gradient-vertical;
+	-fx-background-radius: 10px;
+}
+
+.split-pane:vertical > .split-pane-divider {
+	-fx-background-color: -tertiary-gradient-horizontal;
 	-fx-background-radius: 10px;
 }
 
@@ -201,6 +221,16 @@ tab-content-area — StackPane
 /* This refers to the area "behind" the individual tabs */
 #noteTabPane > .tab-header-area > .tab-header-background {
 	-fx-background-color: transparent;	
+}
+
+#noteChooser .scroll-bar * {
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
 }
 
 
@@ -340,7 +370,7 @@ tab-content-area — StackPane
  * Buttons                                                                     *
  *                                                                             *
  ******************************************************************************/
- 
+ /* old button style
  .button {
  	-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -light;
@@ -367,11 +397,61 @@ tab-content-area — StackPane
  	
  	-fx-background-color:  rgba(47, 47, 47, 1);	
 }
+*/
 
+ .button {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -light;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+
+ 
+ .button:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.95);
+}
+
+ .button:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
+}
+
+/*
+* Buttons which will only show the text when hovered over
+*/
+#saveButton, #saveAllButton, #refreshSimilarsButton, #weeklyGoalResetButton,
+#addAnalysisButton, #addBothButton, #addQuoteButton {
+ 	-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: transparent;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+ 
+ #saveButton:hover, #saveAllButton:hover, #refreshSimilarsButton:hover, #weeklyGoalResetButton:hover,
+ #addAnalysisButton:hover, #addBothButton:hover, #addQuoteButton:hover {
+	-fx-text-fill: -light;
+	-fx-background-color:  rgba(44, 44, 44, 0.95);
+ }
+ 
+ #saveButton:pressed, #saveAllButton:pressed,
+ #refreshSimilarsButton:pressed, #weeklyGoalResetButton:pressed,
+ #addAnalysisButton:pressed, #addBothButton:pressed, #addQuoteButton:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
+}
+ 
 /*
 the custom buttons
 */
-
+/* this code will be necessary if I decide to switch back to old button style
  #bottomSplitButton, #leftButton, #buttonBelowNoteChooser, #bottomRightButton,
  #dailyScrollTopLeftButton, #dailyScrollTopRightButton, #whenNeededButton,
  #longTermGoalSectionButton, #shortTermGoalSectionButton, #saveButton, #saveAllButton,
@@ -401,6 +481,7 @@ the custom buttons
  #refreshSimilarsButton:pressed, #newDailyPageButton:pressed {
  	-fx-background-color:  rgba(40, 40, 40, 1);	
 }
+*/
  
  /*******************************************************************************
  *                                                                             *
@@ -574,47 +655,36 @@ the custom buttons
 /*
 * section backgrounds and styles
 */
- #dailyScrollToDoSection {
- 	-fx-border-color: rgba(47, 47, 47, 0.9);
-	-fx-border-width: 8px;
+ #dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection {
+ 	-fx-border-color: transparent;
+	-fx-border-width: 0px;
 	-fx-border-radius: 5px;
 	
-	-fx-background-color:  rgba(160, 160, 160, 0.9);
+	-fx-background-color:  rgba(47, 47, 47, 0.7);
 	-fx-background-radius: 10px;
  }
  
- #longTermGoalSection {
- 	-fx-border-color: rgba(47, 47, 47, 0.9);
-	-fx-border-width: 8px;
-	-fx-border-radius: 5px;
+ 
+ #weeklyGoalRightSectionBorderAnchor, #weeklyGoalLeftSectionBorderAnchor {
+  	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 5px;
+	-fx-border-radius: 3px
+ }
+
+ 
+  #weeklyGoalCardMarginKeeper {
+  	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 3px;
+	-fx-border-radius: 2px;
 	
 	-fx-background-color:  rgba(158, 83, 54, 0.75);
-	-fx-background-radius: 10px;
+	-fx-background-radius: 2px;
  }
- 
- #shortTermGoalSection {
- 	-fx-border-color: rgba(47, 47, 47, 0.9);
-	-fx-border-width: 8px;
-	-fx-border-radius: 5px;
-	
-	-fx-background-color:  rgba(207, 151, 68, 0.75);
-	-fx-background-radius: 10px;
- }
- 
- #bookSection {
- 	-fx-border-color: rgba(47, 47, 47, 0.9);
-	-fx-border-width: 8px;
-	-fx-border-radius: 5px;
-	
-	-fx-background-color:  rgba(251, 255, 140, 0.5);
-	-fx-background-radius: 10px;
- }
- 
  
  /*
  * toDoSectionButtons
  */
- #toDoSectionNodeReflectButton, #toDoSectionTempButton {
+ #toDoSectionNodeReflectButton {
  	-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -light;
  	-fx-font-size: 13px;
@@ -627,13 +697,11 @@ the custom buttons
  }
 
  
- #toDoSectionNodeReflectButton:hover,
- #toDoSectionTempButton:hover {
+ #toDoSectionNodeReflectButton:hover {
  	-fx-background-color:  rgba(65, 65, 65, 0.95);
 }
 
- #toDoSectionNodeReflectButton:pressed,
- #toDoSectionTempButton:pressed {
+ #toDoSectionNodeReflectButton:pressed {
  	-fx-background-color:  rgba(65, 65, 65, 1);	
 }
 

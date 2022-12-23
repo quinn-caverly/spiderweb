@@ -44,18 +44,68 @@
                                                       <VBox fx:id="longTermGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
                                                    </children></AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
-                                                <AnchorPane fx:id="shortTermGoalSection" prefHeight="200.0" prefWidth="200.0">
+                                                <AnchorPane fx:id="weeklyGoalSection" prefHeight="200.0" prefWidth="200.0">
                                                    <children>
                                                       <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Button fx:id="shortTermGoalSectionButton" mnemonicParsing="false" onAction="#shortTermGoalSectionButtonPushed" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                            <Button fx:id="weeklyGoalSectionButton" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <VBox fx:id="shortTermGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
+                                                      <VBox fx:id="weeklyGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <AnchorPane fx:id="weeklyGoalMainSectionAnchor" prefHeight="10000.0" prefWidth="200.0" VBox.vgrow="ALWAYS">
+                                                               <children>
+                                                                  <HBox fx:id="weeklyGoalSectionHBox" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                     <children>
+                                                                        <AnchorPane fx:id="weeklyGoalSectionLeftSideSpacer" prefWidth="10000.0" HBox.hgrow="NEVER">
+                                                                           <children>
+                                                                              <AnchorPane fx:id="weeklyGoalLeftSectionBorderAnchor" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                 <children>
+                                                                                    <VBox minHeight="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                                                       <children>
+                                                                                          <VBox fx:id="weeklyGoalSectionLeftSideVBox" VBox.vgrow="ALWAYS" />
+                                                                                          <AnchorPane fx:id="weeklyGoalLineUpButtonHolder" maxHeight="20.0" minHeight="20.0">
+                                                                                             <children>
+                                                                                                <Button fx:id="weeklyGoalLineUpButton" mnemonicParsing="false" onAction="#weeklyGoalLineUpButtonPushed" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                                                             </children>
+                                                                                          </AnchorPane>
+                                                                                       </children>
+                                                                                    </VBox>
+                                                                                 </children>
+                                                                              </AnchorPane>
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                        <AnchorPane fx:id="weeklyGoalSectionRightSideSpacer" prefWidth="10000.0" HBox.hgrow="NEVER">
+                                                                           <children>
+                                                                              <AnchorPane fx:id="weeklyGoalRightSectionBorderAnchor" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+                                                                                 <children>
+                                                                                    <VBox fx:id="weeklyGoalSectionRightSideVBox" minHeight="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0" />
+                                                                                 </children>
+                                                                              </AnchorPane>
+                                                                           </children>
+                                                                        </AnchorPane>
+                                                                     </children>
+                                                                  </HBox>
+                                                               </children>
+                                                            </AnchorPane>
+                                                            <AnchorPane fx:id="weeklyGoalResetButtonAnchor" maxHeight="30.0" minHeight="30.0">
+                                                               <children>
+                                                                  <Button fx:id="weeklyGoalResetButton" mnemonicParsing="false" text="reset" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="5.0" />
+                                                               </children>
+                                                            </AnchorPane>
+                                                         </children></VBox>
                                                    </children>
                                                 </AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
-                                                <AnchorPane fx:id="bookSection" prefHeight="200.0" prefWidth="200.0" />
+                                                <AnchorPane fx:id="bookSection" prefHeight="200.0" prefWidth="200.0">
+                                                   <children>
+                                                      <AnchorPane maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                         </children>
+                                                      </AnchorPane>
+                                                      <VBox AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
+                                                   </children></AnchorPane>
                                              </children>
                                           </VBox>
                                        </children>
@@ -74,9 +124,9 @@
                                              <children>
                                                 <AnchorPane fx:id="dailyScrollToDoSection" prefHeight="200.0">
                                                    <children>
-                                                      <AnchorPane fx:id="toDoSectionButtonBarAnchor" maxHeight="30.0" minHeight="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                                      <AnchorPane fx:id="toDoSectionButtonBarAnchor" maxWidth="25.0" minWidth="25.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <Button fx:id="toDoSectionTempButton" mnemonicParsing="false" onAction="#toDoSectionButtonPushed" prefHeight="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
+                                                            <Button fx:id="toDoSectionButton" mnemonicParsing="false" onAction="#toDoSectionButtonPushed" prefHeight="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
                                                       <VBox fx:id="toDoVBox" maxHeight="200.0" minHeight="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" />

@@ -9,8 +9,12 @@ import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
+import java.time.Month;
 import java.time.format.DateTimeFormatter;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.Locale;
 import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
@@ -21,6 +25,7 @@ import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -108,27 +113,53 @@ public class NoteChooserHandler {
 	        
 	        listOfPinnedIDs = new ArrayList<Integer>();
 	        	        
-	        //loads the appearance of the note if it were the TreeView
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
-	    	try {
-				HBox loadedHBox = fxmlLoader.load();
-				
-				this.treeViewHBox = loadedHBox;
+	        //sets style in the treeView
+	        if (typeOfNote != "DailyScroll") { //TODO static reference
+	            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
+		    	try {
+					HBox loadedHBox = fxmlLoader.load();
+					
+					this.treeViewHBox = loadedHBox;
+	
+					ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
+					Label label = (Label) loadedHBox.getChildren().get(1);
+					
+					label.setText(name);
+					
+					InputStream is = new FileInputStream("src/images/SaveIcon.png");
+					Image saveIcon = new Image(is);
+					iconView.setImage(saveIcon);
+					
+					loadedHBox.setMaxHeight(16);
+					loadedHBox.setMaxWidth(100);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
+	        else { //sets style in the listView
+	            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ListViewCell.fxml"));
+		    	try {
+					HBox loadedHBox = fxmlLoader.load();
+					
+					this.listViewHBox = loadedHBox;
+	
+					Label label = (Label) loadedHBox.getChildren().get(0);
+					
+					LocalDate date = LocalDate.now();
+					
+					String day = String.valueOf(date.getDayOfMonth());
+					String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+					String year = String.valueOf(date.getYear());
 
-				ImageView iconView = (ImageView) loadedHBox.getChildren().get(0);
-				Label label = (Label) loadedHBox.getChildren().get(1);
-				
-				label.setText(name);
-				
-				InputStream is = new FileInputStream("src/images/SaveIcon.png");
-				Image saveIcon = new Image(is);
-				iconView.setImage(saveIcon);
-				
-				loadedHBox.setMaxHeight(16);
-				loadedHBox.setMaxWidth(100);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+					
+					label.setText(day + " " + month + " " + year);
+					
+					loadedHBox.setMaxHeight(32);
+					loadedHBox.setMaxWidth(100);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+	        }
 	        		
 
 	        if (typeOfNote == "Standard") {
@@ -257,6 +288,10 @@ public class NoteChooserHandler {
 		public HBox getTreeViewHBox() {
 			return treeViewHBox;
 		}
+		
+		public HBox getListViewHBox() {
+			return listViewHBox;
+		}
 
 		public Integer getId() {
 			return id;
@@ -353,7 +388,7 @@ public class NoteChooserHandler {
 		        if (note == null || empty) {
 		            setGraphic(null);
 		        } else {	        	
-		        	setGraphic(note.getTreeViewHBox());
+		        	setGraphic(note.getListViewHBox());
 		        }
 		    }
 		    
@@ -809,6 +844,11 @@ public class NoteChooserHandler {
 		
 		//adds to treeView structure
 		noteTreeItem.getChildren().add(newNote);
+				
+		/* TODO incomplete
+		noteTreeItem.getChildren().sort(Comparator.comparing(i->((TreeItem<Note>) i).getValue().getTypeOfNote())
+				.thenComparing(i->((TreeItem<Note>) i).getValue().getName()));
+		*/
 		
 		//because the treeview structure has changed, sends a call to the database handler
 		DatabaseHandler.startTreeViewSaveProtocol(mR);
@@ -841,12 +881,7 @@ public class NoteChooserHandler {
         treeView.setShowRoot(false);		
 		treeView.setEditable(true);
 				
-        treeView.setCellFactory(new Callback<TreeView<Note>,TreeCell<Note>>(){
-            @Override
-            public TreeCell<Note> call(TreeView<Note> p) {
-                return new NoteTreeCell();
-            }
-        });
+        treeView.setCellFactory(lv -> new NoteTreeCell());
         
         /*
          * handles the recency tree initialization

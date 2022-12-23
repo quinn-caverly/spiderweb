@@ -332,6 +332,7 @@ public class MainClassController implements Initializable {
 		
 		vBoxHolderOfDailyPageList.maxWidthProperty().bind(leftVBoxOfMainSplit.widthProperty());
 		vBoxHolderOfDailyPageList.minWidthProperty().bind(leftVBoxOfMainSplit.widthProperty());
+		
 	}
 		
 
