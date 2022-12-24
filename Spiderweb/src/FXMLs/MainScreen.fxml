@@ -45,8 +45,6 @@
             </HBox>
          </children>
       </VBox>
-      <AnchorPane fx:id="edgarAnchor0" minHeight="4.0" prefHeight="4.0" prefWidth="200.0" />
-      <AnchorPane fx:id="edgarAnchor1" minHeight="4.0" prefHeight="4.0" prefWidth="200.0" />
       <SplitPane fx:id="verticalSplitPane" dividerPositions="0.75" orientation="VERTICAL" prefHeight="10000.0" prefWidth="900.0">
         <items>
           <SplitPane id="mainSplitPane" fx:id="mainSplitPane" dividerPositions="0.28566121842496284" focusTraversable="true" prefHeight="10000.0" prefWidth="-1.0">

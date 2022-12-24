@@ -34,6 +34,10 @@ public class ReadingTypeNoteController implements Initializable {
 	@FXML
 	private AnchorPane parentOfScrollPane;
 	
+	//subtracted from the bound width in order to prevent bottom scrollbar from being necessary due to
+	//the right-side scrollbar eating up space
+	private static Integer scrollbarBuffer = 10;
+	
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
@@ -113,16 +117,15 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the anchor to the collection and once again binds the dimensions
 			collectorVBox.getChildren().add(anchor);
 
-			anchor.minWidthProperty().bind(collectorVBox.widthProperty());
-			anchor.maxWidthProperty().bind(collectorVBox.widthProperty());
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
 
 			anchor.setMaxHeight(150);
 			anchor.setMinHeight(150);
 			
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
-			GridPane buttonGrid = (GridPane) buttonAnchor.getChildren().get(0);
-			Button removeNodeButton = (Button) buttonGrid.getChildren().get(0);
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			
@@ -163,19 +166,18 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the anchor to the collection and once again binds the dimensions
 			collectorVBox.getChildren().add(anchor);
 
-			anchor.minWidthProperty().bind(collectorVBox.widthProperty());
-			anchor.maxWidthProperty().bind(collectorVBox.widthProperty());
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
 
 			anchor.setMaxHeight(150);
 			anchor.setMinHeight(150);
 			
 			//color has to be set here instead of CSS because analysis and quote boxes do not have unique ids as they share the same fxml
-			textArea.setStyle("-fx-background-color: rgba(47, 47, 47, 0.7); -fx-text-fill: #f6e5c3;");
+			textArea.setStyle("-fx-background-color: rgba(40, 40, 40, 0.95);");
 			
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
-			GridPane buttonGrid = (GridPane) buttonAnchor.getChildren().get(0);
-			Button removeNodeButton = (Button) buttonGrid.getChildren().get(0);
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			
@@ -220,20 +222,19 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the anchor to the collection and once again binds the dimensions
 			collectorVBox.getChildren().add(anchor);
 
-			anchor.minWidthProperty().bind(collectorVBox.widthProperty());
-			anchor.maxWidthProperty().bind(collectorVBox.widthProperty());
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
 
 			//the both box will be slightly larger to compensate for being half the width 
 			anchor.setMaxHeight(200);
 			anchor.setMinHeight(200);
 			
 			//color has to be set here instead of CSS because analysis and quote boxes do not have unique ids as they share the same fxml
-			quoteSide.setStyle("-fx-background-color: rgba(47, 47, 47, 0.7); -fx-text-fill: #f6e5c3;");
+			quoteSide.setStyle("-fx-background-color: rgba(40, 40, 40, 0.95);");
 
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(4);
-			GridPane buttonGrid = (GridPane) buttonAnchor.getChildren().get(0);
-			Button removeNodeButton = (Button) buttonGrid.getChildren().get(0);
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			

@@ -1,18 +1,9 @@
 package application;
 
-import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 
 import fxmlcontrollers.MainClassController;
@@ -21,7 +12,6 @@ import handlers.DatabaseHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
 import handlers.PinnedNotesHandler;
-import handlers.ReadAndWriteHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -31,14 +21,12 @@ import javafx.scene.control.Tab;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.control.TreeView;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.stage.DirectoryChooser;
-import javafx.stage.Stage;
+
 import overriders.TypeTab;
 
 public class MasterReference {
@@ -49,7 +37,6 @@ public class MasterReference {
 	private final MainClassController mCC;
 	
 	private final NoteChooserHandler noteChooserHandler;
-	private final ReadAndWriteHandler raw;
 	private final PinnedNotesHandler pinnedNotesHandler;	
 		
 	private final PipelineNLP pipeline;
@@ -90,10 +77,6 @@ public class MasterReference {
 		//initializes the handlers which are not location specific
 		noteChooserHandler = new NoteChooserHandler(this);
 		pinnedNotesHandler = new PinnedNotesHandler(this);
-		
-		
-		//handlers
-		raw = new ReadAndWriteHandler(this);
 		
 		
 		pipeline = new PipelineNLP();
@@ -401,7 +384,7 @@ public class MasterReference {
 			EventHandler<ActionEvent> onConfirmPressed = (new EventHandler<ActionEvent>() { 
 				@Override
 				public void handle(ActionEvent arg0) {
-					raw.startRenameNote(treeItem, textField);	
+					//TODO incomplete
 				}});
 			confirmButton.setOnAction(onConfirmPressed);
 			
@@ -648,10 +631,6 @@ public class MasterReference {
 
 	public void setSimilarNotesButtonFontSize(Double similarNotesButtonFontSize) {
 		this.similarNotesButtonFontSize = similarNotesButtonFontSize;
-	}
-
-	public ReadAndWriteHandler getRaw() {
-		return raw;
 	}
 	
 	public ImageView getButtonIconImageView() {

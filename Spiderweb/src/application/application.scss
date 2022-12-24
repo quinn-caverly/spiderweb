@@ -1,0 +1,632 @@
+/* reference for the CSS alpha channel for adding opacity to hex colors https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4 */
+
+/*
+the command for powershell for autoupdating saves to this file to the actual css file:
+sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.scss C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.css
+*/
+
+/*******************************************************************************
+ *                                                                             *
+ * Loading Fonts (Fonts are referenced by the strings commmented out)          *
+ *                                                                             *
+ ******************************************************************************/
+
+@font-face { //"Abril Fatface"
+    src: url("AbrilFatface-Regular.ttf"),
+}
+
+@font-face { //"Bungee Shade"
+    src: url("BungeeShade-Regular.ttf"),
+}
+
+@font-face { //"Roboto Mono" 
+    src: url("RobotoMono-Regular.ttf"),
+}
+
+@font-face { //"Roboto Mono Semibold"
+    src: url("RobotoMono-SemiBold.ttf"),
+}
+
+@font-face { //"Bebas Neue"
+    src: url("BebasNeue-Regular.ttf"),
+}
+
+@font-face { //"Quicksand Light", "Quicksand", "Quicksand Medium", "Quicksand Semibold"
+    src: url("Quicksand-VariableFont_wght.ttf"),
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Base                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+.root { //all elements will automatically inherit from here unless they override
+	-ghost-white: rgba(210, 210, 210, 0.2);
+	-full-grayish-white: rgba(210, 210, 210, 1);
+	
+	//colors organized in 3s for 3 step normal, hover, pushed
+	-transparent-white: rgba(210, 210, 210, 0.3);
+	-transparent-darker-white: rgba(190, 190, 190, 0.3);
+	-transparent-darkest-white: rgba(180, 180, 180, 0.3);
+	
+	-thicker-white: rgba(210, 210, 210, 0.4);
+	-thicker-darker-white: rgba(190, 190, 190, 0.4);
+	-thicker-darkest-white: rgba(180, 180, 180, 0.4);
+	
+	-default-gray: rgba(47, 47, 47, 0.8);
+	-contrasting-gray: rgba(100, 100, 100, 0.8);
+	
+	-text-area-dark: rgba(55, 55, 55, 0.95);
+	-text-area-darker: rgba(40, 40, 40, 0.95);
+	
+	//gradients based on sets of 3 colors
+	-closed-white-gradient-vertical: linear-gradient(to bottom, -transparent-white 2%, -thicker-white 25%, -thicker-white 75%, -transparent-white  98%);
+    -closed-white-gradient-horizontal: linear-gradient(to right, -transparent-white 2%, -thicker-white 25%, -thicker-white 75%, -transparent-white  98%);
+    
+    -closed-darker-white-gradient-vertical: linear-gradient(to bottom, -transparent-darker-white 2%, -thicker-darker-white 25%, -thicker-darker-white 75%, -transparent-darker-white  98%);
+    -closed-darker-white-gradient-horizontal: linear-gradient(to right, -transparent-darker-white 2%, -thicker-darker-white 25%, -thicker-darker-white 75%, -transparent-darker-white  98%);
+	
+    -closed-darkest-white-gradient-vertical: linear-gradient(to bottom, -transparent-darkest-white 2%, -thicker-darkest-white 25%, -thicker-darkest-white 75%, -transparent-darkest-white  98%);
+    -closed-darkest-white-gradient-horizontal: linear-gradient(to right, -transparent-darkest-white 2%, -thicker-darkest-white 25%, -thicker-darkest-white 75%, -transparent-darkest-white  98%);	
+	
+	
+    -white-gradient-vertical: linear-gradient(to bottom, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%);
+    -white-gradient-horizontal: linear-gradient(to right, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%); 	
+	
+	
+    -fx-focus-color: rgba(210, 210, 210, 0.1);
+    -fx-faint-focus-color: rgba(210, 210, 210, 0.05);
+    
+    -fx-font-size: 15px;
+    
+    //TODO temporary code
+    -fx-font-family: "Quicksand Light";
+ 	-fx-text-fill: -full-grayish-white;
+}
+
+.button, .split-pane, .tab-pane, .vbox, .anchorpane, .tree-view, .tree-cell, .gridpane, .hbox, .scroll-pane, .scroll-bar, .text-area {
+	 -fx-background-color: transparent;
+	 -fx-border-color: transparent;
+	 -fx-base: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Background                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+ 
+#mainVBox {
+    -fx-background-image: url("colormash.png");
+    -fx-background-repeat: repeat;
+    -fx-background-size:cover;   
+    -fx-padding: 10px 15px;
+    -fx-background-radius: 10px; 
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Text Area                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+ 
+.text-area {
+	-fx-background-color: -text-area-dark;
+	
+	-fx-background-radius: 5px;
+	
+    -fx-font-family: "Quicksand";
+ 	-fx-text-fill: -full-grayish-white;
+}
+ 
+
+/*******************************************************************************
+ *                                                                             *
+ * Scrollbar                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.scroll-bar:vertical {
+	> .thumb  {
+		-fx-background-color: -closed-white-gradient-vertical;
+		-fx-background-radius: 5px;
+	}
+	> .thumb:hover  {
+		-fx-background-color: -closed-darker-white-gradient-vertical;
+	}
+	> .thumb:pressed  {
+		-fx-background-color: -closed-darkest-white-gradient-vertical;
+	}
+}
+
+
+//removes the scrollbars on on the treeView
+#noteChooser .scroll-bar * {
+    -fx-min-width: 0;
+    -fx-pref-width: 0;
+    -fx-max-width: 0;
+
+    -fx-min-height: 0;
+    -fx-pref-height: 0;
+    -fx-max-height: 0;
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Splitpane                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.split-pane:horizontal > .split-pane-divider {
+	-fx-background-color: -white-gradient-vertical;
+	-fx-background-radius: 10px;
+}
+
+.split-pane:vertical > .split-pane-divider {
+	-fx-background-color: -white-gradient-horizontal;
+	-fx-background-radius: 10px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TabPane of Note Section                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+#noteTabPane {
+	> .tab-header-area {
+		-fx-background-color: transparent;
+	}
+	
+	-fx-tab-min-height: 40px;
+    -fx-tab-max-height: 40px;
+    
+    -fx-tab-min-width: 200px;
+    -fx-tab-max-width: 200px;
+    
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+	
+	> .tab-header-area > .headers-region > .tab {
+	 	//-fx-font-family: "Roboto Mono Semibold";
+	 	-fx-font-size: 14px;
+	 	 	
+		-fx-border-color: transparent;
+	 	-fx-border-radius: 0px;
+	 	
+	 	-fx-background-color:  rgba(47, 47, 47, 0.7);
+	 	-fx-background-radius: 5px;
+	}
+	
+	> .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+	    -fx-alignment: CENTER;
+		-fx-text-fill: -full-grayish-white;
+	}
+	
+	> .tab-header-area > .headers-region > .tab:hover {
+		-fx-background-color:  rgba(47, 47, 47, 0.85);
+	}
+
+	> .tab-header-area > .headers-region > .tab:selected {
+		-fx-background-color:  rgba(47, 47, 47, 0.95);
+	}
+	
+	> .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {
+	    -fx-background-color: -full-grayish-white;
+	    -fx-shape: "M 0,0 H1 L 4,3 7,0 H8 V1 L 5,4 8,7 V8 H7 L 4,5 1,8 H0 V7 L 3,4 0,1 Z";
+	    -fx-scale-shape: false;
+	    -fx-effect: dropshadow(two-pass-box , rgba(255, 255, 255, 0.4), 1, 0.0 , 0, 1);
+	}
+	
+}
+
+/* This refers to the area "behind" the individual tabs */
+#noteTabPane > .tab-header-area > .tab-header-background {
+	-fx-background-color: transparent;	
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Standard Note                                                               *
+ *                                                                             *
+ ******************************************************************************/
+
+#titleArea {
+	-fx-background-color: rgba(246, 229, 195, 0.8);
+}
+
+#titleArea:hover {
+}
+
+#mainTextArea {
+	-fx-background-color: rgba(246, 229, 195, 0.8);
+}
+
+#mainTextArea:hover {
+}
+
+
+
+#standardTypeTabPane, #treeViewTabPane {
+	-fx-tab-max-height: 0; /* this is because the buttons above operate as the tabs */
+}
+
+#standardTypeTabPane, #treeViewTabPane > .tab-header-area {
+	-fx-background-color: transparent;
+	-fx-opacity: 0;
+}
+
+#standardTypeTabPane, #treeViewTabPane > .tab-header-area > .headers-region {
+	-fx-background-color: transparent;
+	-fx-opacity: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Note                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+ 
+#dailyTypeRoot {
+	//brainstormingSection, toDoSection, calendarSection
+	.text-area {		
+		-fx-background-radius: 5px;
+		
+	 	-fx-text-fill: -full-grayish-white;
+	}
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * Reading Note                                                                *
+ *                                                                             *
+ ******************************************************************************/
+
+#readingTypeRoot {
+	.button {
+	 	-fx-background-radius: 5px;
+	}
+	
+	.text-area {
+		.scroll-bar:vertical .thumb {
+			-fx-background-radius: 4.5px;
+		}
+	}
+
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Buttons                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+
+.button {
+ 	//-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+
+.button:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.95);
+}
+
+.button:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
+}
+
+/*
+* Buttons which will only show the text when hovered over
+*/
+#saveButton, #saveAllButton, #refreshSimilarsButton, #weeklyGoalResetButton,
+#addAnalysisButton, #addBothButton, #addQuoteButton {
+ 	//-fx-font-family: "Roboto Mono Semibold";
+ 	-fx-text-fill: transparent;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+ 
+ #saveButton:hover, #saveAllButton:hover, #refreshSimilarsButton:hover, #weeklyGoalResetButton:hover,
+ #addAnalysisButton:hover, #addBothButton:hover, #addQuoteButton:hover {
+	-fx-text-fill: -full-grayish-white;
+	-fx-background-color:  rgba(44, 44, 44, 0.95);
+ }
+ 
+ #saveButton:pressed, #saveAllButton:pressed,
+ #refreshSimilarsButton:pressed, #weeklyGoalResetButton:pressed,
+ #addAnalysisButton:pressed, #addBothButton:pressed, #addQuoteButton:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 1);	
+}
+
+
+ /*******************************************************************************
+ *                                                                             *
+ * Function Box Items                                                          *
+ *                                                                             *
+ ******************************************************************************/
+ 
+#newNoteNameVBox, #renameNoteVBox, #deleteNoteVBox {
+	.text-field {
+	 	-fx-background-color: rgba(47, 47, 47, 0.3);
+	 	-fx-text-fill: -full-grayish-white;
+	 	-fx-prompt-text-fill: rgba(256, 256, 256, 0.5);	
+	}
+}
+
+#newNoteNameVBox, #renameNoteVBox {
+	.combo-box {
+	 	-fx-background-color: rgba(47, 47, 47, 0.3);
+	}
+}
+
+#deleteNoteVBox .label {
+ 	-fx-background-color: rgba(47, 47, 47, 0.3);	
+ 	-fx-background-radius: 3.5px;
+}
+
+ 
+ /*******************************************************************************
+ *                                                                             *
+ * List View / Cells                                                           *
+ *                                                                             *
+ ******************************************************************************/
+ 
+.list-view {
+ 	-fx-background-color: rgba(47, 47, 47, 1); 	
+ }
+ 
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell{
+ 	-fx-text-fill: -full-grayish-white;
+}
+ 
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+ 	-fx-background-color: rgba(246, 229, 195, 0.5);
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+
+/*******************************************************************************
+ *                                                                             *
+ * PopupMenu                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+
+.context-menu {
+ 	-fx-background-color: rgba(47, 47, 47, 1); 	
+    -fx-background-insets: 0, 1;
+    -fx-padding: 0.333333em 0.083333em 0.333333em 0.083333em; /* 4 1 8 1 */
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+}
+
+.context-menu > * > .menu-item > .label {
+	-fx-text-fill: #fff;
+	//-fx-font-family: "Roboto Mono Semibold";
+}
+
+.context-menu > * > .menu-item:hover {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+.context-menu > * > .menu-item:focused {
+ 	-fx-background-color: rgba(246, 229, 195, 0.3);
+}
+
+.context-menu > * > .menu-item > .label:hover {
+ 	-fx-color: rgba(246, 229, 195, 0.3);
+}
+
+.context-menu .separator:horizontal .line {
+ 	-fx-color: rgba(246, 229, 195, 0.3);
+ 	-fx-min-height: 3px;
+    -fx-border-insets: 1 0 0 0;
+}
+.context-menu > .scroll-arrow {
+    -fx-padding: 0.416667em 0.416667em 0.416667em 0.416667em; /* 5 */
+    -fx-background-color: transparent;
+}
+.context-menu > .scroll-arrow:hover {
+    -fx-background: -fx-selection-bar;
+    -fx-background-color: -fx-background;
+    -fx-text-fill: -fx-text-background-color;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Note Selectors                                                              *
+ *                                                                             *
+ ******************************************************************************/
+ 
+.list-view {
+ 	-fx-background-color: transparent;
+ }
+ 
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll Specific                                                       *
+ *                                                                             *
+ ******************************************************************************/
+ 
+ //section backgrounds and styles
+#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection {
+ 	-fx-border-color: transparent;
+	-fx-border-width: 0px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(47, 47, 47, 0.7);
+	-fx-background-radius: 10px;
+ }
+ 
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: To Do Section                                                 *
+ *                                                                             *
+ ******************************************************************************/
+ #toDoSectionNodeDeleteButton {
+  	-fx-border-radius: 0px;
+  	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(65, 65, 65, 0.9);
+ 	-fx-background-radius: 4px;
+ }
+ #toDoSectionNodeDeleteButton:hover {
+  	-fx-background-color:  rgba(120, 43, 25, 0.85);
+ }
+ #toDoSectionNodeDeleteButton:pressed {
+  	-fx-background-color:  rgba(120, 43, 25, 0.95);
+ }
+ 
+ 
+ #toDoSectionNodeLockButton {
+  	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(78, 96, 145, 0.8);
+ 	-fx-background-radius: 7px;
+ }
+ #toDoSectionNodeLockButton:hover {
+ 	-fx-background-color:  rgba(78, 96, 145, 0.95);
+ }
+ #toDoSectionNodeLockButton:pressed {
+ 	-fx-background-color:  rgba(78, 96, 145, 1);
+ }
+ 
+ 
+ #toDoSectionNodeCheckButton {
+  	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(85, 145, 78, 0.8);
+ 	-fx-background-radius: 7px;
+ }
+ #toDoSectionNodeCheckButton:hover {
+ 	-fx-background-color:  rgba(85, 145, 78, 0.95);
+ }
+ #toDoSectionNodeCheckButton:pressed {
+ 	-fx-background-color:  rgba(85, 145, 78, 1);
+ }
+ 
+
+#toDoSectionNodeReflectButton {
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(65, 65, 65, 0.9);
+ 	-fx-background-radius: 7px;
+ }
+#toDoSectionNodeReflectButton:hover {
+ 	-fx-background-color:  rgba(65, 65, 65, 0.95);
+}
+#toDoSectionNodeReflectButton:pressed {
+ 	-fx-background-color:  rgba(65, 65, 65, 1);	
+}
+
+#toDoSectionTextField, #reflectionTextArea {
+	-fx-background-color: rgba(47, 47, 47, 0.6);
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-prompt-text-fill: rgba(256, 256, 256, 0.5);
+}
+
+#reflectionTextArea {
+	-fx-background-color: rgba(47, 47, 47, 0.75);
+ 	-fx-text-fill: -full-grayish-white;
+ 	
+ 	-fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Weekly Goal Section                                           *
+ *                                                                             *
+ ******************************************************************************/
+
+#weeklyGoalRightSectionBorderAnchor, #weeklyGoalLeftSectionBorderAnchor {
+  	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 5px;
+	-fx-border-radius: 3px
+ }
+ 
+#weeklyGoalCardMarginKeeper {
+  	-fx-border-color: rgba(47, 47, 47, 0.9);
+	-fx-border-width: 3px;
+	-fx-border-radius: 2px;
+	
+	-fx-background-color:  rgba(158, 83, 54, 0.75);
+	-fx-background-radius: 2px;
+ }
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Long Term Goal Section                                        *
+ *                                                                             *
+ ******************************************************************************/
+
+#longTermGoalSectionActionButton, #longTermGoalSectionDeleteButton {
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.8);
+ 	-fx-background-radius: 6px;
+ }
+
+#longTermGoalSectionActionButton:hover, #longTermGoalSectionDeleteButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.9);
+}
+
+
+#longTermGoalSectionActionButton:pressed, #longTermGoalSectionDeleteButton:pressed {
+ 	-fx-background-color:  rgba(40, 40, 40, 0.95);	
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Short Term Goal Section                                       *
+ *                                                                             *
+ ******************************************************************************/
+
+#shortTermGoalSectionButton {
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 13px;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(47, 47, 47, 0.8);
+ 	-fx-background-radius: 6px;
+ }
+ 
+#shortTermGoalSectionButton:hover {
+ 	-fx-background-color:  rgba(44, 44, 44, 0.9);
+}
+
+#shortTermGoalSectionButton:pressed  {
+ 	-fx-background-color:  rgba(40, 40, 40, 0.95);	
+}
+ 
+ 
+ 
+ 
