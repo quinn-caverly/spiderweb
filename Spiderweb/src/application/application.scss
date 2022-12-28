@@ -42,6 +42,11 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
 
 .root { //all elements will automatically inherit from here unless they override
+	-background-blue: rgba(68, 84, 105, 1);
+	-background-purple: rgba(68, 68, 90, 1);
+	
+	-background-purple-transparent: rgba(68, 68, 90, 0.75);
+
 	-ghost-white: rgba(210, 210, 210, 0.2);
 	-full-grayish-white: rgba(210, 210, 210, 1);
 	
@@ -410,42 +415,26 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
 
 .context-menu {
- 	-fx-background-color: rgba(47, 47, 47, 1); 	
+ 	-fx-background-color: -text-area-dark; 	
     -fx-background-insets: 0, 1;
     -fx-padding: 0.333333em 0.083333em 0.333333em 0.083333em; /* 4 1 8 1 */
     -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+    
+    -fx-background-radius: 5px;
 }
 
 .context-menu > * > .menu-item > .label {
-	-fx-text-fill: #fff;
-	//-fx-font-family: "Roboto Mono Semibold";
+	-fx-text-fill: -full-grayish-white;
 }
 
 .context-menu > * > .menu-item:hover {
- 	-fx-background-color: rgba(246, 229, 195, 0.3);
+ 	-fx-background-color: -background-purple-transparent;
+ 	-fx-background-radius: 3px;
 }
 
 .context-menu > * > .menu-item:focused {
- 	-fx-background-color: rgba(246, 229, 195, 0.3);
-}
-
-.context-menu > * > .menu-item > .label:hover {
- 	-fx-color: rgba(246, 229, 195, 0.3);
-}
-
-.context-menu .separator:horizontal .line {
- 	-fx-color: rgba(246, 229, 195, 0.3);
- 	-fx-min-height: 3px;
-    -fx-border-insets: 1 0 0 0;
-}
-.context-menu > .scroll-arrow {
-    -fx-padding: 0.416667em 0.416667em 0.416667em 0.416667em; /* 5 */
-    -fx-background-color: transparent;
-}
-.context-menu > .scroll-arrow:hover {
-    -fx-background: -fx-selection-bar;
-    -fx-background-color: -fx-background;
-    -fx-text-fill: -fx-text-background-color;
+ 	-fx-background-color: -background-purple-transparent;
+ 	-fx-background-radius: 3px;
 }
 
 /*******************************************************************************
@@ -567,14 +556,26 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	-fx-border-radius: 3px
  }
  
-#weeklyGoalCardMarginKeeper {
-  	-fx-border-color: rgba(47, 47, 47, 0.9);
-	-fx-border-width: 3px;
-	-fx-border-radius: 2px;
-	
-	-fx-background-color:  rgba(158, 83, 54, 0.75);
+#lineupCardHolderHBox {
+	-fx-spacing: 10px;
+}
+
+#weeklyGoalLineupNode {
+	-fx-background-color: -transparent-darker-white;
 	-fx-background-radius: 2px;
  }
+#weeklyGoalLineupNode:hover {
+	-fx-background-color: -transparent-white;
+	-fx-background-radius: 2px;
+ }
+#weeklyGoalCardMarginKeeper {
+	-fx-background-color: -transparent-darkest-white;
+	-fx-background-radius: 2px;
+}
+
+
+//incomplete styles: weeklyGoalSectionCompletedButton, weeklyGoalSectionNodeLabel
+ 
 
 /*******************************************************************************
  *                                                                             *
@@ -626,7 +627,30 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 #shortTermGoalSectionButton:pressed  {
  	-fx-background-color:  rgba(40, 40, 40, 0.95);	
 }
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Book Section                                                  *
+ *                                                                             *
+ ******************************************************************************/
  
+#bookshelfSpotOne, #bookshelfSpotTwo, #bookshelfSpotThree {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 3px;
+}
+
+#firstBookshelfAnchor, #secondBookshelfAnchor, #thirdBookshelfAnchor {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 4px;
+}
+ 
+#libraryBookVBox {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 3px;	
+}
  
  
  

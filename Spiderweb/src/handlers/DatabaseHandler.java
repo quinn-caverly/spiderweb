@@ -71,9 +71,9 @@ public final class DatabaseHandler {
 		    
 		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
 		    
-		    
 		    statement.executeUpdate("CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)");
 
+		    statement.executeUpdate("CREATE TABLE BookDeskTable (Title VARCHAR(1000))");
 		    
 		    connection.close();
 		    
@@ -656,7 +656,8 @@ public final class DatabaseHandler {
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
-		    statement.executeUpdate("CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)");
+		    statement.executeUpdate("CREATE TABLE BookDeskTable (Title VARCHAR(1000))");
+
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -996,6 +997,51 @@ public final class DatabaseHandler {
 		return null;
 	}
 	
+	/*
+	 * BookDeskTable (Title VARCHAR(1000))
+	 * 
+	 * TODO this save structure only works if the books have unique titles
+	 */
+	public static void saveToBookDeskTable(ArrayList<String> titles) {
+
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    statement.execute("DELETE FROM BookDeskTable"); //this deletes all rows of the table
+		    
+		    for (String title : titles) {
+				statement.executeUpdate("INSERT INTO BookDeskTable (Title) VALUES ('"
+				+ prepareStringForSQL(title) + "')");
+		    }
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	
+	public static ArrayList<String> loadFromBookDeskTable() {
+		
+		ArrayList<String> returnList = new ArrayList<String>();
+
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    ResultSet resSet = statement.executeQuery("SELECT * FROM BookDeskTable");
+		    
+		    while (resSet.next()) {
+		    	returnList.add(resSet.getString("Title"));
+		    }
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return returnList;
+	}
 	
 }

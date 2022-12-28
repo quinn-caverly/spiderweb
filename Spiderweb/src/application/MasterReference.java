@@ -190,6 +190,8 @@ public class MasterReference {
     	TypeTab newTab = new TypeTab(dailyScroll.getName(), root, dailyScroll);
     	
     	DailyScrollController dsc = (DailyScrollController) dailyScroll.getController();
+    	dsc.setMasterReference(this);
+    	dsc.loadFromBookDeskDatabase();
 
     	mCC.getNoteTabPane().getTabs().add(newTab);
     	

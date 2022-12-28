@@ -358,7 +358,7 @@ public class PipelineConsolidator {
 		
 	}
 	
-	
+	//TODO, incomplete, needs to be updated if want branch w/ leaf
 	public void setButtonIcon(Button button, TreeItem<Note> buttonTreeItem) {
 		
 		String pathToImage = "src/images/";

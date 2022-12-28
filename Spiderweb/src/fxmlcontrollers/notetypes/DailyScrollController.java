@@ -9,10 +9,14 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import application.MasterReference;
 import handlers.DatabaseHandler;
 import handlers.NoteChooserHandler;
+import handlers.NoteChooserHandler.Note;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -25,6 +29,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
+import javafx.scene.control.TreeItem;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -39,6 +44,23 @@ public class DailyScrollController implements Initializable {
 	private Boolean toDoSectionInExpandedMode = false;
 	//starts in expanded mode and is immediately closed on creation in order to efficiently reference elements
 	private Boolean weeklyGoalSectionInExpandedMode = true;
+	
+	/*
+	 * book section variables
+	 */
+	private Boolean bookSectionInExpandedMode = true;
+	private Boolean bookSectionInBrowseMode = false;
+	
+	private Boolean bookSectionLibraryInitialized = false;
+	private TreeItem<Note> bookNotesTreeItem;
+	private static String bookShelfName = "Book Notes"; //TODO incomplete, make this more legit
+	
+	ArrayList<TreeItem<Note>> checkoutPile = new ArrayList<TreeItem<Note>>();
+	HBox selectedBook;
+	
+	private static Integer widthOfSpacingOfCardLineupHBox = 10;
+	
+	private MasterReference mR;
 	
 	@FXML
 	private AnchorPane dailyScrollRoot;
@@ -116,8 +138,52 @@ public class DailyScrollController implements Initializable {
 	private AnchorPane weeklyGoalSectionLeftSideSpacer;
 	@FXML
 	private AnchorPane weeklyGoalSectionRightSideSpacer;
+	@FXML
+	private Button weeklyGoalSectionCompletedButton;
+	@FXML
+	private Label weeklyGoalSectionNodeLabel;
+	@FXML
+	private HBox bookSectionHBox;
+	@FXML
+	private AnchorPane bookSectionMainButtonHolder;
+	@FXML
+	private AnchorPane bookSectionBookshelfAnchor;
+	@FXML
+	private HBox bookshelfHBox;
+	@FXML
+	private Button bookSectionMainButton;
+	@FXML
+	private VBox firstBookshelf;
+	@FXML
+	private VBox secondBookshelf;
+	@FXML
+	private VBox thirdBookshelf;
+	@FXML
+	private ScrollPane bookshelfScrollPane;
+	@FXML
+	private ScrollPane firstBookshelfScrollPane;
+	@FXML
+	private ScrollPane secondBookshelfScrollPane;	
+	@FXML
+	private ScrollPane thirdBookshelfScrollPane;
+	@FXML
+	private AnchorPane firstBookshelfAnchor;
+	@FXML
+	private AnchorPane secondBookshelfAnchor;
+	@FXML
+	private AnchorPane thirdBookshelfAnchor;
+	@FXML
+	private BorderPane bookshelfSpotOne;
+	@FXML
+	private BorderPane bookshelfSpotTwo;
+	@FXML
+	private BorderPane bookshelfSpotThree;
 	
 	
+	
+	public void setMasterReference(MasterReference mR) {
+		this.mR = mR;
+	}
 		
 	
 	@Override
@@ -173,12 +239,60 @@ public class DailyScrollController implements Initializable {
 		weeklyGoalSectionRightSideSpacer.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
 		
     	changeWeeklyGoalSectionMode();
+    	changeBookSectionMode();
     	
 		/*
 		 * book section
 		 */
 		bookSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		bookSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		
+		bookshelfScrollPane.maxWidthProperty().bind(bookSectionHBox.widthProperty().subtract(25)); //25 accounts for the width of the button holder anchorpane
+		bookshelfScrollPane.minWidthProperty().bind(bookSectionHBox.widthProperty().subtract(25));		
+		 
+		bookshelfHBox.maxWidthProperty().bind(bookshelfScrollPane.widthProperty().subtract(30)); 
+		bookshelfHBox.minWidthProperty().bind(bookshelfScrollPane.widthProperty().subtract(30)); 
+		
+		bookSectionHBox.getChildren().remove(bookshelfScrollPane);
+		
+		firstBookshelf.prefWidthProperty().bind(firstBookshelfAnchor.widthProperty());
+		secondBookshelf.prefWidthProperty().bind(secondBookshelfAnchor.widthProperty());
+		thirdBookshelf.prefWidthProperty().bind(thirdBookshelfAnchor.widthProperty());
+		
+		bookshelfHBox.setPrefHeight(300);
+	}
+	
+	/*
+	 * this must be run after initialization because we need an active reference to mR
+	 */
+	public void loadFromBookDeskDatabase() {
+		//in order to load the books on the "desk", we essentially simulate the user actually adding the books to the specific scroll
+		ArrayList<String> titles = DatabaseHandler.loadFromBookDeskTable();
+		
+		dailyScrollTopLeftButtonPushed();
+		bookSectionMainButtonPushed();
+				
+		ObservableList<Node> observableList = FXCollections.observableArrayList();;
+		
+		observableList.addAll(firstBookshelf.getChildren());
+		observableList.addAll(secondBookshelf.getChildren());
+		observableList.addAll(thirdBookshelf.getChildren());
+		
+		for (Node node : observableList) {
+			AnchorPane anchor = (AnchorPane) node;
+			BorderPane borderPane = (BorderPane) anchor.getChildren().get(0);
+			VBox vbox = (VBox) borderPane.getLeft();
+			HBox hbox = (HBox) vbox.getChildren().get(1);
+			
+			Button selectionButton = (Button) hbox.getChildren().get(3);
+						
+			if (titles.contains(selectionButton.getText())) {
+				selectionButton.fire();
+			}
+		}
+		
+		bookSectionMainButtonPushed();
+		whenNeededButtonPushed();
 	}
 	
 	/*
@@ -192,6 +306,7 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().add(whenNeededButton);
 		
 		changeWeeklyGoalSectionMode();
+		changeBookSectionMode();
 	}
 	
 	/*
@@ -232,6 +347,12 @@ public class DailyScrollController implements Initializable {
 		}
 		if (weeklyGoalSectionInExpandedMode == true) {
 			changeWeeklyGoalSectionMode();
+		}
+		if (bookSectionInExpandedMode == true) {
+			changeBookSectionMode();
+			if (bookSectionInBrowseMode == true) {
+				bookSectionMainButtonPushed();
+			}
 		}
 	}
 	
@@ -360,12 +481,25 @@ public class DailyScrollController implements Initializable {
 		else { //removes the reset button, button to add more nodes on left side
 			weeklyGoalSectionInExpandedMode = false;
 			
-			weeklyGoalSectionVBox.getChildren().remove(weeklyGoalResetButtonAnchor); //potentially destructive static reference
+			weeklyGoalSectionVBox.getChildren().remove(weeklyGoalResetButtonAnchor);
 			weeklyGoalLineUpButtonHolder.getChildren().remove(weeklyGoalLineUpButton);
 			
 		}
+	}
+	
+	//TODO incomplete
+	public void changeBookSectionMode() {
 		
-		
+		if (bookSectionInExpandedMode == false) {
+			bookSectionInExpandedMode = true;
+						
+			bookSectionHBox.getChildren().add(bookSectionMainButtonHolder);
+		}
+		else {
+			bookSectionInExpandedMode = false;
+			
+			bookSectionHBox.getChildren().remove(bookSectionMainButtonHolder);
+		}
 	}
 	
 	public void changeToDoSectionMode() {
@@ -665,7 +799,7 @@ public class DailyScrollController implements Initializable {
 			Button weeklyGoalSectionCreationDeleteButton = (Button) creationNode.getChildren().get(3);
 			
 			handleWeeklyGoalSectionCreationDeleteButton(weeklyGoalSectionCreationDeleteButton, creationNode);
-			handleWeeklyGoalCreateButton(weeklyGoalCreateButton, weeklyGoalDescriptionTextField, weeklyGoalQuantityCombobox);
+			handleWeeklyGoalCreateButton(weeklyGoalCreateButton, weeklyGoalDescriptionTextField, weeklyGoalQuantityCombobox, creationNode);
 			
 			creationNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
 			creationNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
@@ -678,8 +812,7 @@ public class DailyScrollController implements Initializable {
 		
 	}
 	
-	//TODO incomplete
-	private void handleWeeklyGoalCreateButton(Button button, TextField textField, ComboBox comboBox) {
+	private void handleWeeklyGoalCreateButton(Button button, TextField textField, ComboBox comboBox, AnchorPane originalNode) {
 		button.setOnAction(new EventHandler<ActionEvent>() { 
     		@Override
     		public void handle(ActionEvent event) {
@@ -705,6 +838,9 @@ public class DailyScrollController implements Initializable {
     			//for now its okay for nothing to happen if valid == false
     			if (valid == true) {
     				
+    				//first, remove original template node from the vbox
+    				weeklyGoalSectionLeftSideVBox.getChildren().remove(originalNode);
+    				
     				try {
         				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionCreatedStage.fxml"));
 						AnchorPane createdNode = fxmlLoader.load();
@@ -714,6 +850,18 @@ public class DailyScrollController implements Initializable {
 						
 						AnchorPane hboxHolder = (AnchorPane) createdNode.getChildren().get(1);
 						HBox cardHolderHBox = (HBox) hboxHolder.getChildren().get(0);
+						
+						AnchorPane deleteButtonHolder = (AnchorPane) createdNode.getChildren().get(2);
+						Button deleteButton = (Button) deleteButtonHolder.getChildren().get(0);
+						
+						//nothing will be written to database at this stage, just remove the node from the vBox
+						deleteButton.setOnAction(new EventHandler<ActionEvent>() { 
+				    		@Override
+				    		public void handle(ActionEvent event) {
+				    			weeklyGoalSectionLeftSideVBox.getChildren().remove(createdNode);
+			    			}
+			    		});
+	        	
 						
 						descriptionLabel.setText(textField.getText());
 						
@@ -727,15 +875,16 @@ public class DailyScrollController implements Initializable {
 	        				FXMLLoader subLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalLineupNode.fxml"));
 	        				AnchorPane lineupNode = subLoader.load();
 	        				
-	        				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(count));
-	        				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(count));
+	        				Double totalExtraSpace = (double) (widthOfSpacingOfCardLineupHBox * (count - 1));
+	        				Double perEachExtraSpace = (double) totalExtraSpace / count;
+	        				
+	        				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
+	        				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
 	        				
 	        				lineupNode.setOnMouseClicked(new EventHandler<MouseEvent>() { 
 					    		@Override
 					    		public void handle(MouseEvent event) {
-					    			
-					    			System.out.println("test");
-					    			
+					    			lineupNodeClicked(count, perEachExtraSpace, cardHolderHBox, descriptionLabel.getText());
 					    			}
 					    		});
 	        				
@@ -753,6 +902,114 @@ public class DailyScrollController implements Initializable {
 		});
 	}
 	
+	private void lineupNodeClicked(Integer originalCount, Double perEachExtraSpace, HBox cardHolderHBox, String goalDescription) {
+		
+		//remove from the hbox, but place a blank anchorpane at the end in order to represent the absence of the node
+		
+		try {
+			
+			//first we need to check if node already exists in the queue (can't be added twice)
+			Boolean stillOkay = true;
+			for (Node node : weeklyGoalSectionRightSideVBox.getChildren()) {
+				AnchorPane root = (AnchorPane) node;
+				AnchorPane subLabelHolder = (AnchorPane) root.getChildren().get(1);
+				Label subLabel = (Label) subLabelHolder.getChildren().get(0);
+				
+				if (subLabel.getText().equals(goalDescription)) {
+					stillOkay = false;
+				}
+			}
+			
+			if (stillOkay == true) {
+				//remove the first node because this will always have contents
+				cardHolderHBox.getChildren().remove(0);
+						
+				AnchorPane blankAnchor = new AnchorPane();
+				
+				cardHolderHBox.getChildren().add(blankAnchor);
+				blankAnchor.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+				blankAnchor.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+				
+				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionNodeLocked.fxml"));
+				AnchorPane lockedNode = fxmlLoader.load();
+				
+				Button completeButton = (Button) lockedNode.getChildren().get(0);
+				
+				Button unqueueButton = (Button) lockedNode.getChildren().get(2);
+				
+				//puts the lockedNode back into the list of lineup cards. does not affect database
+				unqueueButton.setOnAction(new EventHandler<ActionEvent>() { 
+		    		@Override
+		    		public void handle(ActionEvent event) {
+		    			weeklyGoalSectionRightSideVBox.getChildren().remove(lockedNode); 
+		    			
+		    			//will need to remove the left-most blank anchorpane and replace it with a card
+		    			
+						try {
+			    			FXMLLoader subLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalLineupNode.fxml"));
+	        				AnchorPane lineupNode = subLoader.load();
+							
+	        				Double totalExtraSpace = (double) (widthOfSpacingOfCardLineupHBox * (originalCount - 1));
+	        				Double perEachExtraSpace = (double) totalExtraSpace / originalCount;
+	        				
+	        				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+	        				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+	        				
+	        				lineupNode.setOnMouseClicked(new EventHandler<MouseEvent>() { 
+					    		@Override
+					    		public void handle(MouseEvent event) {
+					    			lineupNodeClicked(originalCount, perEachExtraSpace, cardHolderHBox, goalDescription);
+					    			}
+					    		});
+	        				
+	        				
+	        				//instead of just adding this node, we need to find the first blank anchorpane from the left, remove it and then
+	        				//place the lineupNode at the index
+	        				for (Node node :cardHolderHBox.getChildren()) {
+	        					
+	        					AnchorPane root = (AnchorPane) node;
+	        						        					
+	        					if (root.getChildren().size() == 0) {
+	        						Integer index = cardHolderHBox.getChildren().indexOf(node);
+	        						
+	        						cardHolderHBox.getChildren().remove(node);
+	        						
+	        						cardHolderHBox.getChildren().add(index, lineupNode);
+	        							        						
+	        						break; //breaks out of for loop, process only must happen once
+	        					}
+	        				}
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+		    		}
+				});
+				
+				AnchorPane labelHolder = (AnchorPane) lockedNode.getChildren().get(1);
+				Label label = (Label) labelHolder.getChildren().get(0);
+				
+				label.setText(goalDescription);
+				
+				lockedNode.maxWidthProperty().bind(weeklyGoalSectionRightSideVBox.widthProperty());
+				lockedNode.minWidthProperty().bind(weeklyGoalSectionRightSideVBox.widthProperty());
+				
+				weeklyGoalSectionRightSideVBox.getChildren().add(lockedNode);
+					
+			}
+			else { //for now it is okay to do nothing on false TODO incomplete
+				
+			}
+			
+			
+			
+			
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*
 	 * because the node won't have been written to database yet, just removes it from the vBox
 	 */
@@ -766,7 +1023,241 @@ public class DailyScrollController implements Initializable {
 		});
 	}
 	
+	/*
+	 * replaces the 3 book indicators with the "library" so that new books can be chosen
+	 * 
+	 * TODO incomplete
+	 */ 
+	public void bookSectionMainButtonPushed() {
+		if (bookSectionInBrowseMode == false) {
+			bookSectionInBrowseMode = true;
+			
+			bookSection.setMinHeight(300);
+			bookSection.setMaxHeight(300);
+			
+			if (bookSectionLibraryInitialized == false) { //need to add the nodes to the "bookshelves"
+				
+				//need a list of all the reading type notes from the treeView
+		    	for (TreeItem<Note> treeItem : mR.getPipelineConsolidator().createListOfTreeItems()) {
+		    		if (treeItem.getValue().getTypeOfNote().equals("Reading") && treeItem.getValue().getName().equals(bookShelfName)) {
+		    			bookNotesTreeItem = treeItem;
+		    		}
+		    	}
+		    			    	
+		    	ArrayList<TreeItem<Note>> firstList = new ArrayList<TreeItem<Note>>();
+		    	ArrayList<TreeItem<Note>> secondList = new ArrayList<TreeItem<Note>>();
+		    	ArrayList<TreeItem<Note>> thirdList = new ArrayList<TreeItem<Note>>();
+		    	
+		    	Integer size = bookNotesTreeItem.getChildren().size();
+		    	Double counter = 0.0;
+		    	
+		    	System.out.println(size/3.0);
+		    			    	
+		    	for (TreeItem<Note> treeItem : bookNotesTreeItem.getChildren()) {
+		    		
+		    		if (counter < size/3.0) {
+		    			//System.out.println(counter.toString() + " : first");
+		    			firstList.add(treeItem);
+		    		}
+		    		else if (counter < 2*(size/3.0)) {
+		    			//System.out.println(counter.toString() + " : second");
+		    			secondList.add(treeItem);
+		    		}
+		    		else {
+		    			//System.out.println(counter.toString() + " : third");
+		    			thirdList.add(treeItem);
+		    		}
+		    		++ counter;
+		    	}
+		    	
+		    	for (TreeItem<Note> treeItem : firstList) {
+		    		addBookToShelf(treeItem, firstBookshelf);
+		    	}
+		    	for (TreeItem<Note> treeItem : secondList) {
+		    		addBookToShelf(treeItem, secondBookshelf);
+		    	}
+		    	for (TreeItem<Note> treeItem : thirdList) {
+		    		addBookToShelf(treeItem, thirdBookshelf);
+		    	}
+				
+				bookSectionLibraryInitialized = true;
+			}
+			
+			bookSectionHBox.getChildren().remove(bookSectionBookshelfAnchor);
+			bookSectionHBox.getChildren().add(0, bookshelfScrollPane);
+		}
+		else {
+			bookSectionInBrowseMode = false;
+			
+			bookSection.setMinHeight(170);
+			bookSection.setMaxHeight(170);
+			
+			bookSectionHBox.getChildren().remove(bookshelfScrollPane);
+			bookSectionHBox.getChildren().add(0, bookSectionBookshelfAnchor);
+			
+			//we need to add the books in the checkoutPile to the vBoxes in the normal book section mode
+			if (checkoutPile.size() == 1) {				
+				addBookToDeskSpot(checkoutPile.get(0), bookshelfSpotOne);
+			}
+			else if (checkoutPile.size() == 2) {
+				addBookToDeskSpot(checkoutPile.get(0), bookshelfSpotOne);
+				addBookToDeskSpot(checkoutPile.get(1), bookshelfSpotTwo);
+			}
+			else if (checkoutPile.size() == 3) {
+				addBookToDeskSpot(checkoutPile.get(0), bookshelfSpotOne);
+				addBookToDeskSpot(checkoutPile.get(1), bookshelfSpotTwo);
+				addBookToDeskSpot(checkoutPile.get(2), bookshelfSpotThree);
+			}
+			
+			//we need to write to the database...
+			ArrayList<String> titles = new ArrayList<String>();
+			
+			if (checkoutPile.size() >= 1) {				
+				titles.add(checkoutPile.get(0).getValue().getName());
+			}
+			if (checkoutPile.size() >= 2) {
+				titles.add(checkoutPile.get(1).getValue().getName());
+			}
+			if (checkoutPile.size() >= 3) {
+				titles.add(checkoutPile.get(2).getValue().getName());
+			}		
+			
+			DatabaseHandler.saveToBookDeskTable(titles);
+		}    		
+	}
 	
+	/*
+	 * the method for adding a book to one of the three "shelves" in the book section expanded mode
+	 */
+	private void addBookToShelf(TreeItem<Note> treeItem, VBox vbox) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LibraryBook.fxml"));
+			AnchorPane root = fxmlLoader.load();
+			
+			BorderPane borderPane = (BorderPane) root.getChildren().get(0);
+			VBox marginVBox = (VBox) borderPane.getLeft();
+			HBox buttonsHolder = (HBox) marginVBox.getChildren().get(1);
+			
+			Button selectButton = (Button) buttonsHolder.getChildren().get(3);
+			Button treeItemButton = (Button) buttonsHolder.getChildren().get(1);
+			
+			selectButton.setText(treeItem.getValue().getName());
+			selectButton.setStyle("-fx-font-size: 14;");
+			
+			mR.getPipelineConsolidator().setButtonIcon(treeItemButton, bookNotesTreeItem);
+
+			treeItemButton.setOnAction(new EventHandler<ActionEvent>() { 
+				@Override
+				public void handle(ActionEvent arg0) {
+					try {
+						mR.openNote(treeItem);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}						
+				}});
+			
+			selectButton.setOnAction(new EventHandler<ActionEvent>() { //adds to the checkout ArrayList
+				@Override
+				public void handle(ActionEvent arg0) {
+					if (checkoutPile.contains(treeItem)) { //remove it, set border back to normal
+						checkoutPile.remove(treeItem);
+						
+						marginVBox.setStyle("-fx-border-color: rgba(47, 47, 47, 0.8)");
+					}
+					else { //add it, only if there are less than 3 items in the arraylist
+						
+						if (checkoutPile.size() < 3) {
+							checkoutPile.add(treeItem);
+							
+							marginVBox.setStyle("-fx-border-color: rgba(80, 80, 80, 0.8)");
+						}
+						else { //TODO incomplete, maybe have some indicator that there are already 3 selected...
+							
+						}
+					}
+				}});
+			
+			root.maxWidthProperty().bind(vbox.widthProperty());
+			root.minWidthProperty().bind(vbox.widthProperty());
+			
+			vbox.getChildren().add(root);
+			
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	/*
+	 * the method for adding a node to the "desk" or one of the 3 spots to be actively selected in the normal mode
+	 * 
+	 * this method is necessary because there is no way to make a deep copy of a javafx node
+	 */
+	private void addBookToDeskSpot(TreeItem<Note> treeItem, BorderPane selfBorderPane) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LibraryBook.fxml"));
+			AnchorPane root = fxmlLoader.load();
+			
+			BorderPane borderPane = (BorderPane) root.getChildren().get(0);
+			VBox marginVBox = (VBox) borderPane.getLeft();
+			HBox buttonsHolder = (HBox) marginVBox.getChildren().get(1);
+			
+			Button selectButton = (Button) buttonsHolder.getChildren().get(3);
+			Button treeItemButton = (Button) buttonsHolder.getChildren().get(1);
+			
+			selectButton.setText(treeItem.getValue().getName());
+			selectButton.setStyle("-fx-font-size: 14;");
+			
+			mR.getPipelineConsolidator().setButtonIcon(treeItemButton, bookNotesTreeItem);
+
+			treeItemButton.setOnAction(new EventHandler<ActionEvent>() { 
+				@Override
+				public void handle(ActionEvent arg0) {
+					try {
+						mR.openNote(treeItem);
+					} catch (IOException e) {
+						e.printStackTrace();
+					}						
+				}});
+			
+			selectButton.setOnAction(new EventHandler<ActionEvent>() { //adds to the checkout ArrayList
+				@Override
+				public void handle(ActionEvent arg0) {
+					
+					if (selectedBook == null) {
+						selectedBook = buttonsHolder;
+						
+						selfBorderPane.setStyle("-fx-border-color: rgba(120, 120, 120, 0.5)");
+					}
+					
+					else if (selectedBook == buttonsHolder) {
+						selectedBook = null;
+						
+						selfBorderPane.setStyle("-fx-border-color: rgba(47, 47, 47, 0.8)");
+					}
+					
+					else { //set all of the borderpanes styles to normal, then highlight this borderPane
+						selectedBook = buttonsHolder;
+
+						bookshelfSpotOne.setStyle("-fx-border-color: rgba(47, 47, 47, 0.8)");
+						bookshelfSpotTwo.setStyle("-fx-border-color: rgba(47, 47, 47, 0.8)");
+						bookshelfSpotThree.setStyle("-fx-border-color: rgba(47, 47, 47, 0.8)");
+
+						selfBorderPane.setStyle("-fx-border-color: rgba(120, 120, 120, 0.5)");
+					}
+				}});
+			
+			BorderPane treeItemButtonHolder = new BorderPane();
+			treeItemButtonHolder.setCenter(treeItemButton);
+			
+			treeItemButtonHolder.setMinWidth(32.5);
+			treeItemButtonHolder.setMaxWidth(32.5);
+			
+			selfBorderPane.setLeft(treeItemButtonHolder);
+			selfBorderPane.setCenter(selectButton);
+						
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	/*
 	 * https://stackoverflow.com/questions/237159/whats-the-best-way-to-check-if-a-string-represents-an-integer-in-java?page=1&tab=scoredesc#tab-top
