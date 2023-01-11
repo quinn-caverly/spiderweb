@@ -75,6 +75,8 @@ public final class DatabaseHandler {
 
 		    statement.executeUpdate("CREATE TABLE BookDeskTable (Title VARCHAR(1000))");
 		    
+		    statement.executeUpdate("CREATE TABLE WeeklyGoalTable (Title VARCHAR(1000), Repetitions Int, Remaining Int)");
+		    
 		    connection.close();
 		    
 		} catch (SQLException e) {
@@ -656,7 +658,7 @@ public final class DatabaseHandler {
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
-		    statement.executeUpdate("CREATE TABLE BookDeskTable (Title VARCHAR(1000))");
+		    statement.executeUpdate("CREATE TABLE WeeklyGoalTable (Title VARCHAR(1000), Repetitions Int, Remaining Int)");
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -953,7 +955,7 @@ public final class DatabaseHandler {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
 			
-			statement.execute("DELETE FROM LongTermGoalTable WHERE Description = '" + description + "'");
+			statement.execute("DELETE FROM LongTermGoalTable WHERE Description = '" + prepareStringForSQL(description) + "'");
 
 			connection.close();
 
@@ -1042,6 +1044,128 @@ public final class DatabaseHandler {
 			e.printStackTrace();
 		}
 		return returnList;
+	}
+	
+	/*
+	 * CREATE TABLE WeeklyGoalTable (Title VARCHAR(1000), Repetitions Int, Remaining Int)
+	 * 
+	 * this is run when a new weekly goal is created, this will be consistent for every instance of new daily type note
+	 */
+	public static void saveGoalToWeeklyGoalTable(String description, Integer repetitions) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+			statement.executeUpdate("INSERT INTO WeeklyGoalTable (Title, Repetitions, Remaining) VALUES ('"
+			+ prepareStringForSQL(description) + "', " + repetitions.toString() + ", " + repetitions.toString() + ")");
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * removes the goal from the cycle, not to be confused with the deleteRepetition function
+	 */
+	public static void deleteGoalFromWeeklyGoalTable(String description) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+			
+			statement.execute("DELETE FROM WeeklyGoalTable WHERE Title = '" + prepareStringForSQL(description) + "'");
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * this essentially just lowers the value in the repetition column by one
+	 * 
+	 * it should be impossible for the value present to be <= 0 when pressed, so will not handle that case
+	 */
+	public static void deleteRepetitionFromWeeklyGoalTable(String description) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    //this process will have an uncaught null addition error if something goes wrong, this is okay 
+		    Integer remainingRepetitions = null;
+		    ResultSet resultSet = statement.executeQuery("SELECT * FROM WeeklyGoalTable WHERE Title = '" + prepareStringForSQL(description) + "'");
+		    while (resultSet.next()) {
+		    	remainingRepetitions = resultSet.getInt(3);
+		    }
+		    		    			
+	    	statement.executeUpdate("UPDATE WeeklyGoalTable SET Remaining = " + Integer.toString(remainingRepetitions - 1) +
+	    	" Where Title = '" + prepareStringForSQL(description) + "'");
+
+			connection.close();
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * sets the remaining value to be equal to the repetitions value
+	 */
+	public static void resetRepetitionsFromWeeklyGoalTable() {
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    //this process will have an uncaught null addition error if something goes wrong, this is okay 
+		    ResultSet resultSet = statement.executeQuery("SELECT * FROM WeeklyGoalTable");
+		    while (resultSet.next()) {
+		    	if (resultSet.getString(2).equals(resultSet.getString(3)) == false) { //only sets them same if they are different, more efficient
+			    	statement.executeUpdate("UPDATE WeeklyGoalTable SET Remaining = " + resultSet.getString(2) +
+			    	    	" Where Title = '" + prepareStringForSQL(resultSet.getString(1)) + "'");
+		    	}
+		    }
+
+			connection.close();
+			
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static ArrayList<ArrayList<String>> loadFromWeeklyGoalTable() {
+		
+		Connection connection;
+		try {
+			connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+			ResultSet resultSet = statement.executeQuery("SELECT * FROM WeeklyGoalTable");
+			
+			ArrayList<ArrayList<String>> listOfLists = new ArrayList<ArrayList<String>>();
+			
+			while (resultSet.next()) {
+								
+				ArrayList<String> currentList = new ArrayList<String>();
+				
+				currentList.add(resultSet.getString("Title"));
+				currentList.add(resultSet.getString("Repetitions"));
+				currentList.add(resultSet.getString("Remaining"));
+				
+				listOfLists.add(currentList);
+			}
+			
+			connection.close();
+			
+			return listOfLists;
+		    
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 }

@@ -64,6 +64,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	
 	-text-area-dark: rgba(55, 55, 55, 0.95);
 	-text-area-darker: rgba(40, 40, 40, 0.95);
+	-text-field-middleground: rgba(45, 45, 45, 0.95);
 	
 	//gradients based on sets of 3 colors
 	-closed-white-gradient-vertical: linear-gradient(to bottom, -transparent-white 2%, -thicker-white 25%, -thicker-white 75%, -transparent-white  98%);
@@ -83,6 +84,11 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
     -fx-focus-color: rgba(210, 210, 210, 0.1);
     -fx-faint-focus-color: rgba(210, 210, 210, 0.05);
     
+    -standard-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 10, 0.0, 0 , 8);
+    -light-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 5, 0.0, 0 , 3);
+    -light-transparent-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.05), 5, 0.0, 0 , 3); //for transparent elements
+    -medium-transparent-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.05), 7, 0.0, 0 , 4); //for transparent elements
+  
     -fx-font-size: 15px;
     
     //TODO temporary code
@@ -112,16 +118,27 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 
 /*******************************************************************************
  *                                                                             *
- * Text Area                                                                   *
+ * Text Area / Field                                                           *
  *                                                                             *
  ******************************************************************************/
  
 .text-area {
 	-fx-background-color: -text-area-dark;
-	
 	-fx-background-radius: 5px;
 	
+	-fx-effect: -standard-drop-shadow;
+	
     -fx-font-family: "Quicksand";
+ 	-fx-text-fill: -full-grayish-white;
+}
+
+.text-field {
+	-fx-background-color: -text-field-middleground;
+	-fx-background-radius: 5px;
+	
+	-fx-effect: -standard-drop-shadow;
+	
+    -fx-font-family: "Quicksand Semibold";
  	-fx-text-fill: -full-grayish-white;
 }
  
@@ -136,6 +153,8 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	> .thumb  {
 		-fx-background-color: -closed-white-gradient-vertical;
 		-fx-background-radius: 5px;
+		
+		-fx-effect: -light-drop-shadow;
 	}
 	> .thumb:hover  {
 		-fx-background-color: -closed-darker-white-gradient-vertical;
@@ -190,6 +209,8 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
     
     -fx-tab-min-width: 200px;
     -fx-tab-max-width: 200px;
+    
+    -fx-effect: -light-drop-shadow;
     
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
@@ -314,6 +335,8 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  	//-fx-font-family: "Roboto Mono Semibold";
  	-fx-text-fill: -full-grayish-white;
  	-fx-font-size: 13px;
+ 	
+	-fx-effect: -light-drop-shadow;
  	 	
  	-fx-border-radius: 5px;
  	-fx-border-width: 0px;
@@ -373,12 +396,6 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	}
 }
 
-#newNoteNameVBox, #renameNoteVBox {
-	.combo-box {
-	 	-fx-background-color: rgba(47, 47, 47, 0.3);
-	}
-}
-
 #deleteNoteVBox .label {
  	-fx-background-color: rgba(47, 47, 47, 0.3);	
  	-fx-background-radius: 3.5px;
@@ -392,7 +409,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
  
 .list-view {
- 	-fx-background-color: rgba(47, 47, 47, 1); 	
+ 	-fx-background-color: -text-area-dark; 	
  }
  
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell{
@@ -400,17 +417,17 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 }
  
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
- 	-fx-background-color: rgba(246, 229, 195, 0.5);
+ 	-fx-background-color:  -background-purple-transparent;
 }
 
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
- 	-fx-background-color: rgba(246, 229, 195, 0.3);
+ 	-fx-background-color:  -background-purple-transparent;
 }
 
 
 /*******************************************************************************
  *                                                                             *
- * PopupMenu                                                                   *
+ * PopupMenu (Context Menu and ComboBox)                                       *
  *                                                                             *
  ******************************************************************************/
 
@@ -437,6 +454,19 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  	-fx-background-radius: 3px;
 }
 
+.combo-box {
+ 	-fx-background-color: -text-area-dark; 	
+    -fx-effect: dropshadow( gaussian , rgba(0,0,0,0.2) , 12, 0.0 , 0 , 8 );
+    
+    -fx-background-radius: 5px;
+}
+
+.combo-box-popup > .list-view {
+ 	-fx-background-color: -text-area-dark; 	
+}
+
+
+
 /*******************************************************************************
  *                                                                             *
  * Note Selectors                                                              *
@@ -459,8 +489,10 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	-fx-border-width: 0px;
 	-fx-border-radius: 5px;
 	
-	-fx-background-color:  rgba(47, 47, 47, 0.7);
+	-fx-background-color:  rgba(47, 47, 47, 0.6);
 	-fx-background-radius: 10px;
+	
+	-fx-effect: -light-transparent-drop-shadow;
  }
  
 /*******************************************************************************
@@ -555,24 +587,71 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	-fx-border-width: 5px;
 	-fx-border-radius: 3px
  }
- 
+
+
+
+//Components pertaining to WeeklyGoalSectionCreationStage.fxml (creating a recurring task) (on left side)
+
+#weeklyGoalCreateButton, #weeklyGoalSectionCreationDeleteButton {
+	-fx-background-radius: 4px;
+}
+
+//Pertaining to WeeklyGoalSectionCreationStage.fxml (the created recurring task) (on left side)
+
+#weeklyGoalCreatedLabel {
+	-fx-font-family: "Quicksand Light";
+}
+
+#weeklyGoalCreatedColoredBackground {
+    -fx-background-color: rgba(256, 256, 256, 0.2);
+    -fx-background-radius: 7px;	
+    
+ 	-fx-effect: -standard-drop-shadow;
+}
+
+#weeklyGoalCreatedBorderPane {
+ 	-fx-background-color: rgba(55, 55, 55, 0.9);
+ 	
+ 	-fx-effect: -standard-drop-shadow;
+}
+
 #lineupCardHolderHBox {
-	-fx-spacing: 10px;
+	-fx-spacing: 3px;
 }
 
 #weeklyGoalLineupNode {
-	-fx-background-color: -transparent-darker-white;
-	-fx-background-radius: 2px;
+ 	-fx-background-color:  rgba(44, 44, 44, 0.9);
+ 	-fx-background-radius: 5px;
+ 	
+ 	-fx-effect: -standard-drop-shadow;
  }
 #weeklyGoalLineupNode:hover {
-	-fx-background-color: -transparent-white;
-	-fx-background-radius: 2px;
- }
-#weeklyGoalCardMarginKeeper {
-	-fx-background-color: -transparent-darkest-white;
-	-fx-background-radius: 2px;
+ 	-fx-background-color:  rgba(40, 40, 40, 0.95);
+}
+#weeklyGoalLineupNode:pressed {
+	-fx-background-color:  rgba(37, 37, 37, 1);
 }
 
+.weeklyGoalLineupNodeGone {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 2px;
+	-fx-border-width: 4px;
+	
+ 	-fx-effect: -standard-drop-shadow;
+}
+
+//Pertaining to WeeklyGoalSectionNodeLocked
+
+#weeklyGoalSectionLockedColoredBackground {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 4px;
+}
+
+#weeklyGoalSectionDescriptionButton {
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 15px;
+ }
 
 //incomplete styles: weeklyGoalSectionCompletedButton, weeklyGoalSectionNodeLabel
  
@@ -583,15 +662,9 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  *                                                                             *
  ******************************************************************************/
 
-#longTermGoalSectionActionButton, #longTermGoalSectionDeleteButton {
+#longTermGoalSectionDescriptionButton {
  	-fx-text-fill: -full-grayish-white;
- 	-fx-font-size: 13px;
- 	 	
- 	-fx-border-radius: 5px;
- 	-fx-border-width: 0px;
- 	
- 	-fx-background-color:  rgba(47, 47, 47, 0.8);
- 	-fx-background-radius: 6px;
+ 	-fx-font-size: 15px;
  }
 
 #longTermGoalSectionActionButton:hover, #longTermGoalSectionDeleteButton:hover {
@@ -601,6 +674,12 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 
 #longTermGoalSectionActionButton:pressed, #longTermGoalSectionDeleteButton:pressed {
  	-fx-background-color:  rgba(40, 40, 40, 0.95);	
+}
+
+#longTermGoalLockedColoredBackground {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 4px;
 }
 
 /*******************************************************************************

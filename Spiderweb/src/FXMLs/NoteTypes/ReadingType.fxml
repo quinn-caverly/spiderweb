@@ -27,11 +27,11 @@
                <children>
                   <HBox prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="75.0" AnchorPane.leftAnchor="20.0" AnchorPane.rightAnchor="30.0" AnchorPane.topAnchor="5.0">
                      <children>
-                        <Button fx:id="addAnalysisButton" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="add analysis" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="addQuoteButton" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="add quote" HBox.hgrow="ALWAYS" />
                         <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
                         <Button fx:id="addBothButton" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="add quote and analysis" HBox.hgrow="ALWAYS" />
                         <AnchorPane maxWidth="20.0" minWidth="20.0" prefHeight="200.0" prefWidth="200.0" />
-                        <Button fx:id="addQuoteButton" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="add quote" HBox.hgrow="ALWAYS" />
+                        <Button fx:id="addAnalysisButton" mnemonicParsing="false" prefHeight="10000.0" prefWidth="10000.0" text="add analysis" HBox.hgrow="ALWAYS" />
                      </children>
                   </HBox>
                </children>

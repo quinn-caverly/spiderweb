@@ -58,7 +58,7 @@ public class DailyScrollController implements Initializable {
 	ArrayList<TreeItem<Note>> checkoutPile = new ArrayList<TreeItem<Note>>();
 	HBox selectedBook;
 	
-	private static Integer widthOfSpacingOfCardLineupHBox = 10;
+	private static Integer widthOfSpacingOfCardLineupHBox = 5;
 	
 	private MasterReference mR;
 	
@@ -178,6 +178,14 @@ public class DailyScrollController implements Initializable {
 	private BorderPane bookshelfSpotTwo;
 	@FXML
 	private BorderPane bookshelfSpotThree;
+	@FXML
+	private ScrollPane weeklyGoalLeftSideScrollPane;
+	@FXML
+	private AnchorPane anchorOfLongTermGoalScrollPane;
+	@FXML
+	private ScrollPane longTermGoalScrollPane;
+	@FXML
+	private ScrollPane weeklyGoalRightSideScrollPane;
 	
 	
 	
@@ -221,25 +229,31 @@ public class DailyScrollController implements Initializable {
 		/*
 		 * long term goal section
 		 */
+		loadFromLongTermGoalDatabase();
+
 		longTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		longTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
-		loadFromLongTermGoalDatabase();
 		
+		longTermGoalSectionVBox.prefWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+		longTermGoalSectionVBox.prefHeightProperty().bind(anchorOfLongTermGoalScrollPane.heightProperty().subtract(30));
+		
+		
+
 		/*
 		 * weekly goal section
 		 */
 		weeklyGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		weeklyGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
-		//TODO the 77.5 is an arbitrary number and may break if reformatting occurs
-		weeklyGoalSectionLeftSideSpacer.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
-		weeklyGoalSectionLeftSideSpacer.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
-
-		weeklyGoalSectionRightSideSpacer.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
-		weeklyGoalSectionRightSideSpacer.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(77.5).divide(2));
-		
     	changeWeeklyGoalSectionMode();
     	changeBookSectionMode();
+    	
+    	//subtract 20 to account for the space which is occupied by the vertical scrollbar
+    	weeklyGoalSectionLeftSideVBox.prefWidthProperty().bind(weeklyGoalLeftSideScrollPane.widthProperty().subtract(30));
+    	weeklyGoalSectionLeftSideVBox.prefHeightProperty().bind(weeklyGoalLeftSideScrollPane.heightProperty().subtract(30));
+    	
+    	loadFromWeeklyGoalDatabase();
+
     	
 		/*
 		 * book section
@@ -259,7 +273,7 @@ public class DailyScrollController implements Initializable {
 		secondBookshelf.prefWidthProperty().bind(secondBookshelfAnchor.widthProperty());
 		thirdBookshelf.prefWidthProperty().bind(thirdBookshelfAnchor.widthProperty());
 		
-		bookshelfHBox.setPrefHeight(300);
+		bookshelfHBox.setPrefHeight(295);
 	}
 	
 	/*
@@ -473,16 +487,20 @@ public class DailyScrollController implements Initializable {
 		if (weeklyGoalSectionInExpandedMode == false) {
 			weeklyGoalSectionInExpandedMode = true;
 			
+			weeklyGoalSection.setMaxHeight(325);
+			weeklyGoalSection.setMinHeight(325);
+			
 			weeklyGoalSectionVBox.getChildren().add(weeklyGoalResetButtonAnchor);
-			weeklyGoalLineUpButtonHolder.getChildren().add(weeklyGoalLineUpButton);
-			
-			
+			//weeklyGoalLineUpButtonHolder.getChildren().add(weeklyGoalLineUpButton);
 		}
 		else { //removes the reset button, button to add more nodes on left side
 			weeklyGoalSectionInExpandedMode = false;
 			
+			weeklyGoalSection.setMaxHeight(285);
+			weeklyGoalSection.setMinHeight(285);
+			
 			weeklyGoalSectionVBox.getChildren().remove(weeklyGoalResetButtonAnchor);
-			weeklyGoalLineUpButtonHolder.getChildren().remove(weeklyGoalLineUpButton);
+			//weeklyGoalLineUpButtonHolder.getChildren().remove(weeklyGoalLineUpButton);
 			
 		}
 	}
@@ -561,9 +579,7 @@ public class DailyScrollController implements Initializable {
         button.setOnAction(new EventHandler<ActionEvent>() { 
 		@Override
 		public void handle(ActionEvent event) {
-			
-			System.out.println("lock button pushed");
-			
+						
 			button.setStyle("-fx-background: rgba(65, 65, 65, 0.9);"
 					+ " -fx-hovered-background: rgba(65, 65, 65, 0.95);"
 					+ " -fx-pressed-background: rgba(65, 65, 65, 1);");
@@ -604,8 +620,8 @@ public class DailyScrollController implements Initializable {
 			    }
 			});
 			
-			loadedNode.maxWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
-			loadedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+			loadedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+			loadedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
 			
 			Button actionButton = (Button) loadedNode.getChildren().get(0);
 			
@@ -627,7 +643,7 @@ public class DailyScrollController implements Initializable {
 	    				Integer counter = 0;
 	    				while (counter < contents.length()) {
 	    					if ((allowedCharacters.contains(String.valueOf(contents.charAt(counter)).toLowerCase()) == false)
-	    					&& (String.valueOf(contents.charAt(counter)).toLowerCase() != " ")) {
+	    					&& (String.valueOf(contents.charAt(counter)).toLowerCase().equals(" ") == false)) {
 	    						valid = false;
 	    					}
 	    					counter += 1;
@@ -649,14 +665,15 @@ public class DailyScrollController implements Initializable {
 	    		        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LongTermGoalSectionNodeLocked.fxml"));
 	    				try {
 							AnchorPane lockedNode = fxmlLoader.load();
+							AnchorPane marginKeeper = (AnchorPane) lockedNode.getChildren().get(0);
 							
-							AnchorPane parentOfDescriptionLabel = (AnchorPane) lockedNode.getChildren().get(1);
-							Label longTermGoalSectionDescriptionLabel = (Label) parentOfDescriptionLabel.getChildren().get(0);
+							BorderPane parentOfDescriptionButton = (BorderPane) marginKeeper.getChildren().get(0);
+							Button descriptionButton = (Button) parentOfDescriptionButton.getLeft();
 							
-							AnchorPane parentOfInputLabel = (AnchorPane) lockedNode.getChildren().get(2);
+							AnchorPane parentOfInputLabel = (AnchorPane) marginKeeper.getChildren().get(1);
 							Label longTermGoalSectionDaysLabel = (Label) parentOfInputLabel.getChildren().get(0);
 							
-							longTermGoalSectionDescriptionLabel.setText(longTermGoalSectionDescriptionTextField.getText());
+							descriptionButton.setText(longTermGoalSectionDescriptionTextField.getText());
 							
 							LocalDate date = LocalDate.now();
 							LocalDate inTime = date.plusDays(Integer.valueOf(longTermGoalSectionDaysInputTextField.getText()));
@@ -673,10 +690,8 @@ public class DailyScrollController implements Initializable {
 							longTermGoalSectionDaysLabel.setText(daysBetween.toString() + " days");
 							
 							DatabaseHandler.saveToLongTermGoalTable(longTermGoalSectionDescriptionTextField.getText(), dayString, monthString, yearString);
-							
-							Button actionButton = (Button) lockedNode.getChildren().get(0);
-							
-							handleLongTermGoalCompleteButton(actionButton, longTermGoalSectionDescriptionTextField.getText(), lockedNode);
+														
+							handleLongTermGoalCompleteButton(descriptionButton, longTermGoalSectionDescriptionTextField.getText(), lockedNode);
 							
 							//need to remove the loadedNode from the vBox, replace it with lockedNode
 							Integer indexCounter = 0;
@@ -687,6 +702,9 @@ public class DailyScrollController implements Initializable {
 								}
 								indexCounter += 1;
 							}
+							
+							lockedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+							lockedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
 							
 							longTermGoalSectionVBox.getChildren().add(indexCounter, lockedNode);
 
@@ -705,7 +723,7 @@ public class DailyScrollController implements Initializable {
 	
 	
 	/*
-	 * TODO the long term goals should be sorted by time until date somehow
+	 * TODO, incomplete the long term goals should be sorted by time until date somehow
 	 */
 	private void loadFromLongTermGoalDatabase() {
 		
@@ -720,24 +738,26 @@ public class DailyScrollController implements Initializable {
 			try {
 				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/LongTermGoalSectionNodeLocked.fxml"));
 				AnchorPane lockedNode = fxmlLoader.load();
+				AnchorPane marginKeeper = (AnchorPane) lockedNode.getChildren().get(0);
 				
-				AnchorPane parentOfDescriptionLabel = (AnchorPane) lockedNode.getChildren().get(1);
-				Label longTermGoalSectionDescriptionLabel = (Label) parentOfDescriptionLabel.getChildren().get(0);
+				BorderPane parentOfDescriptionButton = (BorderPane) marginKeeper.getChildren().get(0);
+				Button descriptionButton = (Button) parentOfDescriptionButton.getLeft();
 				
-				AnchorPane parentOfInputLabel = (AnchorPane) lockedNode.getChildren().get(2);
+				AnchorPane parentOfInputLabel = (AnchorPane) marginKeeper.getChildren().get(1);
 				Label longTermGoalSectionDaysLabel = (Label) parentOfInputLabel.getChildren().get(0);
 				
-				longTermGoalSectionDescriptionLabel.setText(entry.get(0));
+				descriptionButton.setText(entry.get(0));
 				
 				LocalDate date = LocalDate.now();
 				LocalDate entryDate = LocalDate.of(Integer.valueOf(entry.get(3)), Integer.valueOf(entry.get(2)), Integer.valueOf(entry.get(1)));
 				
 				Integer daysBetween = (int) ChronoUnit.DAYS.between(date, entryDate);
 				longTermGoalSectionDaysLabel.setText(daysBetween.toString() + " days");
-								
-				Button actionButton = (Button) lockedNode.getChildren().get(0);
+												
+				handleLongTermGoalCompleteButton(descriptionButton, entry.get(0), lockedNode);
 				
-				handleLongTermGoalCompleteButton(actionButton, entry.get(0), lockedNode);
+				lockedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+				lockedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
 				
 				longTermGoalSectionVBox.getChildren().add(lockedNode);
 				
@@ -745,8 +765,6 @@ public class DailyScrollController implements Initializable {
 				e.printStackTrace();
 			}
 		}
-	
-		
 	}
 	
 	//TODO finish this when I finalize this with database
@@ -757,8 +775,8 @@ public class DailyScrollController implements Initializable {
     			DatabaseHandler.deleteFromLongTermGoalTable(description);
     			
 				Integer indexCounter = 0;
-				for (Node node : longTermGoalSectionVBox.getChildren()) {
-					if ((AnchorPane) node == node) {
+				for (Node presentNode : longTermGoalSectionVBox.getChildren()) {
+					if (((AnchorPane) presentNode).equals(node)) {
 						longTermGoalSectionVBox.getChildren().remove(node);
 						break; //breaks out of for loop, ends counter of index counter on whatever index
 					}
@@ -780,10 +798,12 @@ public class DailyScrollController implements Initializable {
 			
 			Button weeklyGoalCreateButton = (Button) creationNode.getChildren().get(0);
 			
-			AnchorPane parentOfWeeklyGoalDescriptionTextField = (AnchorPane) creationNode.getChildren().get(1);
+			HBox containerHBox = (HBox) creationNode.getChildren().get(1);
+			
+			AnchorPane parentOfWeeklyGoalDescriptionTextField = (AnchorPane) containerHBox.getChildren().get(0);
 			TextField weeklyGoalDescriptionTextField = (TextField) parentOfWeeklyGoalDescriptionTextField.getChildren().get(0);
 			
-			AnchorPane parentOfWeeklyGoalQuantityCombobox = (AnchorPane) creationNode.getChildren().get(2);
+			AnchorPane parentOfWeeklyGoalQuantityCombobox = (AnchorPane) containerHBox.getChildren().get(1);
 			ComboBox weeklyGoalQuantityCombobox = (ComboBox) parentOfWeeklyGoalQuantityCombobox.getChildren().get(0);	
 			
 			weeklyGoalQuantityCombobox.getItems().add(1);
@@ -796,13 +816,13 @@ public class DailyScrollController implements Initializable {
 			
 			weeklyGoalQuantityCombobox.getSelectionModel().select(0);
 			
-			Button weeklyGoalSectionCreationDeleteButton = (Button) creationNode.getChildren().get(3);
+			Button weeklyGoalSectionCreationDeleteButton = (Button) creationNode.getChildren().get(2);
 			
 			handleWeeklyGoalSectionCreationDeleteButton(weeklyGoalSectionCreationDeleteButton, creationNode);
 			handleWeeklyGoalCreateButton(weeklyGoalCreateButton, weeklyGoalDescriptionTextField, weeklyGoalQuantityCombobox, creationNode);
 			
-			creationNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
-			creationNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
+			creationNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty().subtract(40));
+			creationNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty().subtract(40));
 			
 			weeklyGoalSectionLeftSideVBox.getChildren().add(creationNode);
 		
@@ -816,8 +836,6 @@ public class DailyScrollController implements Initializable {
 		button.setOnAction(new EventHandler<ActionEvent>() { 
     		@Override
     		public void handle(ActionEvent event) {
-    			//need to check if there is text in the description text field
-    			//if the description text is good and number is good, then convert to "LongTermGoalSectionNodeLocked.fxml"
 				Boolean valid = true;
     			
     			if (textField.getText().length() > 0) {
@@ -841,65 +859,89 @@ public class DailyScrollController implements Initializable {
     				//first, remove original template node from the vbox
     				weeklyGoalSectionLeftSideVBox.getChildren().remove(originalNode);
     				
-    				try {
-        				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionCreatedStage.fxml"));
-						AnchorPane createdNode = fxmlLoader.load();
-						
-						BorderPane borderPane = (BorderPane) createdNode.getChildren().get(0);
-						Label descriptionLabel = (Label) borderPane.getCenter();
-						
-						AnchorPane hboxHolder = (AnchorPane) createdNode.getChildren().get(1);
-						HBox cardHolderHBox = (HBox) hboxHolder.getChildren().get(0);
-						
-						AnchorPane deleteButtonHolder = (AnchorPane) createdNode.getChildren().get(2);
-						Button deleteButton = (Button) deleteButtonHolder.getChildren().get(0);
-						
-						//nothing will be written to database at this stage, just remove the node from the vBox
-						deleteButton.setOnAction(new EventHandler<ActionEvent>() { 
-				    		@Override
-				    		public void handle(ActionEvent event) {
-				    			weeklyGoalSectionLeftSideVBox.getChildren().remove(createdNode);
-			    			}
-			    		});
-	        	
-						
-						descriptionLabel.setText(textField.getText());
-						
-						createdNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
-						createdNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty());
-						
-						weeklyGoalSectionLeftSideVBox.getChildren().add(createdNode);
-        				Integer count = (Integer) comboBox.getSelectionModel().getSelectedItem();
-						
-						for (int i = 0; i < count; i++) {
-	        				FXMLLoader subLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalLineupNode.fxml"));
-	        				AnchorPane lineupNode = subLoader.load();
-	        				
-	        				Double totalExtraSpace = (double) (widthOfSpacingOfCardLineupHBox * (count - 1));
-	        				Double perEachExtraSpace = (double) totalExtraSpace / count;
-	        				
-	        				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
-	        				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
-	        				
-	        				lineupNode.setOnMouseClicked(new EventHandler<MouseEvent>() { 
-					    		@Override
-					    		public void handle(MouseEvent event) {
-					    			lineupNodeClicked(count, perEachExtraSpace, cardHolderHBox, descriptionLabel.getText());
-					    			}
-					    		});
-	        				
-	        				cardHolderHBox.getChildren().add(lineupNode);
-						}
-						
-						
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
+    				Integer count = (Integer) comboBox.getSelectionModel().getSelectedItem();
     				
+    				DatabaseHandler.saveGoalToWeeklyGoalTable(textField.getText(), count);
     				
+    				createWeeklyGoalSectionCreationStageNode(textField.getText(), count);
     			}
     		}
 		});
+	}
+	
+	private HBox createWeeklyGoalSectionCreationStageNode(String text, Integer count) {
+		try {
+			FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionCreatedStage.fxml"));
+			AnchorPane createdNode = fxmlLoader.load();
+			AnchorPane coloredBackground = (AnchorPane) createdNode.getChildren().get(0);
+			
+			BorderPane borderPane = (BorderPane) coloredBackground.getChildren().get(0);
+			Label descriptionLabel = (Label) borderPane.getCenter();
+			
+			AnchorPane hboxHolder = (AnchorPane) coloredBackground.getChildren().get(1);
+			HBox cardHolderHBox = (HBox) hboxHolder.getChildren().get(0);
+			
+			
+			AnchorPane deleteButtonHolder = (AnchorPane) createdNode.getChildren().get(1);
+			Button deleteButton = (Button) deleteButtonHolder.getChildren().get(0);
+			
+			//nothing will be written to database at this stage, just remove the node from the vBox
+			deleteButton.setOnAction(new EventHandler<ActionEvent>() { 
+	    		@Override
+	    		public void handle(ActionEvent event) {
+	    			weeklyGoalSectionLeftSideVBox.getChildren().remove(createdNode);
+	    			DatabaseHandler.deleteGoalFromWeeklyGoalTable(text);
+	    			
+	    			//if we delete a goal, we also need to delete its instances in the right side
+	    			
+	    			for (Node node: weeklyGoalSectionRightSideVBox.getChildren()) {
+	    				AnchorPane root = (AnchorPane) node;
+	    				AnchorPane borderPaneAnchor = (AnchorPane) root.getChildren().get(0);
+	    				BorderPane borderPane = (BorderPane) borderPaneAnchor.getChildren().get(0);
+	    				Button descriptionButton = (Button) borderPane.getLeft();
+	    				
+	    				if (descriptionButton.getText().equals(text)) {
+	    					weeklyGoalSectionRightSideVBox.getChildren().remove(node);
+	    					break; //breaks because there will be no duplicates
+	    				}
+	    			}
+    			}
+    		});
+	
+			
+			descriptionLabel.setText(text);
+			
+			createdNode.minWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty().subtract(40));
+			createdNode.maxWidthProperty().bind(weeklyGoalLeftSectionBorderAnchor.widthProperty().subtract(40));
+			
+			weeklyGoalSectionLeftSideVBox.getChildren().add(createdNode);
+						
+			for (int i = 0; i < count; i++) {
+				FXMLLoader subLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalLineupNode.fxml"));
+				AnchorPane lineupNode = subLoader.load();
+				
+				Double totalExtraSpace = (double) (widthOfSpacingOfCardLineupHBox * (count - 1));
+				Double perEachExtraSpace = (double) totalExtraSpace / count;
+				
+				lineupNode.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
+				lineupNode.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(count).subtract(perEachExtraSpace));
+				
+				lineupNode.setOnMouseClicked(new EventHandler<MouseEvent>() { 
+		    		@Override
+		    		public void handle(MouseEvent event) {
+		    			lineupNodeClicked(count, perEachExtraSpace, cardHolderHBox, descriptionLabel.getText());
+		    			}
+		    		});
+				
+				cardHolderHBox.getChildren().add(lineupNode);
+				}
+			
+			return cardHolderHBox;
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 	
 	private void lineupNodeClicked(Integer originalCount, Double perEachExtraSpace, HBox cardHolderHBox, String goalDescription) {
@@ -912,10 +954,11 @@ public class DailyScrollController implements Initializable {
 			Boolean stillOkay = true;
 			for (Node node : weeklyGoalSectionRightSideVBox.getChildren()) {
 				AnchorPane root = (AnchorPane) node;
-				AnchorPane subLabelHolder = (AnchorPane) root.getChildren().get(1);
-				Label subLabel = (Label) subLabelHolder.getChildren().get(0);
+				AnchorPane marginKeeper = (AnchorPane) root.getChildren().get(0);
+				BorderPane borderPane = (BorderPane) marginKeeper.getChildren().get(0);
+				Button actionButton = (Button) borderPane.getLeft();
 				
-				if (subLabel.getText().equals(goalDescription)) {
+				if (actionButton.getText().equals(goalDescription)) {
 					stillOkay = false;
 				}
 			}
@@ -925,17 +968,21 @@ public class DailyScrollController implements Initializable {
 				cardHolderHBox.getChildren().remove(0);
 						
 				AnchorPane blankAnchor = new AnchorPane();
+				blankAnchor.getStyleClass().add("weeklyGoalLineupNodeGone");
 				
-				cardHolderHBox.getChildren().add(blankAnchor);
 				blankAnchor.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
 				blankAnchor.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+				cardHolderHBox.getChildren().add(blankAnchor);
 				
 				FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/WeeklyGoalSectionNodeLocked.fxml"));
 				AnchorPane lockedNode = fxmlLoader.load();
+				AnchorPane marginKeeper = (AnchorPane) lockedNode.getChildren().get(0);
 				
-				Button completeButton = (Button) lockedNode.getChildren().get(0);
+				BorderPane actionButtonBorderPane = (BorderPane) marginKeeper.getChildren().get(0);
+				Button actionButton = (Button) actionButtonBorderPane.getLeft();
 				
-				Button unqueueButton = (Button) lockedNode.getChildren().get(2);
+				AnchorPane unqueueButtonHolder = (AnchorPane) marginKeeper.getChildren().get(1);
+				Button unqueueButton = (Button) unqueueButtonHolder.getChildren().get(0);
 				
 				//puts the lockedNode back into the list of lineup cards. does not affect database
 				unqueueButton.setOnAction(new EventHandler<ActionEvent>() { 
@@ -985,17 +1032,22 @@ public class DailyScrollController implements Initializable {
 						}
 		    		}
 				});
+								
+				actionButton.setText(goalDescription);
 				
-				AnchorPane labelHolder = (AnchorPane) lockedNode.getChildren().get(1);
-				Label label = (Label) labelHolder.getChildren().get(0);
+				actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+		    		@Override
+		    		public void handle(ActionEvent event) {
+		    			weeklyGoalSectionRightSideVBox.getChildren().remove(lockedNode);
+		    			
+		    			DatabaseHandler.deleteRepetitionFromWeeklyGoalTable(goalDescription);
+		    		}
+				});
 				
-				label.setText(goalDescription);
-				
-				lockedNode.maxWidthProperty().bind(weeklyGoalSectionRightSideVBox.widthProperty());
-				lockedNode.minWidthProperty().bind(weeklyGoalSectionRightSideVBox.widthProperty());
+				lockedNode.maxWidthProperty().bind(weeklyGoalRightSectionBorderAnchor.widthProperty().subtract(20));
+				lockedNode.minWidthProperty().bind(weeklyGoalRightSectionBorderAnchor.widthProperty().subtract(20));
 				
 				weeklyGoalSectionRightSideVBox.getChildren().add(lockedNode);
-					
 			}
 			else { //for now it is okay to do nothing on false TODO incomplete
 				
@@ -1024,6 +1076,58 @@ public class DailyScrollController implements Initializable {
 	}
 	
 	/*
+	 * first, we receive an ArrayList<ArrayList<String>> from the database handler which contains all the info we need
+	 * about the weekly goals and their statuses
+	 * 
+	 * second, recreate each weekly goal with the correct number of lineup nodes present
+	 */
+	private void loadFromWeeklyGoalDatabase() {
+		
+		ArrayList<ArrayList<String>> listOfLists = DatabaseHandler.loadFromWeeklyGoalTable();
+		
+		for (ArrayList<String> entry : listOfLists) {
+						
+			Integer originalCount = Integer.valueOf(entry.get(1));
+			HBox cardHolderHBox = createWeeklyGoalSectionCreationStageNode(entry.get(0), originalCount);
+												
+			Integer counter = 0;
+			Integer difference = originalCount - Integer.valueOf(entry.get(2));
+			
+			while (counter < difference) {
+				Double totalExtraSpace = (double) (widthOfSpacingOfCardLineupHBox * (originalCount - 1));
+				Double perEachExtraSpace = (double) totalExtraSpace / originalCount;
+				
+				cardHolderHBox.getChildren().remove(0);
+				
+				AnchorPane blankAnchor = new AnchorPane();
+				blankAnchor.getStyleClass().add("weeklyGoalLineupNodeGone");
+				
+				blankAnchor.maxWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+				blankAnchor.minWidthProperty().bind(cardHolderHBox.widthProperty().divide(originalCount).subtract(perEachExtraSpace));
+				cardHolderHBox.getChildren().add(blankAnchor);
+				
+				counter ++;
+			}
+		}
+	}
+	
+	/*
+	 * this needs to reset all the remaining repetitions values in the weeklygoaltable back to the total original count,
+	 * needs to remove all of the nodes from the weeklyGoalSectionRightSideVBox, and needs to replace all blank anchors with lineup nodes
+	 * (this can be done by just washing everything, then loading from the database again with the new values)
+	 */
+	public void weeklyGoalResetButtonPushed() {
+		
+		DatabaseHandler.resetRepetitionsFromWeeklyGoalTable();
+		
+		weeklyGoalSectionRightSideVBox.getChildren().clear();
+		weeklyGoalSectionLeftSideVBox.getChildren().clear();
+		
+		loadFromWeeklyGoalDatabase();
+	}
+	
+	
+	/*
 	 * replaces the 3 book indicators with the "library" so that new books can be chosen
 	 * 
 	 * TODO incomplete
@@ -1050,21 +1154,16 @@ public class DailyScrollController implements Initializable {
 		    	
 		    	Integer size = bookNotesTreeItem.getChildren().size();
 		    	Double counter = 0.0;
-		    	
-		    	System.out.println(size/3.0);
-		    			    	
+		    			    			    	
 		    	for (TreeItem<Note> treeItem : bookNotesTreeItem.getChildren()) {
 		    		
 		    		if (counter < size/3.0) {
-		    			//System.out.println(counter.toString() + " : first");
 		    			firstList.add(treeItem);
 		    		}
 		    		else if (counter < 2*(size/3.0)) {
-		    			//System.out.println(counter.toString() + " : second");
 		    			secondList.add(treeItem);
 		    		}
 		    		else {
-		    			//System.out.println(counter.toString() + " : third");
 		    			thirdList.add(treeItem);
 		    		}
 		    		++ counter;

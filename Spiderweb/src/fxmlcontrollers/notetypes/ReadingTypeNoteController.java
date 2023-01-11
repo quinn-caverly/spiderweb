@@ -84,9 +84,49 @@ public class ReadingTypeNoteController implements Initializable {
         button.setOnAction(new EventHandler<ActionEvent>() { 
 		@Override
 		public void handle(ActionEvent event) {
-
 			collectorVBox.getChildren().remove(anchor);
+		}});
+	}
+	
+	private void handleUpButtonListener(Button button, AnchorPane anchor) {
+        button.setOnAction(new EventHandler<ActionEvent>() { 
+		@Override
+		public void handle(ActionEvent event) {
+			//first, find the index of the node which is being pushed up
+			Integer counter = 0;
+			for (Node node: collectorVBox.getChildren()) {
+				if (((AnchorPane) node).equals(anchor)) {
+					break;
+				}
+				counter += 1;
+			}
 			
+			if (counter != 0) { //if it equals 0, can't go up
+				collectorVBox.getChildren().remove(anchor);
+				
+				collectorVBox.getChildren().add(counter-1, anchor);
+			}
+		}});
+	}
+	
+	private void handleDownButtonListener(Button button, AnchorPane anchor) {
+        button.setOnAction(new EventHandler<ActionEvent>() { 
+		@Override
+		public void handle(ActionEvent event) {
+			//first, find the index of the node which is being pushed up
+			Integer counter = 0;
+			for (Node node: collectorVBox.getChildren()) {
+				if (((AnchorPane) node).equals(anchor)) {
+					break;
+				}
+				counter += 1;
+			}
+			
+			if (counter != collectorVBox.getChildren().size()-1) { //if it is the last element, can't go down
+				collectorVBox.getChildren().remove(anchor);
+				
+				collectorVBox.getChildren().add(counter+1, anchor);
+			}
 		}});
 	}
 
@@ -125,7 +165,15 @@ public class ReadingTypeNoteController implements Initializable {
 			
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
-			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			
@@ -177,7 +225,15 @@ public class ReadingTypeNoteController implements Initializable {
 			
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
-			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			
@@ -234,7 +290,15 @@ public class ReadingTypeNoteController implements Initializable {
 
 			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(4);
-			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(0);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
 			
 			handleCloseButtonListener(removeNodeButton, anchor);
 			

@@ -17,9 +17,16 @@
             <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="500.0" prefWidth="200.0" />
          </children>
       </VBox>
-      <AnchorPane maxWidth="50.0" minWidth="50.0" HBox.hgrow="ALWAYS">
+      <AnchorPane maxWidth="70.0" minWidth="70.0" HBox.hgrow="ALWAYS">
          <children>
-            <Button fx:id="removeNodeButton1" mnemonicParsing="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="10.0">
+            <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="55.0" AnchorPane.topAnchor="10.0">
+               <children>
+                  <Button maxWidth="15.0" minWidth="15.0" mnemonicParsing="false" prefHeight="10000.0" text="Button" VBox.vgrow="ALWAYS" />
+                  <AnchorPane minHeight="10.0" />
+                  <Button maxWidth="15.0" minWidth="15.0" mnemonicParsing="false" prefHeight="10000.0" text="Button" VBox.vgrow="ALWAYS" />
+               </children>
+            </VBox>
+            <Button fx:id="removeNodeButton1" mnemonicParsing="false" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="10.0">
                <font>
                   <Font size="6.0" />
                </font>

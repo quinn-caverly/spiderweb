@@ -6,7 +6,7 @@
 
 <AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="60.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
    <children>
-      <AnchorPane fx:id="weeklyGoalSectionLockedColoredBackground" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
+      <AnchorPane fx:id="weeklyGoalSectionLockedColoredBackground" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0">
          <children>
             <BorderPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="90.0" AnchorPane.topAnchor="0.0">
                <left>
@@ -15,7 +15,7 @@
             </BorderPane>
             <AnchorPane maxWidth="45.0" minWidth="45.0" AnchorPane.bottomAnchor="0.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="0.0">
                <children>
-                  <Button minWidth="30.0" mnemonicParsing="false" AnchorPane.bottomAnchor="7.5" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="7.5" />
+                  <Button maxWidth="30.0" minWidth="30.0" mnemonicParsing="false" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0" />
                </children>
             </AnchorPane>
          </children>
