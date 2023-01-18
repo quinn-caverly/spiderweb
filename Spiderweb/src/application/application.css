@@ -243,6 +243,43 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
   -fx-background-radius: 4.5px;
 }
 
+#chapterDescriptionButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 20px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#chapterDescriptionButton:hover {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+#chapterDescriptionButton:pressed {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+#sectionDescriptionButton {
+  -fx-font-family: "Quicksand";
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 22px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#sectionDescriptionButton:hover {
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+}
+
+#sectionDescriptionButton:pressed {
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+}
+
 /*******************************************************************************
  *                                                                             *
  * Buttons                                                                     *
@@ -270,7 +307,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 * Buttons which will only show the text when hovered over
 */
 #saveButton, #saveAllButton, #refreshSimilarsButton, #weeklyGoalResetButton,
-#addAnalysisButton, #addBothButton, #addQuoteButton {
+#addAnalysisButton, #addBothButton, #addQuoteButton, #addSectionButton, #addChapterButton {
   -fx-text-fill: transparent;
   -fx-font-size: 13px;
   -fx-border-radius: 5px;
@@ -280,14 +317,16 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 }
 
 #saveButton:hover, #saveAllButton:hover, #refreshSimilarsButton:hover, #weeklyGoalResetButton:hover,
-#addAnalysisButton:hover, #addBothButton:hover, #addQuoteButton:hover {
+#addAnalysisButton:hover, #addBothButton:hover, #addQuoteButton:hover,
+#addSectionButton:hover, #addChapterButton:hover {
   -fx-text-fill: -full-grayish-white;
   -fx-background-color: rgba(44, 44, 44, 0.95);
 }
 
 #saveButton:pressed, #saveAllButton:pressed,
 #refreshSimilarsButton:pressed, #weeklyGoalResetButton:pressed,
-#addAnalysisButton:pressed, #addBothButton:pressed, #addQuoteButton:pressed {
+#addAnalysisButton:pressed, #addBothButton:pressed, #addQuoteButton:pressed,
+#addSectionButton:pressed, #addChapterButton:pressed {
   -fx-background-color: rgb(40, 40, 40);
 }
 
@@ -379,7 +418,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  * Daily Scroll Specific                                                       *
  *                                                                             *
  ******************************************************************************/
-#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection {
+#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection, #rightTextSection, #leftTextSection {
   -fx-border-color: transparent;
   -fx-border-width: 0px;
   -fx-border-radius: 5px;
@@ -601,6 +640,15 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
   -fx-border-color: -default-gray;
   -fx-border-radius: 3px;
   -fx-border-width: 3px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Text Sections                                                 *
+ *                                                                             *
+ ******************************************************************************/
+#leftTextSectionTextArea, #rightTextSectionTextArea {
+  -fx-background-color: rgba(255, 255, 255, 0.2);
 }
 
 /*# sourceMappingURL=application.css.map */

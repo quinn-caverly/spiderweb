@@ -14,9 +14,11 @@ import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import handlers.NoteChooserHandler.Note;
 import javafx.scene.Node;
+import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import overriders.AnchorForReadingType;
@@ -65,7 +67,10 @@ public final class DatabaseHandler {
 		    statement.executeUpdate("CREATE TABLE AnalysisContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// A
 		    statement.executeUpdate("CREATE TABLE QuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Contents VARCHAR(30000))");// Q
 		    statement.executeUpdate("CREATE TABLE AnalysisAndQuoteContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, AnalysisContents VARCHAR(30000), QuoteContents VARCHAR(30000))");// B
-		   
+		    statement.executeUpdate("CREATE TABLE SectionContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// S
+		    statement.executeUpdate("CREATE TABLE ChapterContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// C
+
+		    
 		    //for saving the treeView structure
 		    statement.executeUpdate("CREATE TABLE TreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot CHAR(1))");
 		    
@@ -548,6 +553,66 @@ public final class DatabaseHandler {
 					e.printStackTrace();
 				}
 			}
+			
+			else if (anchorSpecial.getType().equals("Section")) {
+				
+				BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+				Button nameButton = (Button) borderPane.getCenter();
+				String name = prepareStringForSQL(nameButton.getText());
+
+				try {
+				    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO SectionContainer (Name) VALUES ('" + name + "')", Statement.RETURN_GENERATED_KEYS);
+				    
+				    preparedStatement.executeUpdate();
+				    
+				    //will have to query the database to see which id was generated for the container
+			        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+			            if (generatedKeys.next()) { //this is in an iteration loop but will only run once because there will only be 1 insert
+						    String generatedId = generatedKeys.getString(1);
+			            	
+			            	ArrayList<String> arrayListToAdd = new ArrayList<String>();
+			            	arrayListToAdd.add("S"); //Q because this is a quote container
+			            	arrayListToAdd.add(generatedId);
+			            	containerSequence.add(arrayListToAdd);
+			            }
+			            else {
+			                throw new SQLException("Inserting failed, no Quote Id obtained");
+			            }
+			        }
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
+			else if (anchorSpecial.getType().equals("Chapter")) {
+				BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+				Button nameButton = (Button) borderPane.getCenter();
+				String name = prepareStringForSQL(nameButton.getText());
+
+				try {
+				    PreparedStatement preparedStatement = connection.prepareStatement("INSERT INTO ChapterContainer (Name) VALUES ('" + name + "')", Statement.RETURN_GENERATED_KEYS);
+				    
+				    preparedStatement.executeUpdate();
+				    
+				    //will have to query the database to see which id was generated for the container
+			        try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+			            if (generatedKeys.next()) { //this is in an iteration loop but will only run once because there will only be 1 insert
+						    String generatedId = generatedKeys.getString(1);
+			            	
+			            	ArrayList<String> arrayListToAdd = new ArrayList<String>();
+			            	arrayListToAdd.add("C"); //Q because this is a quote container
+			            	arrayListToAdd.add(generatedId);
+			            	containerSequence.add(arrayListToAdd);
+			            }
+			            else {
+			                throw new SQLException("Inserting failed, no Quote Id obtained");
+			            }
+			        }
+					
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+			}
 		}
 		
         connection.close();
@@ -631,7 +696,14 @@ public final class DatabaseHandler {
 		 */
 		else if (innerList.get(0).equals("B")) {
 			statement.executeUpdate("DELETE FROM AnalysisAndQuoteContainer WHERE Id = " + innerList.get(1));
-
+		}
+		
+		else if (innerList.get(0).equals("C")) {
+			statement.executeUpdate("DELETE FROM ChapterContainer WHERE Id = " + innerList.get(1));
+		}
+		
+		else if (innerList.get(0).equals("S")) {
+			statement.executeUpdate("DELETE FROM SectionContainer WHERE Id = " + innerList.get(1));
 		}
 		
 		else {
@@ -658,7 +730,8 @@ public final class DatabaseHandler {
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
-		    statement.executeUpdate("CREATE TABLE WeeklyGoalTable (Title VARCHAR(1000), Repetitions Int, Remaining Int)");
+		    statement.executeUpdate("CREATE TABLE SectionContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// S
+		    statement.executeUpdate("CREATE TABLE ChapterContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// C
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -857,8 +930,25 @@ public final class DatabaseHandler {
 						quoteTextArea.setText(resSet.getString("QuoteContents"));
 						analysisTextArea.setText(resSet.getString("AnalysisContents"));
 				    }
-
 				}
+			    else if (type.equals("S")) { //Section
+			    	
+					Statement subStatement = connection.createStatement();
+				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM SectionContainer WHERE Id = " + id);
+				    
+				    if (resSet.next()) {
+						rtnc.createSection(resSet.getString("Name"));
+				    }
+			    }
+			    else if (type.equals("C")) { //Section
+			    	
+					Statement subStatement = connection.createStatement();
+				    ResultSet resSet = subStatement.executeQuery("SELECT * FROM ChapterContainer WHERE Id = " + id);
+				    
+				    if (resSet.next()) {
+						rtnc.createChapter(resSet.getString("Name"));
+				    }
+			    }
 				else {
 					throw new SQLException("Something went wrong, Reading Page Container Type is not A, Q, or B");
 				}	

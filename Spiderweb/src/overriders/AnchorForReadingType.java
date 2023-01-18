@@ -14,6 +14,7 @@ public class AnchorForReadingType extends AnchorPane {
 		return type;
 	}
 	
-	
-
+	public void setType(String type) {
+		this.type = type;
+	}
 }

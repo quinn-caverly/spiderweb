@@ -12,8 +12,11 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
@@ -33,6 +36,10 @@ public class ReadingTypeNoteController implements Initializable {
 	private VBox collectorVBox;
 	@FXML
 	private AnchorPane parentOfScrollPane;
+	@FXML
+	private Button addChapterButton;
+	@FXML
+	private Button addSectionButton;
 	
 	//subtracted from the bound width in order to prevent bottom scrollbar from being necessary due to
 	//the right-side scrollbar eating up space
@@ -56,7 +63,7 @@ public class ReadingTypeNoteController implements Initializable {
 		@Override
 		public void handle(ActionEvent event) {
 			pushAnalysisButton();
-		}
+			}
         });
         
         
@@ -67,7 +74,7 @@ public class ReadingTypeNoteController implements Initializable {
 		@Override
 		public void handle(ActionEvent event) {
 			pushQuoteButton();
-		}
+			}
         });
         
         
@@ -76,7 +83,21 @@ public class ReadingTypeNoteController implements Initializable {
 		@Override
 		public void handle(ActionEvent event) {
 			pushBothButton();
-		}
+			}
+        });
+        
+        addChapterButton.setOnAction(new EventHandler<ActionEvent>() { 
+		@Override
+		public void handle(ActionEvent event) {
+			pushChapterButton();
+			}
+        });
+        
+        addSectionButton.setOnAction(new EventHandler<ActionEvent>() { 
+    		@Override
+    		public void handle(ActionEvent event) {
+    			pushSectionButton();
+    		}
         });
 	}
 	
@@ -288,7 +309,6 @@ public class ReadingTypeNoteController implements Initializable {
 			//color has to be set here instead of CSS because analysis and quote boxes do not have unique ids as they share the same fxml
 			quoteSide.setStyle("-fx-background-color: rgba(40, 40, 40, 0.95);");
 
-			//handles the close button
 			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(4);
 			
 			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
@@ -315,16 +335,246 @@ public class ReadingTypeNoteController implements Initializable {
 		return null;
 	}
 	
+	public void pushChapterButton() {
+		
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ReadingTypeSubFXMLs/Divider.fxml"));
+        
+        try {
+			AnchorForReadingType anchor = new AnchorForReadingType("Unverified Chapter");
+			HBox mainHBox = fxmlLoader.load();
+			
+			//adds the HBox to the anchor and binds the hbox to the dimensions
+			anchor.getChildren().add(mainHBox);
+			
+			mainHBox.minWidthProperty().bind(anchor.widthProperty());
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			
+			mainHBox.minHeightProperty().bind(anchor.heightProperty());
+			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
+						
+			collectorVBox.getChildren().add(anchor);
+			
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+
+			//the both box will be slightly larger to compensate for being half the width 
+			anchor.setMaxHeight(85);
+			anchor.setMinHeight(85);
+			
+			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
+			
+			handleCloseButtonListener(removeNodeButton, anchor);
+			
+			BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+			
+			AnchorPane actionButtonAnchor = (AnchorPane) borderPane.getLeft();
+			Button actionButton = (Button) actionButtonAnchor.getChildren().get(0);
+			TextField descriptionField = (TextField) borderPane.getCenter();
+			
+			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+			@Override
+			public void handle(ActionEvent event) {
+				Button roleButton = new Button();
+				roleButton.setText(descriptionField.getText());
+				roleButton.setId("chapterDescriptionButton");
+				
+				borderPane.getChildren().clear();
+				borderPane.setCenter(roleButton);
+				
+				anchor.setType("Chapter");
+			}
+	        });
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 	
-	//this needs to go through and find simply concatenate all of the text in the various components and then return it
+	public void createChapter(String name) {
+		
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ReadingTypeSubFXMLs/Divider.fxml"));
+        
+        try {
+			AnchorForReadingType anchor = new AnchorForReadingType("Chapter");
+			HBox mainHBox = fxmlLoader.load();
+			
+			//adds the HBox to the anchor and binds the hbox to the dimensions
+			anchor.getChildren().add(mainHBox);
+			
+			mainHBox.minWidthProperty().bind(anchor.widthProperty());
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			
+			mainHBox.minHeightProperty().bind(anchor.heightProperty());
+			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
+						
+			collectorVBox.getChildren().add(anchor);
+			
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+
+			anchor.setMaxHeight(85);
+			anchor.setMinHeight(85);
+			
+			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
+			
+			handleCloseButtonListener(removeNodeButton, anchor);
+			
+			BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+	
+			Button roleButton = new Button();
+			roleButton.setText(name);
+			roleButton.setId("chapterDescriptionButton");
+			
+			borderPane.getChildren().clear();
+			borderPane.setCenter(roleButton);
+							
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void pushSectionButton() {
+		
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ReadingTypeSubFXMLs/Divider.fxml"));
+        
+        try {
+			AnchorForReadingType anchor = new AnchorForReadingType("Unverified Section");
+			HBox mainHBox = fxmlLoader.load();
+			
+			//adds the HBox to the anchor and binds the hbox to the dimensions
+			anchor.getChildren().add(mainHBox);
+			
+			mainHBox.minWidthProperty().bind(anchor.widthProperty());
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			
+			mainHBox.minHeightProperty().bind(anchor.heightProperty());
+			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
+						
+			collectorVBox.getChildren().add(anchor);
+			
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+
+			//the both box will be slightly larger to compensate for being half the width 
+			anchor.setMaxHeight(85);
+			anchor.setMinHeight(85);
+			
+			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
+			
+			handleCloseButtonListener(removeNodeButton, anchor);
+			
+			BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+			
+			AnchorPane actionButtonAnchor = (AnchorPane) borderPane.getLeft();
+			Button actionButton = (Button) actionButtonAnchor.getChildren().get(0);
+			TextField descriptionField = (TextField) borderPane.getCenter();
+			
+			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+			@Override
+			public void handle(ActionEvent event) {
+				Button roleButton = new Button();
+				roleButton.setText(descriptionField.getText());
+				roleButton.setId("sectionDescriptionButton");
+				
+				borderPane.getChildren().clear();
+				borderPane.setCenter(roleButton);
+				
+				anchor.setType("Section");
+			}
+	        });
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public void createSection(String name) {
+		
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ReadingTypeSubFXMLs/Divider.fxml"));
+        
+        try {
+			AnchorForReadingType anchor = new AnchorForReadingType("Section");
+			HBox mainHBox = fxmlLoader.load();
+			
+			//adds the HBox to the anchor and binds the hbox to the dimensions
+			anchor.getChildren().add(mainHBox);
+			
+			mainHBox.minWidthProperty().bind(anchor.widthProperty());
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			
+			mainHBox.minHeightProperty().bind(anchor.heightProperty());
+			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
+						
+			collectorVBox.getChildren().add(anchor);
+			
+			anchor.minWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+			anchor.maxWidthProperty().bind(collectorVBox.widthProperty().subtract(scrollbarBuffer));
+
+			anchor.setMaxHeight(85);
+			anchor.setMinHeight(85);
+			
+			AnchorPane buttonAnchor = (AnchorPane) mainHBox.getChildren().get(2);
+			
+			VBox directionVBox = (VBox) buttonAnchor.getChildren().get(0);
+			Button upButton = (Button) directionVBox.getChildren().get(0);
+			Button downButton = (Button) directionVBox.getChildren().get(2);
+			
+			handleUpButtonListener(upButton, anchor);
+			handleDownButtonListener(downButton, anchor);
+			
+			Button removeNodeButton = (Button) buttonAnchor.getChildren().get(1);
+			
+			handleCloseButtonListener(removeNodeButton, anchor);
+			
+			BorderPane borderPane = (BorderPane) mainHBox.getChildren().get(1);
+	
+			Button roleButton = new Button();
+			roleButton.setText(name);
+			roleButton.setId("sectionDescriptionButton");
+			
+			borderPane.getChildren().clear();
+			borderPane.setCenter(roleButton);
+							
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * Concatenates all of the contents into a single string and returns it
+	 * 
+	 * the chapter and section nodes are excluded from this, they are simply glossed over in the iteration
+	 */
 	public String returnTextForClassifier() {
 		
 		//will iterate through and add to this string as it goes on
 		String sumContents = "";
-		
-		
-		//the following code is very similar to the saveReadingNote method in ReadAndWriteHandler
-		
+				
 		for (Node node :getCollectorVBox().getChildren()) {
 			
 			//each anchor is actually a AnchorForReadingType, after it is cast we can see what type it is, Quote, Reading, Both
@@ -335,10 +585,10 @@ public class ReadingTypeNoteController implements Initializable {
 			
 			//this is called here to avoid redundancy
 			HBox mainHBox = (HBox) anchorSpecial.getChildren().get(0);
-			VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
 			
 			if (type == "Analysis") {
 				
+				VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea analysisTextArea = (TextArea) mainVBox.getChildren().get(1);
 				
 			   sumContents += analysisTextArea.getText() + " ";
@@ -346,13 +596,14 @@ public class ReadingTypeNoteController implements Initializable {
 			
 			else if (type == "Quote") {
 				
+				VBox mainVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea quoteTextArea = (TextArea) mainVBox.getChildren().get(1);
 				
 				sumContents += quoteTextArea.getText() + " ";
 			}
 			
 			//this will be if the type is quote, can only be 3 types, hard else clause for principle
-			else {
+			else if (type == "Both") {
 				
 				VBox quoteVBox = (VBox) mainHBox.getChildren().get(1);
 				TextArea quoteTextArea = (TextArea) quoteVBox.getChildren().get(1);

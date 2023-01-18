@@ -186,6 +186,12 @@ public class DailyScrollController implements Initializable {
 	private ScrollPane longTermGoalScrollPane;
 	@FXML
 	private ScrollPane weeklyGoalRightSideScrollPane;
+	@FXML
+	private AnchorPane anchorOfToDoSectionScrollPane;
+	@FXML
+	private AnchorPane leftTextSection;
+	@FXML
+	private AnchorPane rightTextSection;
 	
 	
 	
@@ -216,13 +222,11 @@ public class DailyScrollController implements Initializable {
 		/*
 		 * to do section
 		 */
-		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
-		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
+		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
+		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
 		
-		toDoVBox.setMinHeight(200);
-		toDoVBox.setMaxHeight(200);
-		dailyScrollToDoSection.setMinHeight(240);
-		dailyScrollToDoSection.setMaxHeight(240);
+		toDoVBox.prefWidthProperty().bind(anchorOfToDoSectionScrollPane.widthProperty().subtract(30));
+		toDoVBox.prefHeightProperty().bind(anchorOfToDoSectionScrollPane.heightProperty().subtract(30));
 		
 		topButtonHolder.getChildren().remove(whenNeededButton);
 
@@ -274,6 +278,27 @@ public class DailyScrollController implements Initializable {
 		thirdBookshelf.prefWidthProperty().bind(thirdBookshelfAnchor.widthProperty());
 		
 		bookshelfHBox.setPrefHeight(295);
+		
+		/*
+		 * text sections
+		 */
+		
+		//left
+		leftTextSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		leftTextSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
+		
+		leftTextSection.setMinHeight(400);
+		
+		//leftTextSection.prefHeightProperty().bind(leftMarginKeeper.heightProperty().subtract(bookSection.heightProperty()
+		//		.add(bookSection.heightProperty().add(weeklyGoalSection.heightProperty().add(longTermGoalSection.heightProperty())))));
+		//leftTextSection.prefHeightProperty().bind(leftMarginKeeper.heightProperty().subtract(bookSection.heightProperty()));
+		leftTextSection.setPrefHeight(1000);
+		
+		//right
+		rightTextSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
+		rightTextSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
+		
+		rightTextSection.setMinHeight(400);
 	}
 	
 	/*
@@ -376,14 +401,14 @@ public class DailyScrollController implements Initializable {
 	 * this way, it can hold node specific attributes without making a reference to a controller
 	 */
 	public void toDoSectionButtonPushed() {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/ToDoSectionNodeExperiment.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/ToDoSectionNode.fxml"));
 		try {
 			AnchorPane loadedNode = fxmlLoader.load();
 						
 			toDoVBox.getChildren().add(loadedNode);
 			
-			loadedNode.maxWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(15));
-			loadedNode.minWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(15));
+			loadedNode.maxWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
+			loadedNode.minWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
 			
 			
 			//TODO these are static references and can break if the tree structure of the node changes
@@ -394,13 +419,6 @@ public class DailyScrollController implements Initializable {
 			
 			handleDeleteButtonListener(deleteButton, loadedNode, toDoVBox);
 			
-			HBox leftSideHBox = (HBox) originalAnchor.getChildren().get(0);
-
-			Button toDoSectionNodeReflectButton = (Button) leftSideHBox.getChildren().get(0);
-			Button toDoSectionNodeCheckButton = (Button) leftSideHBox.getChildren().get(2);
-			Button toDoSectionNodeLockButton = (Button) leftSideHBox.getChildren().get(4);
-			
-			handleLockButtonListener(toDoSectionNodeLockButton);
 			
 			AnchorPane secondAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(1);
 			AnchorPane nestedAnchor = (AnchorPane) secondAnchor.getChildren().get(0);
@@ -566,28 +584,6 @@ public class DailyScrollController implements Initializable {
 			vbox.getChildren().remove(anchor);
 			
 			adjustToDoSectionVBoxHeight();
-		}});
-	}
-	
-	/*
-	 * when the lock button is pushed, change the color from green to gray, enable the pushing of the 
-	 * check button
-	 * 
-	 * (later will add some functionality here, maybe turn the textfield into a label for cosmetic purposes)
-	 */
-	private void handleLockButtonListener(Button button) {
-        button.setOnAction(new EventHandler<ActionEvent>() { 
-		@Override
-		public void handle(ActionEvent event) {
-						
-			button.setStyle("-fx-background: rgba(65, 65, 65, 0.9);"
-					+ " -fx-hovered-background: rgba(65, 65, 65, 0.95);"
-					+ " -fx-pressed-background: rgba(65, 65, 65, 1);");
-			
-			
-			button.getStylesheets().add(getClass().getResource("src/application/application.css").toExternalForm());
-			button.getStyleClass().add("test");
-		
 		}});
 	}
 	
