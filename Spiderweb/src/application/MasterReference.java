@@ -312,16 +312,19 @@ public class MasterReference {
 	 * saves only the note which is currently opened on the tabPane
 	 */
 	public void saveCurrentNote() throws IOException {
-		//there could be no tabs in the tabPane
 		TabPane noteTabPane = mCC.getNoteTabPane();
-
 		Tab selectedTab = noteTabPane.getSelectionModel().getSelectedItem();
 		
 		if (selectedTab!=null) {
 			
 			TypeTab typeTab = (TypeTab) selectedTab;
 			
-			saveNote(typeTab.getTreeItem());
+			if (typeTab.getTreeItem() != null) {
+				saveNote(typeTab.getTreeItem());
+			}
+			else if (typeTab.getScroll() != null) {
+				System.out.println("scroll");
+			}
 		}
 	}	
 	
@@ -333,6 +336,12 @@ public class MasterReference {
 		DatabaseHandler.savePageToDatabase(treeItem.getValue());
 		
 		pipeline.runThroughPipeline(treeItem.getValue());
+	}
+	
+	public void saveScroll(Note scroll) {
+		//todo incomplete
+		
+		
 	}
 	
 	public void renameCurrentNote() throws IOException {

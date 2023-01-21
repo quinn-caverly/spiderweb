@@ -246,7 +246,7 @@ public final class DatabaseHandler {
 		    Statement statement = connection.createStatement();
 		    
 		    StandardTypeNoteController stnc = (StandardTypeNoteController) standardPage.getController();
-		    TextArea mainTextArea = stnc.getMainTextArea();
+		    TextArea mainTextArea = stnc.getStandardTypeMainTextArea();
 		    
 		    String BoxContents = prepareStringForSQL(mainTextArea.getText());
 		    
@@ -828,8 +828,8 @@ public final class DatabaseHandler {
 
 			StandardTypeNoteController stnc = (StandardTypeNoteController) standardNote.getController();
 			
-			stnc.getMainTextArea().setText(resultSet.getString("BoxContents"));
-			stnc.getTitleArea().setText(resultSet.getString("Title"));
+			stnc.getStandardTypeMainTextArea().setText(resultSet.getString("BoxContents"));
+			stnc.getStandardTypeNoteTitleButton().setText(resultSet.getString("Title"));
 						
 			treeList.add(new TreeItem<Note>(standardNote));
 	    }

@@ -166,10 +166,7 @@ public class NoteChooserHandler {
 
 	        	try {
 					root = loader.load();
-					
-		        	StandardTypeNoteController stnc = loader.getController();
-		        	stnc.setMasterReference(mR);
-		        	
+		        	StandardTypeNoteController stnc = loader.getController();		        	
 		        	controller = stnc;
 		        	
 				} catch (IOException e) {

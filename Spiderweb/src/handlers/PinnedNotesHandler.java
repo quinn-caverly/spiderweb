@@ -120,7 +120,7 @@ public class PinnedNotesHandler {
         			if (currentNote.getTypeOfNote() == "Standard") {
         				StandardTypeNoteController stnc = (StandardTypeNoteController) currentNote.getController();
         				
-        				textArea.setText(stnc.getMainTextArea().getText());
+        				textArea.setText(stnc.getStandardTypeMainTextArea().getText());
         			}
         			
         			else if (currentNote.getTypeOfNote() == "Daily") {

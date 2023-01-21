@@ -264,24 +264,51 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  *                                                                             *
  ******************************************************************************/
 
-#titleArea {
-	-fx-background-color: rgba(246, 229, 195, 0.8);
+#standardTypeMarginKeeper {
+	-fx-border-color: transparent;
+	-fx-border-width: 0px;
+	-fx-border-radius: 5px;
+	
+	-fx-background-color:  rgba(47, 47, 47, 0.55);
+	-fx-background-radius: 10px;
+	
+	-fx-effect: -light-transparent-drop-shadow;
 }
 
-#titleArea:hover {
+#standardTypeMainTextArea {
+	-fx-background-color: rgba(46, 46, 46, 0.95);
+    -fx-font-size: 18px;
 }
 
-#mainTextArea {
-	-fx-background-color: rgba(246, 229, 195, 0.8);
+//identical to the chapter button in reading type note
+#standardTypeNoteTitleButton {
+ 	-fx-text-fill: -full-grayish-white;
+ 	-fx-font-size: 23px;
+ 	
+	-fx-effect: -light-drop-shadow;
+ 	 	
+ 	-fx-border-radius: 5px;
+ 	-fx-border-width: 0px;
+ 	
+ 	-fx-background-color:  rgba(50, 50, 50, 0.9);
+ 	-fx-background-radius: 7px;
+}
+#standardTypeNoteTitleButton:hover {
+ 	-fx-background-color:  rgba(50, 50, 50, 0.9);
+}
+#standardTypeNoteTitleButton:pressed {
+ 	-fx-background-color:  rgba(50, 50, 50, 0.9);
 }
 
-#mainTextArea:hover {
-}
-
-
-
+/*******************************************************************************
+ *                                                                             *
+ * Invisible TabPane                                                           *
+ *                                                                             *
+ ******************************************************************************/
+ //the component is a tabpane for the functionality of switching between panes, though the visible tabpane functions are removed
+ 
 #standardTypeTabPane, #treeViewTabPane {
-	-fx-tab-max-height: 0; /* this is because the buttons above operate as the tabs */
+	-fx-tab-max-height: 0;
 }
 
 #standardTypeTabPane, #treeViewTabPane > .tab-header-area {
