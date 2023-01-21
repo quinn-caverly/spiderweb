@@ -225,6 +225,8 @@ public class DailyScrollController implements Initializable {
 		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
 		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
 		
+		dailyScrollToDoSection.setMinHeight(200);
+		
 		toDoVBox.prefWidthProperty().bind(anchorOfToDoSectionScrollPane.widthProperty().subtract(30));
 		toDoVBox.prefHeightProperty().bind(anchorOfToDoSectionScrollPane.heightProperty().subtract(30));
 		

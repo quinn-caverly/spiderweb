@@ -288,13 +288,11 @@ public class MainClassController implements Initializable {
 	}
 	
 	public void newDailyPageButtonPushed() {
-		
 		Note newDailyScroll = mR.getNoteChooserHandler().new Note("Test", "DailyScroll");
 				
 		dailyPageList.getItems().add(newDailyScroll);
 		
 		mR.openNote(newDailyScroll);
-		
 	}
 	
 

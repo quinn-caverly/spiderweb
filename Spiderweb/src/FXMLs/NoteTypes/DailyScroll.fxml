@@ -198,7 +198,8 @@
                                                    <children>
                                                       <AnchorPane fx:id="anchorOfLongTermGoalScrollPane1" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <TextArea fx:id="leftTextSectionTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="7.5" AnchorPane.leftAnchor="7.5" AnchorPane.rightAnchor="7.5" AnchorPane.topAnchor="7.5" />
+                                                            <TextArea fx:id="leftTextSectionTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="12.5" AnchorPane.leftAnchor="12.5" AnchorPane.rightAnchor="42.5" AnchorPane.topAnchor="12.5" />
+                                                            <Button maxWidth="17.5" minWidth="17.5" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="12.5" AnchorPane.rightAnchor="12.5" AnchorPane.topAnchor="12.5" />
                                                          </children>
                                                       </AnchorPane>
                                                    </children>
@@ -241,7 +242,8 @@
                                                    <children>
                                                       <AnchorPane fx:id="anchorOfLongTermGoalScrollPane11" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                                                          <children>
-                                                            <TextArea fx:id="rightTextSectionTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="7.5" AnchorPane.leftAnchor="7.5" AnchorPane.rightAnchor="7.5" AnchorPane.topAnchor="7.5" />
+                                                            <TextArea fx:id="rightTextSectionTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="12.5" AnchorPane.leftAnchor="12.5" AnchorPane.rightAnchor="42.5" AnchorPane.topAnchor="12.5" />
+                                                            <Button maxWidth="17.5" minWidth="17.5" mnemonicParsing="false" text="Button" AnchorPane.bottomAnchor="12.5" AnchorPane.rightAnchor="12.5" AnchorPane.topAnchor="12.5" />
                                                          </children>
                                                       </AnchorPane>
                                                    </children>

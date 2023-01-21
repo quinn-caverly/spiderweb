@@ -5,6 +5,8 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.ResourceBundle;
 
+import javafx.collections.ListChangeListener.Change;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -54,8 +56,8 @@ public class ReadingTypeNoteController implements Initializable {
 		marginKeeper.maxWidthProperty().bind(parentOfScrollPane.widthProperty());
 		
 		//the margin keeper height is bounded to its child, or the collector vbox, this makes it so that the scrollpane is activated as the anchorpane becomes larger than the area
-		marginKeeper.minHeightProperty().bind(collectorVBox.heightProperty());
-		marginKeeper.maxHeightProperty().bind(collectorVBox.heightProperty());
+		marginKeeper.minHeightProperty().bind(collectorVBox.heightProperty().add(10));
+		marginKeeper.maxHeightProperty().bind(collectorVBox.heightProperty().add(10));
 		
 		
         //When the Add Analysis Button is Pushed
@@ -99,6 +101,8 @@ public class ReadingTypeNoteController implements Initializable {
     			pushSectionButton();
     		}
         });
+        
+       
 	}
 	
 	private void handleCloseButtonListener(Button button, AnchorPane anchor) {

@@ -87,7 +87,7 @@ public class NoteChooserHandler {
 		private TreeViewCellController cellController;
 		
 		private HBox treeViewHBox;
-		private HBox listViewHBox;
+		private AnchorPane listViewAnchor;
 
 	    private final String name;
 	    private final String typeOfNote;
@@ -139,23 +139,22 @@ public class NoteChooserHandler {
 	        else { //sets style in the listView
 	            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/ListViewCell.fxml"));
 		    	try {
-					HBox loadedHBox = fxmlLoader.load();
+					AnchorPane listViewAnchor = fxmlLoader.load();
 					
-					this.listViewHBox = loadedHBox;
-	
-					Label label = (Label) loadedHBox.getChildren().get(0);
+					this.listViewAnchor = listViewAnchor;
 					
+					Button button = (Button) listViewAnchor.getChildren().get(0);
+						
 					LocalDate date = LocalDate.now();
 					
 					String day = String.valueOf(date.getDayOfMonth());
 					String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
 					String year = String.valueOf(date.getYear());
 
+					button.setStyle("-fx-font-size: 16px;");
+					button.setText(day + " " + month + " " + year);
 					
-					label.setText(day + " " + month + " " + year);
-					
-					loadedHBox.setMaxHeight(32);
-					loadedHBox.setMaxWidth(100);
+					listViewAnchor.setMaxWidth(100);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -289,8 +288,8 @@ public class NoteChooserHandler {
 			return treeViewHBox;
 		}
 		
-		public HBox getListViewHBox() {
-			return listViewHBox;
+		public AnchorPane getListViewAnchor() {
+			return listViewAnchor;
 		}
 
 		public Integer getId() {
@@ -388,7 +387,7 @@ public class NoteChooserHandler {
 		        if (note == null || empty) {
 		            setGraphic(null);
 		        } else {	        	
-		        	setGraphic(note.getListViewHBox());
+		        	setGraphic(note.getListViewAnchor());
 		        }
 		    }
 		    

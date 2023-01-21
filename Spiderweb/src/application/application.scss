@@ -80,9 +80,13 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
     -white-gradient-vertical: linear-gradient(to bottom, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%);
     -white-gradient-horizontal: linear-gradient(to right, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%); 	
 	
-	
-    -fx-focus-color: rgba(210, 210, 210, 0.1);
-    -fx-faint-focus-color: rgba(210, 210, 210, 0.05);
+    -fx-focus-color: transparent;
+    -fx-faint-focus-color: transparent;
+    -fx-selection-bar: transparent;
+    -fx-cell-focus-inner-border: transparent;
+    
+    //-fx-focus-color: rgba(210, 210, 210, 0.1);
+    //-fx-faint-focus-color: rgba(210, 210, 210, 0.05);
     
     -standard-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 10, 0.0, 0 , 8);
     -light-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 5, 0.0, 0 , 3);
@@ -451,6 +455,8 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  
 .list-view {
  	-fx-background-color: -text-area-dark; 	
+ 	
+    -fx-selection-bar: transparent;
  }
  
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell{
@@ -458,11 +464,37 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 }
  
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
- 	-fx-background-color:  -background-purple-transparent;
+ 	-fx-background-color:  transparent;
 }
 
 .list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
- 	-fx-background-color:  -background-purple-transparent;
+ 	-fx-background-color:  transparent;
+}
+
+//overwriting modena.css...
+/* When the ListView is _not_ focused, we show alternate selection colors */
+.list-cell:filled:selected:focused, .list-cell:filled:selected, .list-view:horizontal .list-cell:filled:selected {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-selection-bar-text;
+}
+
+.list-cell:filled:selected:focused:disabled, .list-cell:filled:selected:disabled {
+    -fx-opacity: -fx-disabled-opacity;
+}
+
+.list-cell:filled:hover {
+    -fx-background-color: transparent;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.list-view:focused .list-cell:filled:focused:hover {
+    -fx-background-color: transparent;
+    -fx-background-insets: 0, 1, 2;
+    -fx-text-fill: -fx-text-inner-color;
+}
+
+.list-view:horizontal .list-cell:filled:selected, .list-view:horizontal .list-cell:filled:selected:hover {
+    -fx-background-color: linear-gradient(to right, derive(-fx-accent,-7%), derive(-fx-accent,-25%));
 }
 
 
@@ -530,7 +562,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	-fx-border-width: 0px;
 	-fx-border-radius: 5px;
 	
-	-fx-background-color:  rgba(47, 47, 47, 0.6);
+	-fx-background-color:  rgba(47, 47, 47, 0.55);
 	-fx-background-radius: 10px;
 	
 	-fx-effect: -light-transparent-drop-shadow;
@@ -779,7 +811,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
  
  #leftTextSectionTextArea, #rightTextSectionTextArea {
-	-fx-background-color: rgba(255, 255, 255, 0.2);
+	-fx-background-color: rgba(46, 46, 46, 0.95);
 }
  
  
