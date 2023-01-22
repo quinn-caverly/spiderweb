@@ -44,15 +44,7 @@
                                                             <Button fx:id="longTermGoalSectionButton" mnemonicParsing="false" onAction="#longTermGoalSectionButtonPushed" text="Button" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane fx:id="anchorOfLongTermGoalScrollPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
-                                                         <children>
-                                                            <ScrollPane fx:id="longTermGoalScrollPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                               <content>
-                                                                  <VBox fx:id="longTermGoalSectionVBox" prefHeight="200.0" prefWidth="100.0" />
-                                                               </content>
-                                                            </ScrollPane>
-                                                         </children>
-                                                      </AnchorPane>
+                                                      <VBox fx:id="longTermGoalSectionVBox" layoutX="10.0" layoutY="10.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
                                                    </children></AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
                                                 <AnchorPane fx:id="weeklyGoalSection" maxHeight="250.0" minHeight="250.0">

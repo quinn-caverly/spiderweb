@@ -62,6 +62,8 @@ public class DailyScrollController implements Initializable {
 	
 	private static Integer widthOfSpacingOfCardLineupHBox = 5;
 	
+	private static Double heightOfLongTermGoalSectionNode = 60.0;
+	
 	private MasterReference mR;
 	
 	@FXML
@@ -183,10 +185,6 @@ public class DailyScrollController implements Initializable {
 	@FXML
 	private ScrollPane weeklyGoalLeftSideScrollPane;
 	@FXML
-	private AnchorPane anchorOfLongTermGoalScrollPane;
-	@FXML
-	private ScrollPane longTermGoalScrollPane;
-	@FXML
 	private ScrollPane weeklyGoalRightSideScrollPane;
 	@FXML
 	private AnchorPane anchorOfToDoSectionScrollPane;
@@ -255,10 +253,7 @@ public class DailyScrollController implements Initializable {
 		longTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		longTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
-		longTermGoalSectionVBox.prefWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
-		longTermGoalSectionVBox.prefHeightProperty().bind(anchorOfLongTermGoalScrollPane.heightProperty().subtract(30));
-		
-		
+		longTermGoalSectionVBox.setMinHeight(100);
 
 		/*
 		 * weekly goal section
@@ -326,6 +321,29 @@ public class DailyScrollController implements Initializable {
 		}
 				
 		vbox.setMinHeight(totalHeightOfElements + newNodeHeight);
+		vbox.setMaxHeight(totalHeightOfElements + newNodeHeight);
+		
+		System.out.println(totalHeightOfElements + newNodeHeight);
+	}
+	
+	private void resizeLongTermGoalSection(Double newNodeHeight) {
+		Double totalHeightOfElements = 0.0;
+		for (Node node: longTermGoalSectionVBox.getChildren()) {
+			totalHeightOfElements += ((AnchorPane) node).getHeight();
+		}
+		
+		longTermGoalSection.setMinHeight(totalHeightOfElements + newNodeHeight);
+		longTermGoalSection.setMaxHeight(totalHeightOfElements + newNodeHeight);
+	}
+	
+	private void resizeLongTermGoalSection() { //this is used when something is removed
+		Double totalHeightOfElements = 0.0;
+		for (Node node: longTermGoalSectionVBox.getChildren()) {
+			totalHeightOfElements += ((AnchorPane) node).getHeight();
+		}
+		
+		longTermGoalSection.setMinHeight(totalHeightOfElements);
+		longTermGoalSection.setMaxHeight(totalHeightOfElements);
 	}
 	
 	/*
@@ -652,9 +670,15 @@ public class DailyScrollController implements Initializable {
 			AnchorPane loadedNode = fxmlLoader.load();
 									
 			longTermGoalSectionVBox.getChildren().add(loadedNode);
+			resizeLongTermGoalSection(heightOfLongTermGoalSectionNode);
 			
 			Button deleteButton = (Button) loadedNode.getChildren().get(3);
-			handleDeleteButtonListener(deleteButton, loadedNode, longTermGoalSectionVBox);
+			deleteButton.setOnAction(new EventHandler<ActionEvent>() { 
+	    		@Override
+	    		public void handle(ActionEvent event) {
+	    			longTermGoalSectionVBox.getChildren().remove(loadedNode);
+	    			resizeLongTermGoalSection();	
+	    		}});
 			
 			AnchorPane parentOfDescriptionTextField = (AnchorPane) loadedNode.getChildren().get(1);
 			TextField longTermGoalSectionDescriptionTextField = (TextField) parentOfDescriptionTextField.getChildren().get(0);
@@ -674,8 +698,8 @@ public class DailyScrollController implements Initializable {
 			    }
 			});
 			
-			loadedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
-			loadedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+			loadedNode.maxWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+			loadedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
 			
 			Button actionButton = (Button) loadedNode.getChildren().get(0);
 			
@@ -752,15 +776,17 @@ public class DailyScrollController implements Initializable {
 							for (Node node : longTermGoalSectionVBox.getChildren()) {
 								if ((AnchorPane) node == loadedNode) {
 									longTermGoalSectionVBox.getChildren().remove(node);
+									resizeLongTermGoalSection();
 									break; //breaks out of for loop, ends counter of index counter on whatever index
 								}
 								indexCounter += 1;
 							}
 							
-							lockedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
-							lockedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+							lockedNode.maxWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+							lockedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
 							
 							longTermGoalSectionVBox.getChildren().add(indexCounter, lockedNode);
+							resizeLongTermGoalSection(heightOfLongTermGoalSectionNode);
 
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -786,6 +812,7 @@ public class DailyScrollController implements Initializable {
 		/*
 		 * Description, Day, Month, Year
 		 */
+		Integer count = 0;
 		
 		for (ArrayList<String> entry : listOfLists) {
 						
@@ -810,15 +837,17 @@ public class DailyScrollController implements Initializable {
 												
 				handleLongTermGoalCompleteButton(descriptionButton, entry.get(0), lockedNode);
 				
-				lockedNode.maxWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
-				lockedNode.minWidthProperty().bind(anchorOfLongTermGoalScrollPane.widthProperty().subtract(30));
+				lockedNode.maxWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
+				lockedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
 				
 				longTermGoalSectionVBox.getChildren().add(lockedNode);
 				
+				++count;
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
+		resizeLongTermGoalSection(heightOfLongTermGoalSectionNode * count);
 	}
 	
 	//TODO finish this when I finalize this with database
@@ -832,6 +861,7 @@ public class DailyScrollController implements Initializable {
 				for (Node presentNode : longTermGoalSectionVBox.getChildren()) {
 					if (((AnchorPane) presentNode).equals(node)) {
 						longTermGoalSectionVBox.getChildren().remove(node);
+						resizeLongTermGoalSection();
 						break; //breaks out of for loop, ends counter of index counter on whatever index
 					}
 					indexCounter += 1;
