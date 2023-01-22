@@ -501,7 +501,8 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  * Daily Scroll Specific                                                       *
  *                                                                             *
  ******************************************************************************/
-#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection, #rightTextSection, #leftTextSection {
+#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection, #rightTextSection, #leftTextSection,
+#dailyScrollDoneSectionVBox {
   -fx-border-color: transparent;
   -fx-border-width: 0px;
   -fx-border-radius: 5px;
@@ -720,6 +721,17 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 }
 
 #libraryBookVBox {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 3px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Done Section                                                  *
+ *                                                                             *
+ ******************************************************************************/
+#doneSectionNodeMarginKeeper {
   -fx-border-color: -default-gray;
   -fx-border-radius: 3px;
   -fx-border-width: 3px;

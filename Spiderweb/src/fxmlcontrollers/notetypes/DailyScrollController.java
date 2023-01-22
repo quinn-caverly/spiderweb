@@ -18,6 +18,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -30,6 +31,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
+import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -192,6 +194,12 @@ public class DailyScrollController implements Initializable {
 	private AnchorPane leftTextSection;
 	@FXML
 	private AnchorPane rightTextSection;
+	@FXML
+	private AnchorPane dailyScrollDoneSection;
+	@FXML
+	private ScrollPane dailyScrollDoneSectionScrollPane;
+	@FXML
+	private VBox dailyScrollDoneSectionVBox;
 	
 	
 	
@@ -222,8 +230,8 @@ public class DailyScrollController implements Initializable {
 		/*
 		 * to do section
 		 */
-		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
-		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
+		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
+		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		
 		dailyScrollToDoSection.setMinHeight(200);
 		
@@ -231,7 +239,14 @@ public class DailyScrollController implements Initializable {
 		toDoVBox.prefHeightProperty().bind(anchorOfToDoSectionScrollPane.heightProperty().subtract(30));
 		
 		topButtonHolder.getChildren().remove(whenNeededButton);
+		
+		/*
+		 * done section
+		 */
+		dailyScrollDoneSectionVBox.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
+		dailyScrollDoneSectionVBox.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 
+		dailyScrollDoneSectionVBox.setMinHeight(100);
 		/*
 		 * long term goal section
 		 */
@@ -297,10 +312,20 @@ public class DailyScrollController implements Initializable {
 		leftTextSection.setPrefHeight(1000);
 		
 		//right
-		rightTextSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
-		rightTextSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(30));
+		rightTextSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
+		rightTextSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		
 		rightTextSection.setMinHeight(400);
+	}
+	
+	
+	private void resizeVBox(VBox vbox, Double newNodeHeight) {
+		Double totalHeightOfElements = 0.0;
+		for (Node node: vbox.getChildren()) {
+			totalHeightOfElements += ((AnchorPane) node).getHeight();
+		}
+				
+		vbox.setMinHeight(totalHeightOfElements + newNodeHeight);
 	}
 	
 	/*
@@ -412,15 +437,46 @@ public class DailyScrollController implements Initializable {
 			loadedNode.maxWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
 			loadedNode.minWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
 			
-			
 			//TODO these are static references and can break if the tree structure of the node changes
 			VBox encapsulatingVBox = (VBox) loadedNode.getChildren().get(0);
 			AnchorPane originalAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(0);
+			Button actionButton = (Button) originalAnchor.getChildren().get(0);
 			HBox rightSideHBox = (HBox) originalAnchor.getChildren().get(1);
 			Button deleteButton = (Button) rightSideHBox.getChildren().get(2);
 			
 			handleDeleteButtonListener(deleteButton, loadedNode, toDoVBox);
 			
+			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+	    		@Override
+	    		public void handle(ActionEvent event) {
+	    	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/DoneSectionNode.fxml"));
+	    			try {
+						AnchorPane doneSectionRoot = fxmlLoader.load();
+						Double doneSectionRootHeight = 50.0;
+						doneSectionRoot.setMinHeight(doneSectionRootHeight);
+						
+						AnchorPane marginKeeper = (AnchorPane) doneSectionRoot.getChildren().get(0);
+						BorderPane borderPane = (BorderPane) marginKeeper.getChildren().get(0);
+						
+						Button mainButton = (Button) borderPane.getCenter();
+						
+						mainButton.setMinWidth(100);						
+						mainButton.setText("This is a test");
+						
+						
+						//TODO incomplete
+						
+						doneSectionRoot.maxWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
+						doneSectionRoot.minWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
+												
+						dailyScrollDoneSectionVBox.getChildren().add(doneSectionRoot);
+
+						resizeVBox(dailyScrollDoneSectionVBox, doneSectionRootHeight);
+						
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+	    		}});
 			
 			AnchorPane secondAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(1);
 			AnchorPane nestedAnchor = (AnchorPane) secondAnchor.getChildren().get(0);

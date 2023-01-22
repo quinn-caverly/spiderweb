@@ -238,6 +238,8 @@
                                                       </AnchorPane>
                                                    </children></AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
+                                                <VBox fx:id="dailyScrollDoneSectionVBox" />
+                                                <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
                                                 <AnchorPane fx:id="rightTextSection" minHeight="150.0">
                                                    <children>
                                                       <AnchorPane fx:id="anchorOfLongTermGoalScrollPane11" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
