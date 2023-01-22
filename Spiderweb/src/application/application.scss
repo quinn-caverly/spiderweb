@@ -46,6 +46,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	-background-purple: rgba(68, 68, 90, 1);
 	
 	-background-purple-transparent: rgba(68, 68, 90, 0.75);
+	-background-blue-transparent: rgba(68, 84, 105, 0.75);
 
 	-ghost-white: rgba(210, 210, 210, 0.2);
 	-full-grayish-white: rgba(210, 210, 210, 1);
@@ -79,15 +80,15 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
 	
     -white-gradient-vertical: linear-gradient(to bottom, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%);
     -white-gradient-horizontal: linear-gradient(to right, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent  98%); 	
-	
+    
+    //modena.css overriding which is potentially destructive
     -fx-focus-color: transparent;
     -fx-faint-focus-color: transparent;
     -fx-selection-bar: transparent;
     -fx-cell-focus-inner-border: transparent;
-    
-    //-fx-focus-color: rgba(210, 210, 210, 0.1);
-    //-fx-faint-focus-color: rgba(210, 210, 210, 0.05);
-    
+    //-fx-highlight-fill: transparent;
+    //-fx-text-background-color: transparent;
+
     -standard-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 10, 0.0, 0 , 8);
     -light-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.2), 5, 0.0, 0 , 3);
     -light-transparent-drop-shadow: dropshadow(gaussian , rgba(0,0,0,0.05), 5, 0.0, 0 , 3); //for transparent elements
@@ -118,6 +119,38 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
     -fx-background-size:cover;   
     -fx-padding: 10px 15px;
     -fx-background-radius: 10px; 
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Text COMMON                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+ //overriding modena.css
+
+.text-input {
+    -fx-text-fill: -full-grayish-white;
+    -fx-highlight-fill: -background-blue-transparent;
+    -fx-highlight-text-fill: -full-grayish-white;
+    -fx-prompt-text-fill: derive(-fx-control-inner-background,-30%);
+    -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border),
+        linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: 0, 1;
+    -fx-background-radius: 3, 2;
+    -fx-cursor: text;
+    -fx-padding: 0.333333em 0.583em 0.333333em 0.583em; /* 4 7 4 7 */
+}
+.text-input:focused {
+    -fx-highlight-fill: -background-purple-transparent;
+    -fx-highlight-text-fill: -full-grayish-white;
+    //-fx-background-color: //this causes off-color in reading type note text area to have a transp. background
+    //    -fx-focus-color,
+    //    -fx-control-inner-background,
+    //    -fx-faint-focus-color,
+    //    linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+    -fx-background-insets: -0.2, 1, -1.4, 3;
+    -fx-background-radius: 3, 2, 4, 0;
+    -fx-prompt-text-fill: transparent;
 }
 
 /*******************************************************************************
