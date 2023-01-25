@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import application.MasterReference;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
+import fxmlcontrollers.notetypes.ReadingTypeNoteController.AnchorForReadingType;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import handlers.NoteChooserHandler.Note;
 import javafx.scene.Node;
@@ -21,7 +22,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import overriders.AnchorForReadingType;
 
 /*
  * DatabaseHandler will have only static methods in order to create an implementation

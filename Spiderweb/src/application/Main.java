@@ -22,7 +22,7 @@ public class Main extends Application {
 			Parent root = FXMLLoader.load(getClass().getResource("/FXMLs/MainScreen.fxml"));
 			Scene scene = new Scene(root);
 			
-			scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			scene.getStylesheets().add(getClass().getResource("css/application.css").toExternalForm());
 	        scene.setFill(Color.TRANSPARENT);
 			
 			//name and icon of the application

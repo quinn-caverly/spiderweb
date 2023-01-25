@@ -7,10 +7,7 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 
-public class SimilarNotesNodeController {
-	
-	private MasterReference mR;
-	
+public class SimilarNotesNodeController {	
 	@FXML
 	AnchorPane root;
 	@FXML
@@ -21,17 +18,10 @@ public class SimilarNotesNodeController {
 	Label titleOfNoteLabel;
 	
 	
-	public void setMasterReference(MasterReference mR) {
-		this.mR = mR;
-	}
-	
 	//has to take root as an argument because can only access fxml components from initialize me
 	public void setSizeAndPosition(AnchorPane root) {
-
 		root.maxWidthProperty().bind(root.heightProperty());
 		root.setMinWidth(200);
-
-		
 	}
 
 	public AnchorPane getRoot() {

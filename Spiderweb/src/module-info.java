@@ -13,5 +13,4 @@ module quinncaverly {
 	opens fxmlcontrollers to javafx.graphics, javafx.fxml;
 	opens handlers to javafx.graphics, javafx.fxml;
 	opens fxmlcontrollers.notetypes to javafx.fxml;
-	opens fxmlcontrollers.notetypes.subtypes to javafx.fxml;
 }

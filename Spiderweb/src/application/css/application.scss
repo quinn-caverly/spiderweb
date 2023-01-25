@@ -2,7 +2,7 @@
 
 /*
 the command for powershell for autoupdating saves to this file to the actual css file:
-sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.scss C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.css
+sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\application.scss C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\application.css
 */
 
 /*******************************************************************************
@@ -12,27 +12,27 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
 
 @font-face { //"Abril Fatface"
-    src: url("AbrilFatface-Regular.ttf"),
+    src: url("../files/AbrilFatface-Regular.ttf"),
 }
 
 @font-face { //"Bungee Shade"
-    src: url("BungeeShade-Regular.ttf"),
+    src: url("../files/BebasNeue-Regular.ttf"),
 }
 
 @font-face { //"Roboto Mono" 
-    src: url("RobotoMono-Regular.ttf"),
+    src: url("../files/RobotoMono-Regular.ttf"),
 }
 
 @font-face { //"Roboto Mono Semibold"
-    src: url("RobotoMono-SemiBold.ttf"),
+    src: url("../files/RobotoMono-SemiBold.ttf"),
 }
 
 @font-face { //"Bebas Neue"
-    src: url("BebasNeue-Regular.ttf"),
+    src: url("../files/BebasNeue-Regular.ttf"),
 }
 
 @font-face { //"Quicksand Light", "Quicksand", "Quicksand Medium", "Quicksand Semibold"
-    src: url("Quicksand-VariableFont_wght.ttf"),
+    src: url("../files/Quicksand-VariableFont_wght.ttf"),
 }
 
 /*******************************************************************************
@@ -114,7 +114,7 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\application.
  ******************************************************************************/
  
 #mainVBox {
-    -fx-background-image: url("colormash.png");
+    -fx-background-image: url("../files/colormash.png");
     -fx-background-repeat: repeat;
     -fx-background-size:cover;   
     -fx-padding: 10px 15px;

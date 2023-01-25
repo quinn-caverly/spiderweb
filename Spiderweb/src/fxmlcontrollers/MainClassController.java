@@ -8,6 +8,7 @@ import java.util.ResourceBundle;
 import application.MasterReference;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import handlers.NoteChooserHandler.Note;
+import handlers.NoteChooserHandler.TypeTab;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -25,7 +26,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
 import javafx.stage.Stage;
-import overriders.TypeTab;
 
 
 public class MainClassController implements Initializable {

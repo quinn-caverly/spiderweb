@@ -11,6 +11,7 @@ import fxmlcontrollers.notetypes.DailyScrollController;
 import handlers.DatabaseHandler;
 import handlers.NoteChooserHandler;
 import handlers.NoteChooserHandler.Note;
+import handlers.NoteChooserHandler.TypeTab;
 import handlers.PinnedNotesHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -26,8 +27,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-
-import overriders.TypeTab;
 
 public class MasterReference {
 	
@@ -164,7 +163,7 @@ public class MasterReference {
     	root.maxHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
     	root.minHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
     	
-    	TypeTab newTab = new TypeTab(note.getName(), root, treeItem);
+    	TypeTab newTab = noteChooserHandler.new TypeTab(note.getName(), root, treeItem);
     	
     	mCC.getNoteTabPane().getTabs().add(newTab);
     	
@@ -187,7 +186,7 @@ public class MasterReference {
     	root.maxHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
     	root.minHeightProperty().bind(mCC.getNoteTabPane().heightProperty());
     	
-    	TypeTab newTab = new TypeTab(dailyScroll.getName(), root, dailyScroll);
+    	TypeTab newTab = noteChooserHandler.new TypeTab(dailyScroll.getName(), root, dailyScroll);
     	
     	DailyScrollController dsc = (DailyScrollController) dailyScroll.getController();
     	dsc.setMasterReference(this);
@@ -251,7 +250,7 @@ public class MasterReference {
 				
 				if (treeItem == typeTab.getTreeItem()) {
 					
-					TypeTab newTab = new TypeTab(newName, tab.getContent(), treeItem);
+					TypeTab newTab = noteChooserHandler.new TypeTab(newName, tab.getContent(), treeItem);
 					
 					noteTabPane.getTabs().remove(tab);
 					noteTabPane.getTabs().add(newTab);

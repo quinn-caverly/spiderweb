@@ -11,6 +11,7 @@ import java.util.Map;
 import java.util.TreeMap;
 
 import handlers.NoteChooserHandler.Note;
+import handlers.NoteChooserHandler.TypeTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -21,7 +22,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import overriders.TypeTab;
 
 public class PipelineConsolidator {
 	

@@ -1,21 +1,13 @@
 package handlers;
 
-import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.nio.file.attribute.BasicFileAttributes;
 import java.time.LocalDate;
-import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Locale;
-import java.util.Scanner;
 import java.util.Set;
 import java.util.TreeMap;
 
@@ -25,10 +17,12 @@ import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
-import javafx.collections.ObservableList;
+import handlers.NoteChooserHandler.Note;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
+import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
+import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.ContextMenu;
@@ -36,6 +30,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.ListCell;
 import javafx.scene.control.ListView;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.Tab;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeCell;
 import javafx.scene.control.TreeItem;
@@ -45,7 +40,6 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import javafx.util.Callback;
 
 public class NoteChooserHandler {	
 	//mainReference
@@ -69,7 +63,36 @@ public class NoteChooserHandler {
 				
 		this.functionBox = mR.getMainClassController().getFunctionBox();
 	}
+	
+	public class TypeTab extends Tab {
+		private TreeItem<Note> treeItem;
+		private Note scroll;
+		
+		public TypeTab(String name, Node node, TreeItem<Note> treeItem) {
+			super(name, node);
+			this.treeItem = treeItem;
+		}
+		
+		/*
+		 * this is needed because a scroll is not contained in a treeItem
+		 * this could be refactored so that everything is just a note and not treeItem
+		 * if I ever do a large refactor of code
+		 * 
+		 * TODO
+		 */
+		public TypeTab(String name, Node node, Note scroll) {
+			super(name, node);
+			this.scroll = scroll;
+		}
 
+		public TreeItem<Note> getTreeItem() {
+			return treeItem;
+		}
+
+		public Note getScroll() {
+			return scroll;
+		}
+	}
 
 	public class Note {
 		
