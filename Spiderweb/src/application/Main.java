@@ -27,7 +27,7 @@ public class Main extends Application {
 			
 			//name and icon of the application
 			
-			String pathToImage = "src/images/StandardNote/branchwithleaf.png";
+			String pathToImage = "src/application/files/hatBearRoundedCorners.png";
 			
 			InputStream is;
 			is = new FileInputStream(pathToImage);
@@ -35,9 +35,8 @@ public class Main extends Application {
 			
 			primaryStage.getIcons().add(iconImage);
 			
-	        //primaryStage.initStyle(StageStyle.TRANSPARENT); //removes the basic top window bar
 			
-			primaryStage.setTitle("SpiderWeb");
+			primaryStage.setTitle("Spiderweb");
 
 			
 			primaryStage.setScene(scene);
