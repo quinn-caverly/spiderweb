@@ -18,7 +18,6 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
-import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -31,7 +30,6 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
-import javafx.scene.input.MouseButton;
 import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -39,33 +37,6 @@ import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 
 public class DailyScrollController implements Initializable {
-	
-	private static Integer toDoVBoxDefaultHeight = 200;
-	private static Integer heightOfReflectionSection = 70;
-	private static Integer heightOfClosedToDoSectionNode = 50;
-	private Boolean toDoSectionInExpandedMode = false;
-	//starts in expanded mode and is immediately closed on creation in order to efficiently reference elements
-	private Boolean weeklyGoalSectionInExpandedMode = true;
-	
-	/*
-	 * book section variables
-	 */
-	private Boolean bookSectionInExpandedMode = true;
-	private Boolean bookSectionInBrowseMode = false;
-	
-	private Boolean bookSectionLibraryInitialized = false;
-	private TreeItem<Note> bookNotesTreeItem;
-	private static String bookShelfName = "Book Notes"; //TODO incomplete, make this more legit
-	
-	ArrayList<TreeItem<Note>> checkoutPile = new ArrayList<TreeItem<Note>>();
-	HBox selectedBook;
-	
-	private static Integer widthOfSpacingOfCardLineupHBox = 5;
-	
-	private static Double heightOfLongTermGoalSectionNode = 60.0;
-	
-	private MasterReference mR;
-	
 	@FXML
 	private AnchorPane dailyScrollRoot;
 	@FXML
@@ -99,7 +70,7 @@ public class DailyScrollController implements Initializable {
 	@FXML
 	private Button dailyScrollTopRightButton;
 	@FXML
-	private Button whenNeededButton; //this is the button in same hbox as 2 above, removed initially, added when needed
+	private Button whenNeededButton;
 	@FXML
 	private HBox topButtonHolder;
 	@FXML
@@ -187,8 +158,6 @@ public class DailyScrollController implements Initializable {
 	@FXML
 	private ScrollPane weeklyGoalRightSideScrollPane;
 	@FXML
-	private AnchorPane anchorOfToDoSectionScrollPane;
-	@FXML
 	private AnchorPane leftTextSection;
 	@FXML
 	private AnchorPane rightTextSection;
@@ -200,14 +169,37 @@ public class DailyScrollController implements Initializable {
 	private VBox dailyScrollDoneSectionVBox;
 	
 	
-	
 	public void setMasterReference(MasterReference mR) {
 		this.mR = mR;
 	}
+	
+	private static Integer heightOfReflectionSection = 70;
+	private static Integer heightOfClosedToDoSectionNode = 50;
+	private Boolean toDoSectionInExpandedMode = false;
+	//starts in expanded mode and is immediately closed on creation in order to efficiently reference elements
+	private Boolean weeklyGoalSectionInExpandedMode = true;
+	
+	private Boolean bookSectionInExpandedMode = true;
+	private Boolean bookSectionInBrowseMode = false;
+	private Boolean bookSectionLibraryInitialized = false;
+	private TreeItem<Note> bookNotesTreeItem;
+	private static String bookShelfName = "Book Notes"; //TODO incomplete, make this more legit
+	
+	ArrayList<TreeItem<Note>> checkoutPile = new ArrayList<TreeItem<Note>>();
+	HBox selectedBook;
+	
+	private static Integer widthOfSpacingOfCardLineupHBox = 5;
+	
+	private static Double heightOfLongTermGoalSectionNode = 60.0;
+	private static Double heightOfToDoSectionNode = 50.0;
+	
+	private MasterReference mR;
 		
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
+		
+		topButtonHolder.getChildren().remove(whenNeededButton);
 		
 				
 		leftMarginKeeper.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty());
@@ -231,13 +223,8 @@ public class DailyScrollController implements Initializable {
 		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		
-		dailyScrollToDoSection.setMinHeight(200);
-		
-		toDoVBox.prefWidthProperty().bind(anchorOfToDoSectionScrollPane.widthProperty().subtract(30));
-		toDoVBox.prefHeightProperty().bind(anchorOfToDoSectionScrollPane.heightProperty().subtract(30));
-		
-		topButtonHolder.getChildren().remove(whenNeededButton);
-		
+		toDoVBox.setMinHeight(200);
+				
 		/*
 		 * done section
 		 */
@@ -245,6 +232,7 @@ public class DailyScrollController implements Initializable {
 		dailyScrollDoneSectionVBox.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 
 		dailyScrollDoneSectionVBox.setMinHeight(100);
+		
 		/*
 		 * long term goal section
 		 */
@@ -277,7 +265,7 @@ public class DailyScrollController implements Initializable {
 		bookSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		bookSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
-		bookshelfScrollPane.maxWidthProperty().bind(bookSectionHBox.widthProperty().subtract(25)); //25 accounts for the width of the button holder anchorpane
+		bookshelfScrollPane.maxWidthProperty().bind(bookSectionHBox.widthProperty().subtract(25));
 		bookshelfScrollPane.minWidthProperty().bind(bookSectionHBox.widthProperty().subtract(25));		
 		 
 		bookshelfHBox.maxWidthProperty().bind(bookshelfScrollPane.widthProperty().subtract(30)); 
@@ -300,12 +288,7 @@ public class DailyScrollController implements Initializable {
 		leftTextSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
 		leftTextSection.setMinHeight(400);
-		
-		//leftTextSection.prefHeightProperty().bind(leftMarginKeeper.heightProperty().subtract(bookSection.heightProperty()
-		//		.add(bookSection.heightProperty().add(weeklyGoalSection.heightProperty().add(longTermGoalSection.heightProperty())))));
-		//leftTextSection.prefHeightProperty().bind(leftMarginKeeper.heightProperty().subtract(bookSection.heightProperty()));
-		leftTextSection.setPrefHeight(1000);
-		
+				
 		//right
 		rightTextSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		rightTextSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
@@ -322,29 +305,39 @@ public class DailyScrollController implements Initializable {
 				
 		vbox.setMinHeight(totalHeightOfElements + newNodeHeight);
 		vbox.setMaxHeight(totalHeightOfElements + newNodeHeight);
-		
-		System.out.println(totalHeightOfElements + newNodeHeight);
 	}
 	
-	private void resizeLongTermGoalSection(Double newNodeHeight) {
-		Double totalHeightOfElements = 0.0;
-		for (Node node: longTermGoalSectionVBox.getChildren()) {
-			totalHeightOfElements += ((AnchorPane) node).getHeight();
+	/*
+	 * used for both upsize and downsize, toDoSeciton needs a special method for resizing because it needs to match the height of its child vbox
+	 * this child vbox's size changes but does not trigger a resize through javafx, this essentially forces it to change to what it should have been prior
+	 */
+	private void resizeToDoSection() {
+		Double newHeight = toDoVBox.getChildren().size()*heightOfToDoSectionNode;
+		if (newHeight <= 200) {
+			dailyScrollToDoSection.setMinHeight(200);
+			dailyScrollToDoSection.setMaxHeight(200);
 		}
-		
-		longTermGoalSection.setMinHeight(totalHeightOfElements + newNodeHeight);
-		longTermGoalSection.setMaxHeight(totalHeightOfElements + newNodeHeight);
+		else {
+			dailyScrollToDoSection.setMinHeight(newHeight);
+			dailyScrollToDoSection.setMaxHeight(newHeight);
+		}
 	}
 	
-	private void resizeLongTermGoalSection() { //this is used when something is removed
-		Double totalHeightOfElements = 0.0;
-		for (Node node: longTermGoalSectionVBox.getChildren()) {
-			totalHeightOfElements += ((AnchorPane) node).getHeight();
+	/*
+	 * see comments for above method resizeToDoSection()
+	 */
+	private void resizeLongTermGoalSection() {
+		Double newHeight = longTermGoalSectionVBox.getChildren().size()*heightOfLongTermGoalSectionNode;
+		if (newHeight <= 100) {
+			longTermGoalSection.setMinHeight(100);
+			longTermGoalSection.setMaxHeight(100);
 		}
-		
-		longTermGoalSection.setMinHeight(totalHeightOfElements);
-		longTermGoalSection.setMaxHeight(totalHeightOfElements);
+		else {
+			longTermGoalSection.setMinHeight(newHeight);
+			longTermGoalSection.setMaxHeight(newHeight);
+		}
 	}
+	
 	
 	/*
 	 * this must be run after initialization because we need an active reference to mR
@@ -408,7 +401,6 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
 		
-		changeToDoSectionMode();
 	}
 	
 	/*
@@ -427,7 +419,7 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().add(dailyScrollTopRightButton);
 		
 		if (toDoSectionInExpandedMode == true) {
-			changeToDoSectionMode();
+			//placeholder, describes relevance of the toDoSectionInExpandedMode variable
 		}
 		if (weeklyGoalSectionInExpandedMode == true) {
 			changeWeeklyGoalSectionMode();
@@ -451,6 +443,7 @@ public class DailyScrollController implements Initializable {
 			AnchorPane loadedNode = fxmlLoader.load();
 						
 			toDoVBox.getChildren().add(loadedNode);
+			resizeToDoSection();
 			
 			loadedNode.maxWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
 			loadedNode.minWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
@@ -508,72 +501,11 @@ public class DailyScrollController implements Initializable {
 				loadedNode.setPrefHeight(heightOfClosedToDoSectionNode + heightOfReflectionSection);
 			}
 			
-			adjustToDoSectionVBoxHeight();
-			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 	}
 	
-	/*
-	 * the default height will be 200, if there are more than 4 children height 50, then add height
-	 */
-	private void adjustToDoSectionVBoxHeight() {
-		
-		if (toDoSectionInExpandedMode == false) {
-			//sets the height of the vbox back to the default to avoid rewriting unnecessary code, this operation should cause no visible latency
-			toDoVBox.setMaxHeight(toDoVBoxDefaultHeight);
-			toDoVBox.setMinHeight(toDoVBoxDefaultHeight);
-			
-			if (toDoVBox.getChildren().size() >= 5) {
-				
-				Integer numOfChildren = toDoVBox.getChildren().size();
-				Integer counter = 4;
-				
-				//if 4 children or less, already the expected height, for every child after 4, add one unit
-				
-				while (counter < numOfChildren) {
-					toDoVBox.setMaxHeight(toDoVBox.getMaxHeight() + heightOfClosedToDoSectionNode);
-					toDoVBox.setMinHeight(toDoVBox.getMinHeight() + heightOfClosedToDoSectionNode);
-
-					dailyScrollToDoSection.setMinHeight(toDoVBox.getMinHeight() + 40);
-					dailyScrollToDoSection.setMaxHeight(toDoVBox.getMinHeight() + 40);
-					
-					counter += 1;
-				}
-			}
-			else {
-				dailyScrollToDoSection.setMinHeight(toDoVBox.getMinHeight() + 40);
-				dailyScrollToDoSection.setMaxHeight(toDoVBox.getMinHeight() + 40);
-			}
-		}
-		else {
-			toDoVBox.setMaxHeight(toDoVBoxDefaultHeight + 2 * heightOfReflectionSection);
-			toDoVBox.setMinHeight(toDoVBoxDefaultHeight + 2 * heightOfReflectionSection);
-			
-			if (toDoVBox.getChildren().size() >= 3) {
-				
-				Integer numOfChildren = toDoVBox.getChildren().size();
-				Integer counter = 2;
-				
-				//if 4 children or less, already the expected height, for every child after 4, add one unit
-				
-				while (counter < numOfChildren) {
-					toDoVBox.setMaxHeight(toDoVBox.getMaxHeight() + heightOfClosedToDoSectionNode + heightOfReflectionSection);
-					toDoVBox.setMinHeight(toDoVBox.getMinHeight() + heightOfClosedToDoSectionNode + heightOfReflectionSection);
-
-					dailyScrollToDoSection.setMinHeight(toDoVBox.getMinHeight() + 40);
-					dailyScrollToDoSection.setMaxHeight(toDoVBox.getMinHeight() + 40);
-					
-					counter += 1;
-				}
-			}
-			else {
-				dailyScrollToDoSection.setMinHeight(toDoVBox.getMinHeight() + 40);
-				dailyScrollToDoSection.setMaxHeight(toDoVBox.getMinHeight() + 40);
-			}
-		}
-	}
 	
 	//TODO incomplete
 	public void changeWeeklyGoalSectionMode() {
@@ -614,44 +546,6 @@ public class DailyScrollController implements Initializable {
 		}
 	}
 	
-	public void changeToDoSectionMode() {
-		if (toDoSectionInExpandedMode == false) {
-			toDoSectionInExpandedMode = true;
-						
-			for (Node node : toDoVBox.getChildren()) {
-				AnchorPane root = (AnchorPane) node;
-				
-				root.setPrefHeight(heightOfClosedToDoSectionNode + heightOfReflectionSection);
-				
-				//TODO these are vulnerable static references to indexes of tree structure
-				VBox encapsulatingVBox = (VBox) root.getChildren().get(0);
-				AnchorPane secondAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(1);
-				AnchorPane nestedAnchor = (AnchorPane) secondAnchor.getChildren().get(0);
-				TextArea reflectionTextArea = (TextArea) nestedAnchor.getChildren().get(0);
-				
-				reflectionTextArea.setVisible(true);
-			}
-			adjustToDoSectionVBoxHeight();
-		}
-		else {
-			toDoSectionInExpandedMode = false;
-			
-			for (Node node : toDoVBox.getChildren()) {
-				AnchorPane root = (AnchorPane) node;
-				
-				root.setPrefHeight(heightOfClosedToDoSectionNode);
-				
-				//TODO these are vulnerable static references to indexes of tree structure
-				VBox encapsulatingVBox = (VBox) root.getChildren().get(0);
-				AnchorPane secondAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(1);
-				AnchorPane nestedAnchor = (AnchorPane) secondAnchor.getChildren().get(0);
-				TextArea reflectionTextArea = (TextArea) nestedAnchor.getChildren().get(0);
-				
-				reflectionTextArea.setVisible(false);
-			}
-			adjustToDoSectionVBoxHeight();
-		}
-	}
 	
 	private void handleDeleteButtonListener(Button button, AnchorPane anchor, VBox vbox) {
         button.setOnAction(new EventHandler<ActionEvent>() { 
@@ -659,7 +553,7 @@ public class DailyScrollController implements Initializable {
 		public void handle(ActionEvent event) {
 			vbox.getChildren().remove(anchor);
 			
-			adjustToDoSectionVBoxHeight();
+			resizeToDoSection();
 		}});
 	}
 	
@@ -670,14 +564,14 @@ public class DailyScrollController implements Initializable {
 			AnchorPane loadedNode = fxmlLoader.load();
 									
 			longTermGoalSectionVBox.getChildren().add(loadedNode);
-			resizeLongTermGoalSection(heightOfLongTermGoalSectionNode);
+			resizeLongTermGoalSection();
 			
 			Button deleteButton = (Button) loadedNode.getChildren().get(3);
 			deleteButton.setOnAction(new EventHandler<ActionEvent>() { 
 	    		@Override
 	    		public void handle(ActionEvent event) {
 	    			longTermGoalSectionVBox.getChildren().remove(loadedNode);
-	    			resizeLongTermGoalSection();	
+	    			resizeLongTermGoalSection();
 	    		}});
 			
 			AnchorPane parentOfDescriptionTextField = (AnchorPane) loadedNode.getChildren().get(1);
@@ -786,7 +680,7 @@ public class DailyScrollController implements Initializable {
 							lockedNode.minWidthProperty().bind(longTermGoalSectionVBox.widthProperty());
 							
 							longTermGoalSectionVBox.getChildren().add(indexCounter, lockedNode);
-							resizeLongTermGoalSection(heightOfLongTermGoalSectionNode);
+							resizeLongTermGoalSection();
 
 						} catch (IOException e) {
 							e.printStackTrace();
@@ -847,7 +741,7 @@ public class DailyScrollController implements Initializable {
 				e.printStackTrace();
 			}
 		}
-		resizeLongTermGoalSection(heightOfLongTermGoalSectionNode * count);
+		resizeLongTermGoalSection();
 	}
 	
 	//TODO finish this when I finalize this with database

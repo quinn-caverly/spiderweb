@@ -219,15 +219,7 @@
                                                             <Button fx:id="toDoSectionButton" mnemonicParsing="false" onAction="#toDoSectionButtonPushed" prefHeight="10.0" AnchorPane.bottomAnchor="5.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="5.0" />
                                                          </children>
                                                       </AnchorPane>
-                                                      <AnchorPane fx:id="anchorOfToDoSectionScrollPane" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
-                                                         <children>
-                                                            <ScrollPane prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-                                                               <content>
-                                                                  <VBox fx:id="toDoVBox" />
-                                                               </content>
-                                                            </ScrollPane>
-                                                         </children>
-                                                      </AnchorPane>
+                                                      <VBox fx:id="toDoVBox" layoutX="10.0" layoutY="10.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0" />
                                                    </children></AnchorPane>
                                                 <AnchorPane maxHeight="10.0" minHeight="10.0" prefHeight="10.0" />
                                                 <VBox fx:id="dailyScrollDoneSectionVBox" />
