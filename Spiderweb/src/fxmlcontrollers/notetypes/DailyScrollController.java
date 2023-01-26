@@ -483,78 +483,11 @@ public class DailyScrollController implements Initializable {
 			handleDeleteButtonListener(deleteButton, loadedNode, toDoVBox);
 			
 			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
-				/*
-				 * 1/25/2023-8:40PM --- 4/5
-				 * 
-				 * needs to remove toDoSectionNode, add DoneSectionNode with title of the now-remove toDoSectionNode, remove toDoSectionNode from its vBox
-				 */
 	    		@Override
 	    		public void handle(ActionEvent event) {
-	    	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/DoneSectionNode.fxml"));
 	    			try {
-						AnchorPane doneSectionRoot = fxmlLoader.load();
-						AnchorPane marginKeeper = (AnchorPane) doneSectionRoot.getChildren().get(0);
-						VBox vbox = (VBox) marginKeeper.getChildren().get(0);
-						BorderPane borderPane = (BorderPane) vbox.getChildren().get(0);
-						
-						Button mainButton = (Button) borderPane.getCenter();
-						mainButton.setMinWidth(100);						
-						mainButton.setText(textField.getText());
-						
-						Button deleteButton = (Button) borderPane.getRight();
-						deleteButton.setOnAction(new EventHandler<ActionEvent>() {
-							/*
-							 * 1/25/2023-8:50PM --- TODO incomplete, this needs to call to database
-							 * 
-							 * removes the DoneSectionNode, sends back to the toDoSection, with the same value for the button / textfield
-							 */
-				    		@Override
-				    		public void handle(ActionEvent event) {
-								dailyScrollDoneSectionVBox.getChildren().remove(doneSectionRoot);
-								resizeDoneSection();
-								
-								TextField textField = toDoSectionButtonPushed();
-								textField.setText(mainButton.getText());
-				    		}});
-						
-						AnchorPane textAreaHolder = (AnchorPane) vbox.getChildren().get(1);
-						TextArea reflectionTextArea = (TextArea) textAreaHolder.getChildren().get(0);
-						textAreaHolder.setVisible(false);
-						reflectionTextArea.setVisible(false);
-						
-						mainButton.setOnAction(new EventHandler<ActionEvent>() {
-							/*
-							 * 1/25/2023-9:25PM --- 
-							 * 
-							 * toggles between the reflectionTextArea and its holder being visible or not and also must change the size of the node
-							 */
-				    		@Override
-				    		public void handle(ActionEvent event) {
-				    			
-				    			if (reflectionTextArea.isVisible()) {
-					    			doneSectionRoot.setPrefHeight(heightOfDoneSectionNode);
-					    			
-					    			textAreaHolder.setVisible(false);
-					    			reflectionTextArea.setVisible(false);
-					    			resizeDoneSection();
-				    			}
-				    			else {
-					    			doneSectionRoot.setPrefHeight(heightOfExpandedDoneSectionNode);
-					    			
-					    			textAreaHolder.setVisible(true);
-					    			reflectionTextArea.setVisible(true);
-					    			resizeDoneSection();
-				    			}				    			
-				    		}});
-						
-						doneSectionRoot.maxWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
-						doneSectionRoot.minWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
-												
-						dailyScrollDoneSectionVBox.getChildren().add(doneSectionRoot);
-						resizeDoneSection();
-						
-						toDoVBox.getChildren().remove(loadedNode);
-						
+						directlyCreateDoneSectionNode(textField.getText());
+		    			toDoVBox.getChildren().remove(loadedNode);
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
@@ -567,6 +500,80 @@ public class DailyScrollController implements Initializable {
 		}
 		return null;
 	}
+	
+	/*
+	 * 1/26/2023-5:08PM --- 5/5
+	 * 
+	 * needs to remove toDoSectionNode, add DoneSectionNode with title of the now-remove toDoSectionNode, remove toDoSectionNode from its vBox
+	 * 
+	 * returns its ReflectionTextArea so that this can be edited from the DatabaseHandler class
+	 */
+	public TextArea directlyCreateDoneSectionNode(String description) throws IOException {
+		FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/DoneSectionNode.fxml"));
+		AnchorPane doneSectionRoot = fxmlLoader.load();
+		AnchorPane marginKeeper = (AnchorPane) doneSectionRoot.getChildren().get(0);
+		VBox vbox = (VBox) marginKeeper.getChildren().get(0);
+		BorderPane borderPane = (BorderPane) vbox.getChildren().get(0);
+		
+		Button mainButton = (Button) borderPane.getCenter();
+		mainButton.setMinWidth(100);				
+		mainButton.setText(description);
+		
+		Button deleteButton = (Button) borderPane.getRight();
+		deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+			/*
+			 * 1/25/2023-8:50PM --- TODO incomplete, this needs to call to database
+			 * 
+			 * removes the DoneSectionNode, sends back to the toDoSection, with the same value for the button / textfield
+			 */
+    		@Override
+    		public void handle(ActionEvent event) {
+				dailyScrollDoneSectionVBox.getChildren().remove(doneSectionRoot);
+				resizeDoneSection();
+				
+				TextField textField = toDoSectionButtonPushed();
+				textField.setText(mainButton.getText());
+    		}});
+		
+		AnchorPane textAreaHolder = (AnchorPane) vbox.getChildren().get(1);
+		TextArea reflectionTextArea = (TextArea) textAreaHolder.getChildren().get(0);
+		textAreaHolder.setVisible(false);
+		reflectionTextArea.setVisible(false);
+		
+		mainButton.setOnAction(new EventHandler<ActionEvent>() {
+			/*
+			 * 1/25/2023-9:25PM --- 
+			 * 
+			 * toggles between the reflectionTextArea and its holder being visible or not and also must change the size of the node
+			 */
+    		@Override
+    		public void handle(ActionEvent event) {
+    			
+    			if (reflectionTextArea.isVisible()) {
+	    			doneSectionRoot.setPrefHeight(heightOfDoneSectionNode);
+	    			
+	    			textAreaHolder.setVisible(false);
+	    			reflectionTextArea.setVisible(false);
+	    			resizeDoneSection();
+    			}
+    			else {
+	    			doneSectionRoot.setPrefHeight(heightOfExpandedDoneSectionNode);
+	    			
+	    			textAreaHolder.setVisible(true);
+	    			reflectionTextArea.setVisible(true);
+	    			resizeDoneSection();
+    			}				    			
+    		}});
+		
+		doneSectionRoot.maxWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
+		doneSectionRoot.minWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
+								
+		dailyScrollDoneSectionVBox.getChildren().add(doneSectionRoot);
+		resizeDoneSection();
+		
+		return reflectionTextArea;
+	}
+	
 	
 	
 	//TODO incomplete

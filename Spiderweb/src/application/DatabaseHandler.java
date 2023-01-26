@@ -1,12 +1,16 @@
 package application;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
+import java.time.LocalDate;
+import java.time.format.TextStyle;
 import java.util.ArrayList;
+import java.util.Locale;
 
 import application.NoteChooserHandler.Note;
 import fxmlcontrollers.notetypes.DailyScrollController;
@@ -17,6 +21,7 @@ import fxmlcontrollers.notetypes.StandardTypeNoteController;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TreeItem;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.BorderPane;
@@ -103,7 +108,6 @@ public final class DatabaseHandler {
 		}
 		
 		startTreeViewSaveProtocol(mR);
-		
 	}
 	
 	/*
@@ -803,7 +807,6 @@ public final class DatabaseHandler {
 	public static void startLoadProtocol(MasterReference mR) {
 		
 		//TODO place temporary db updates here
-		
 		/*
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
@@ -818,8 +821,66 @@ public final class DatabaseHandler {
 		}
 		*/
 		
-		startTreeViewLoadProtocol(mR);
+		try {
+			startTreeViewLoadProtocol(mR);
+			startDailyScrollListViewLoadProtocol(mR);
+		} catch (SQLException e) {
+			e.printStackTrace();
+		} catch (Exception e1) {
+			e1.printStackTrace();
+		}
+	}
+	
+	/*
+	 * 1/26/2023-4:49PM ---
+	 * 
+	 * needs to load the scrolls and add them to the listview
+	 * importantly, needs to decide whether the scroll is a current scroll (today) or a previous scroll
+	 * 
+	 * if a previous scroll, use the TimeCapsuleDailyScroll type, otherwise use DailyScroll
+	 * CREATE TABLE DailyScroll (Name VARCHAR(100), LeftTextAreaContents VARCHAR(30000), RightTextAreaContents VARCHAR(30000))
+	 * CREATE TABLE DoneSectionNode (Name VARCHAR(100), Id INT, Description VARCHAR(1000), ReflectionTextAreaContents VARCHAR(10000))
+	 */
+	private static void startDailyScrollListViewLoadProtocol(MasterReference mR) throws SQLException {
+
+		LocalDate date = LocalDate.now();
+		String day = String.valueOf(date.getDayOfMonth());
+		String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+		String year = String.valueOf(date.getYear());
+		String nameOfToday = day + " " + month + " " + year;
 		
+		Connection connection = DriverManager.getConnection(urlForConnection);
+	    Statement statement = connection.createStatement();
+	    ResultSet resultSet = statement.executeQuery("SELECT * FROM DailyScroll");
+	    while (resultSet.next()) {
+	    	
+	    	String nameOfCurrent = resultSet.getString("Name");
+	    	String leftTextAreaContents = resultSet.getString("LeftTextAreaContents");
+	    	String rightTextAreaContents = resultSet.getString("RightTextAreaContents");
+	    	
+	    	if (nameOfToday.equals(nameOfCurrent)) {
+	    		System.out.println("today");
+	    		
+	    		Note newDailyScroll = mR.getNoteChooserHandler().new Note(nameOfToday, "DailyScroll");
+	    		mR.getMainClassController().getDailyPageList().getItems().add(newDailyScroll);
+	    		DailyScrollController dailyScrollController = (DailyScrollController) newDailyScroll.getController();
+	    		
+	    		dailyScrollController.getLeftTextSectionTextArea().setText(leftTextAreaContents);
+	    		dailyScrollController.getRightTextSectionTextArea().setText(rightTextAreaContents);
+	    		
+	    		//having multiple queries on one statement can cause errors
+				Statement subStatement = connection.createStatement();
+			    ResultSet resSet = subStatement.executeQuery("SELECT * FROM DoneSectionNode WHERE Name = '" + nameOfCurrent + "'");
+			    while (resSet.next()) {
+		    		try {
+						TextArea reflectionTextArea = dailyScrollController.directlyCreateDoneSectionNode(resSet.getString("Description"));
+						reflectionTextArea.setText(resSet.getString("ReflectionTextAreaContents"));
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+			    }
+	    	}
+	    }
 	}
 	
 	/*
@@ -829,66 +890,58 @@ public final class DatabaseHandler {
 	 * 
 	 * the ChildrenSequence is a comma-separated list of the notes children, unordered
 	 */
-	private static void startTreeViewLoadProtocol(MasterReference mR) {
+	private static void startTreeViewLoadProtocol(MasterReference mR) throws Exception {
+		Connection connection = DriverManager.getConnection(urlForConnection);
+	    Statement statement = connection.createStatement();
 		
-		try {
-			Connection connection = DriverManager.getConnection(urlForConnection);
-		    Statement statement = connection.createStatement();
-			
-			ArrayList<TreeItem<Note>> treeList = new ArrayList<TreeItem<Note>>();
+		ArrayList<TreeItem<Note>> treeList = new ArrayList<TreeItem<Note>>();
+				
+		loadFromReadingPage(treeList, connection, mR);
+		loadFromLegacyDailyPage(treeList, connection, mR);
+		loadFromStandardPage(treeList, connection, mR);
 					
-			loadFromReadingPage(treeList, connection, mR);
-			loadFromLegacyDailyPage(treeList, connection, mR);
-			loadFromStandardPage(treeList, connection, mR);
-						
-			TreeItem<Note> rootItem = null;
-			
-		    ResultSet resultSet = statement.executeQuery("SELECT * FROM TreeViewStructure");
-		    while (resultSet.next()) {
-		    	
-		    	String childrenSequenceString = resultSet.getString("ChildrenSequence");
-		    	
-		    	ArrayList<String> childrenIds = new ArrayList<String>();
-		    	if (childrenSequenceString != null) {
-		    		for (String childId : childrenSequenceString.split(",")) {
-		    			childrenIds.add(childId);
-		    		}
-		    	}
-		    	
-		    	TreeItem<Note> parentItem = null;
-		    	Integer id = resultSet.getInt("Id");
-		    		    		
-		    	for (TreeItem<Note> treeItem : treeList) {		    		
-		    		if (treeItem.getValue().getDatabaseId().equals(id)) {
-		    			parentItem = treeItem;
-		    			break;
-		    		}
-		    	}
-		    	
-		    	if (parentItem == null) {
-		    		throw new Exception("An id which existed in one of the type pages does not exist in the main database.");
-		    	}
-		    	
-		    	for (TreeItem<Note> treeItem : treeList) {
-		    		if (childrenIds.contains(treeItem.getValue().getDatabaseId().toString())) {
-		    			parentItem.getChildren().add(treeItem);
-		    		}
-		    	}
-		    			    	
-		    	if (resultSet.getString("IsRoot").equals("1")) {
-		    		rootItem = parentItem;
-		    	}
-		    }
-		    		    
-		    mR.getMainClassController().getNoteChooser().setRoot(rootItem);
-			
-			connection.close();
-			
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
+		TreeItem<Note> rootItem = null;
+		
+	    ResultSet resultSet = statement.executeQuery("SELECT * FROM TreeViewStructure");
+	    while (resultSet.next()) {
+	    	
+	    	String childrenSequenceString = resultSet.getString("ChildrenSequence");
+	    	
+	    	ArrayList<String> childrenIds = new ArrayList<String>();
+	    	if (childrenSequenceString != null) {
+	    		for (String childId : childrenSequenceString.split(",")) {
+	    			childrenIds.add(childId);
+	    		}
+	    	}
+	    	
+	    	TreeItem<Note> parentItem = null;
+	    	Integer id = resultSet.getInt("Id");
+	    		    		
+	    	for (TreeItem<Note> treeItem : treeList) {		    		
+	    		if (treeItem.getValue().getDatabaseId().equals(id)) {
+	    			parentItem = treeItem;
+	    			break;
+	    		}
+	    	}
+	    	
+	    	if (parentItem == null) {
+	    		throw new Exception("An id which existed in one of the type pages does not exist in the main database.");
+	    	}
+	    	
+	    	for (TreeItem<Note> treeItem : treeList) {
+	    		if (childrenIds.contains(treeItem.getValue().getDatabaseId().toString())) {
+	    			parentItem.getChildren().add(treeItem);
+	    		}
+	    	}
+	    			    	
+	    	if (resultSet.getString("IsRoot").equals("1")) {
+	    		rootItem = parentItem;
+	    	}
+	    }
+	    		    
+	    mR.getMainClassController().getNoteChooser().setRoot(rootItem);
+		
+		connection.close();
 	}
 	
 	/*

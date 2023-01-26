@@ -166,6 +166,11 @@ public class NoteChooserHandler {
 					this.listViewAnchor = listViewAnchor;
 					
 					Button button = (Button) listViewAnchor.getChildren().get(0);
+					button.setOnAction(new EventHandler<ActionEvent>() { 
+						@Override
+						public void handle(ActionEvent event) {
+							mR.openNote(Note.this);	
+						}});
 						
 					LocalDate date = LocalDate.now();
 					
