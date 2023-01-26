@@ -288,41 +288,54 @@ public class MasterReference {
 		}
 	}
 	
-	
 	/*
-	 * saves all notes that are open in the tabPane
+	 * 1/26/2023-4:28PM --- 5/5
+	 * 
+	 * only saves notes which are currently opened in the tabview, if not opened in the tabview then it is very unlikely
+	 * that there have been updates which need to be saved
 	 */
 	public void saveAllNotes() throws IOException {
-		
 		TabPane noteTabPane = mCC.getNoteTabPane();
 		
 		for (Tab currentTab: noteTabPane.getTabs()) {
 			TypeTab typeTab = (TypeTab) currentTab;
-
-			saveNote(typeTab.getTreeItem());
+			saveTypeTab(typeTab);
 		}
 	}
 	
-	
 	/*
-	 * saves only the note which is currently opened on the tabPane
+	 * 1/26/2023-4:32PM --- 2/5 read below
+	 * 
+	 * checks if the selectedTab is null because the buttons are still pressable even when none are selected
+	 * TODO, maybe make it impossible to push save and saveAllNotes buttons when they don't point to anything
 	 */
 	public void saveCurrentNote() throws IOException {
 		TabPane noteTabPane = mCC.getNoteTabPane();
 		Tab selectedTab = noteTabPane.getSelectionModel().getSelectedItem();
 		
 		if (selectedTab!=null) {
-			
 			TypeTab typeTab = (TypeTab) selectedTab;
-			
-			if (typeTab.getTreeItem() != null) {
+			saveTypeTab(typeTab);
+		}
+	}
+	
+	/*
+	 * 1/26/2023-4:30PM --- 5/5
+	 * 
+	 * method for saving a typetab to avoid code repetitiveness
+	 */
+	public void saveTypeTab(TypeTab typeTab) {
+		if (typeTab.getTreeItem() != null) {
+			try {
 				saveNote(typeTab.getTreeItem());
-			}
-			else if (typeTab.getScroll() != null) {
-				saveScroll(typeTab.getScroll());
+			} catch (IOException e) {
+				e.printStackTrace();
 			}
 		}
-	}	
+		else if (typeTab.getScroll() != null) {
+			saveScroll(typeTab.getScroll());
+		}
+	}
 	
 	/*
 	 * both saveCurrentNote() and saveAllNotes() lead to this function
