@@ -10,8 +10,8 @@ import java.util.Comparator;
 import java.util.Map;
 import java.util.TreeMap;
 
-import handlers.NoteChooserHandler.Note;
-import handlers.NoteChooserHandler.TypeTab;
+import application.NoteChooserHandler.Note;
+import application.NoteChooserHandler.TypeTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;

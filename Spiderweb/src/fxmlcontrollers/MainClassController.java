@@ -6,9 +6,9 @@ import java.util.Random;
 import java.util.ResourceBundle;
 
 import application.MasterReference;
+import application.NoteChooserHandler.Note;
+import application.NoteChooserHandler.TypeTab;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
-import handlers.NoteChooserHandler.Note;
-import handlers.NoteChooserHandler.TypeTab;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -288,7 +288,7 @@ public class MainClassController implements Initializable {
 	}
 	
 	public void newDailyPageButtonPushed() {
-		Note newDailyScroll = mR.getNoteChooserHandler().new Note("Test", "DailyScroll");
+		Note newDailyScroll = mR.getNoteChooserHandler().new Note("Temporary Name", "DailyScroll"); //name is overridden with the date later
 				
 		dailyPageList.getItems().add(newDailyScroll);
 		

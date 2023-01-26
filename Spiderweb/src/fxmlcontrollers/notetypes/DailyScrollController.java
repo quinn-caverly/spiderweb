@@ -9,10 +9,10 @@ import java.util.ArrayList;
 import java.util.ResourceBundle;
 import java.util.Set;
 
+import application.DatabaseHandler;
 import application.MasterReference;
-import handlers.DatabaseHandler;
-import handlers.NoteChooserHandler;
-import handlers.NoteChooserHandler.Note;
+import application.NoteChooserHandler;
+import application.NoteChooserHandler.Note;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
@@ -167,6 +167,10 @@ public class DailyScrollController implements Initializable {
 	private ScrollPane dailyScrollDoneSectionScrollPane;
 	@FXML
 	private VBox dailyScrollDoneSectionVBox;
+	@FXML
+	private TextArea rightTextSectionTextArea;
+	@FXML
+	private TextArea leftTextSectionTextArea;
 	
 	
 	public void setMasterReference(MasterReference mR) {
@@ -1421,5 +1425,17 @@ public class DailyScrollController implements Initializable {
 	        }
 	    }
 	    return true;
+	}
+	
+	public VBox getDailyScrollDoneSectionVBox() {
+		return dailyScrollDoneSectionVBox;
+	}
+	
+	public TextArea getRightTextSectionTextArea() {
+		return rightTextSectionTextArea;
+	}
+	
+	public TextArea getLeftTextSectionTextArea() {
+		return leftTextSectionTextArea;
 	}
 }

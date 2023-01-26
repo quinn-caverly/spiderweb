@@ -1,4 +1,4 @@
-package handlers;
+package application;
 
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -11,13 +11,12 @@ import java.util.Locale;
 import java.util.Set;
 import java.util.TreeMap;
 
-import application.MasterReference;
+import application.NoteChooserHandler.Note;
 import fxmlcontrollers.TreeViewCellController;
 import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
-import handlers.NoteChooserHandler.Note;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -112,7 +111,7 @@ public class NoteChooserHandler {
 		private HBox treeViewHBox;
 		private AnchorPane listViewAnchor;
 
-	    private final String name;
+	    private String name;
 	    private final String typeOfNote;
 	    
 	    private String childrenFilePath;
@@ -176,6 +175,7 @@ public class NoteChooserHandler {
 
 					button.setStyle("-fx-font-size: 16px;");
 					button.setText(day + " " + month + " " + year);
+					setName(day + " " + month + " " + year);
 					
 					listViewAnchor.setMaxWidth(100);
 				} catch (IOException e) {
@@ -228,9 +228,7 @@ public class NoteChooserHandler {
 	        }
 	        
 	        else if (typeOfNote == "DailyScroll") {
-	        	
-	        	System.out.println("dailyscroll");
-	        	
+	        		        	
 				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyScroll.fxml"));
 
 	        	try {
@@ -250,6 +248,10 @@ public class NoteChooserHandler {
 
 	    public String getName() {
 	        return name;
+	    }
+	    
+	    public void setName(String name) {
+	    	this.name = name;
 	    }
 
 		public boolean isFullSaved() {

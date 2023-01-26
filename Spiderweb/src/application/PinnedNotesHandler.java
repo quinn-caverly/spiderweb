@@ -1,9 +1,10 @@
-package handlers;
+package application;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import handlers.NoteChooserHandler.Note;
-import handlers.NoteChooserHandler.TypeTab;
+
+import application.NoteChooserHandler.Note;
+import application.NoteChooserHandler.TypeTab;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -14,7 +15,6 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.GridPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
-import application.MasterReference;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;

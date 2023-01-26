@@ -13,6 +13,7 @@ import java.util.Map;
 import java.util.Scanner;
 import java.util.TreeMap;
 
+import application.NoteChooserHandler.Note;
 import edu.mit.jwi.Dictionary;
 import edu.mit.jwi.IDictionary;
 import edu.mit.jwi.item.IIndexWord;
@@ -24,7 +25,6 @@ import edu.mit.jwi.item.POS;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
-import handlers.NoteChooserHandler.Note;
 import opennlp.tools.lemmatizer.DictionaryLemmatizer;
 import opennlp.tools.postag.POSModel;
 import opennlp.tools.postag.POSTaggerME;

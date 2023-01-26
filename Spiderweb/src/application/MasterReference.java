@@ -6,13 +6,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
 
+import application.NoteChooserHandler.Note;
+import application.NoteChooserHandler.TypeTab;
 import fxmlcontrollers.MainClassController;
 import fxmlcontrollers.notetypes.DailyScrollController;
-import handlers.DatabaseHandler;
-import handlers.NoteChooserHandler;
-import handlers.NoteChooserHandler.Note;
-import handlers.NoteChooserHandler.TypeTab;
-import handlers.PinnedNotesHandler;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
@@ -322,7 +319,7 @@ public class MasterReference {
 				saveNote(typeTab.getTreeItem());
 			}
 			else if (typeTab.getScroll() != null) {
-				System.out.println("scroll");
+				saveScroll(typeTab.getScroll());
 			}
 		}
 	}	
@@ -337,8 +334,13 @@ public class MasterReference {
 		pipeline.runThroughPipeline(treeItem.getValue());
 	}
 	
+	/*
+	 * 1/26/2023-1:38PM --- TODO incomplete
+	 * 
+	 * diff from saveNote because of fundamentally diff structure
+	 */
 	public void saveScroll(Note scroll) {
-		//todo incomplete
+		DatabaseHandler.saveDailyScrollToDatabase(scroll);
 		
 		
 	}

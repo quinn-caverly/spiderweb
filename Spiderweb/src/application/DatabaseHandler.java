@@ -1,4 +1,4 @@
-package handlers;
+package application;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,12 +8,12 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 
-import application.MasterReference;
+import application.NoteChooserHandler.Note;
+import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController.AnchorForReadingType;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
-import handlers.NoteChooserHandler.Note;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.TextArea;
@@ -73,14 +73,15 @@ public final class DatabaseHandler {
 		    
 		    //for saving the treeView structure
 		    statement.executeUpdate("CREATE TABLE TreeViewStructure (Id INT, ChildrenSequence VARCHAR(1000), IsRoot CHAR(1))");
-		    
-		    statement.executeUpdate("CREATE TABLE DailyScroll (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Date VARCHAR(10))");
-		    
+		    		    
 		    statement.executeUpdate("CREATE TABLE LongTermGoalTable (Description VARCHAR(1000), Day INT, Month INT, CalendarYear INT)");
-
 		    statement.executeUpdate("CREATE TABLE BookDeskTable (Title VARCHAR(1000))");
-		    
 		    statement.executeUpdate("CREATE TABLE WeeklyGoalTable (Title VARCHAR(1000), Repetitions Int, Remaining Int)");
+		    
+		    statement.executeUpdate("CREATE TABLE DailyScroll (Name VARCHAR(100), LeftTextAreaContents VARCHAR(50000), RightTextAreaContents VARCHAR(50000))");
+		    statement.executeUpdate("CREATE TABLE DoneSectionNode (Name VARCHAR(100), Id INT, Description VARCHAR(1000), ReflectionTextAreaContents VARCHAR(10000))");
+
+
 		    
 		    connection.close();
 		    
@@ -620,6 +621,94 @@ public final class DatabaseHandler {
 		return containerSequence;
 	}
 	
+	
+	/*
+	 * 1/26/2023-4:15PM --- 5/5
+	 * 
+	 * needs to save both text areas and the toDoDoneSection contents
+	 * 
+	 * will use another table for saving the nodes of the DoneSection, helper function saveDoneSectionNode will be used
+	 * the id function will essentially just be the name of the scroll, which is the date because there can be no repeats
+	 * 
+	 * statement.executeUpdate("CREATE TABLE DailyScroll (Name VARCHAR(100), LeftTextAreaContents VARCHAR(50000), RightTextAreaContents VARCHAR(50000))");
+	 */
+	public static void saveDailyScrollToDatabase(Note dailyScroll) {
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+		    
+		    DailyScrollController dailyScrollController = (DailyScrollController) dailyScroll.getController();
+		    
+		    TextArea leftTextArea = dailyScrollController.getLeftTextSectionTextArea();
+		    TextArea rightTextArea = dailyScrollController.getRightTextSectionTextArea();
+		    	    		    		    			    
+		    Boolean existsInDatabase = false;
+		    ResultSet resultSet = statement.executeQuery("SELECT COUNT(1) FROM DailyScroll WHERE Name = '" + dailyScroll.getName() + "'");
+		    while (resultSet.next()) {
+		        Integer count = resultSet.getInt(1);
+		        if (count == 1) { existsInDatabase = true; }
+		    }
+		    
+		    if (existsInDatabase) {
+		    	statement.executeUpdate("UPDATE DailyScroll SET LeftTextAreaContents = '" + prepareStringForSQL(leftTextArea.getText()) +
+		    			"', RightTextAreaContents = '" + prepareStringForSQL(rightTextArea.getText()) + "'" +
+		    	    	" Where Name = '" + dailyScroll.getName() + "'");
+		    }
+		    else {
+				statement.executeUpdate("INSERT INTO DailyScroll (Name, LeftTextAreaContents, RightTextAreaContents) VALUES ('"+
+						dailyScroll.getName() + "','" + prepareStringForSQL(leftTextArea.getText()) + "', '" + 
+						prepareStringForSQL(rightTextArea.getText()) + "')");
+		    }
+		    
+		    saveDoneSectionNodes(dailyScroll);
+		    
+			connection.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	/*
+	 * 1/26/2023-4:17PM --- 5/5
+	 * 
+	 * statement.executeUpdate("CREATE TABLE DoneSectionNode (Name VARCHAR(100), Id INT, Description VARCHAR(1000), ReflectionTextAreaContents VARCHAR(10000))");
+	 * deletes the previous versions and re-adds them as new entries in the table
+	 */
+	public static void saveDoneSectionNodes(Note dailyScroll) {
+				
+		DailyScrollController dailyScrollController = (DailyScrollController) dailyScroll.getController();
+		VBox dailyScrollDoneSectionVBox = dailyScrollController.getDailyScrollDoneSectionVBox();
+		
+		try {
+			Connection connection = DriverManager.getConnection(urlForConnection);
+		    Statement statement = connection.createStatement();
+			statement.executeUpdate("DELETE FROM DoneSectionNode WHERE Name = '" + dailyScroll.getName() + "'");
+			
+			Integer indexCounter = 0;
+			for (Node node: dailyScrollDoneSectionVBox.getChildren()) {
+				
+				AnchorPane root = (AnchorPane) node;
+				AnchorPane marginKeeper = (AnchorPane) root.getChildren().get(0);
+				VBox vbox = (VBox) marginKeeper.getChildren().get(0);
+				
+				BorderPane borderPane = (BorderPane) vbox.getChildren().get(0);
+				Button descriptionButton = (Button) borderPane.getCenter();
+				
+				AnchorPane textAreaHolder = (AnchorPane) vbox.getChildren().get(1);
+				TextArea reflectionTextArea = (TextArea) textAreaHolder.getChildren().get(0);
+				
+				statement.executeUpdate("INSERT INTO DoneSectionNode (Name, Id, Description, ReflectionTextAreaContents) VALUES ('"
+				+ dailyScroll.getName() + "'," + indexCounter.toString() + ",'" + prepareStringForSQL(descriptionButton.getText()) +
+				"','" + prepareStringForSQL(reflectionTextArea.getText()) + "')");
+								
+				++indexCounter;
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
+	
 	/*
 	 * this will define the format of the container sequence
 	 * 
@@ -711,17 +800,6 @@ public final class DatabaseHandler {
 		}
 	}
 	
-	/*
-	 * Because I use single quotations, ', for wrapping strings for SQL, if the string contains a single quotation, it will cause a syntax error
-	 * This method replaces single quotations with two single quotations, which is interpreted as just one single quotation when
-	 * queried back from SQL
-	 */
-	private static String prepareStringForSQL(String string) {
-		return string.replaceAll("\'", "\''");
-	}
-	
-	
-	
 	public static void startLoadProtocol(MasterReference mR) {
 		
 		//TODO place temporary db updates here
@@ -730,9 +808,11 @@ public final class DatabaseHandler {
 		try {
 			Connection connection = DriverManager.getConnection(urlForConnection);
 		    Statement statement = connection.createStatement();
-		    statement.executeUpdate("CREATE TABLE SectionContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// S
-		    statement.executeUpdate("CREATE TABLE ChapterContainer (Id INT NOT NULL GENERATED ALWAYS AS IDENTITY, Name VARCHAR(1000))");// C
+		    //statement.executeUpdate("DROP TABLE DailyScroll");// S
+		    statement.executeUpdate("CREATE TABLE DailyScroll (Name VARCHAR(100), LeftTextAreaContents VARCHAR(30000), RightTextAreaContents VARCHAR(30000))");
+		    statement.executeUpdate("CREATE TABLE DoneSectionNode (Name VARCHAR(100), Id INT, Description VARCHAR(1000), ReflectionTextAreaContents VARCHAR(10000))");
 
+		    
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
@@ -1258,4 +1338,14 @@ public final class DatabaseHandler {
 		return null;
 	}
 	
+	/*
+	 * 1/26/2023-3:02PM --- 5/5
+	 * 
+	 * Because I use single quotations, ', for wrapping strings for SQL, if the string contains a single quotation, it will cause a syntax error
+	 * This method replaces single quotations with two single quotations, which is interpreted as just one single quotation when
+	 * queried back from SQL
+	 */
+	private static String prepareStringForSQL(String string) {
+		return string.replaceAll("\'", "\''");
+	}
 }
