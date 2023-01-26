@@ -192,6 +192,8 @@ public class DailyScrollController implements Initializable {
 	
 	private static Double heightOfLongTermGoalSectionNode = 60.0;
 	private static Double heightOfToDoSectionNode = 50.0;
+	private static Double heightOfDoneSectionNode = 55.0;
+	private static Double heightOfExpandedDoneSectionNode = 135.0;
 	
 	private MasterReference mR;
 		
@@ -223,7 +225,7 @@ public class DailyScrollController implements Initializable {
 		dailyScrollToDoSection.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		dailyScrollToDoSection.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		
-		toDoVBox.setMinHeight(200);
+		toDoVBox.setMinHeight(heightOfToDoSectionNode*4);
 				
 		/*
 		 * done section
@@ -231,7 +233,7 @@ public class DailyScrollController implements Initializable {
 		dailyScrollDoneSectionVBox.minWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 		dailyScrollDoneSectionVBox.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty().subtract(40));
 
-		dailyScrollDoneSectionVBox.setMinHeight(100);
+		dailyScrollDoneSectionVBox.setMinHeight(heightOfDoneSectionNode*2);
 		
 		/*
 		 * long term goal section
@@ -241,7 +243,7 @@ public class DailyScrollController implements Initializable {
 		longTermGoalSection.minWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		longTermGoalSection.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty().subtract(40));
 		
-		longTermGoalSectionVBox.setMinHeight(100);
+		longTermGoalSectionVBox.setMinHeight(heightOfLongTermGoalSectionNode*2);
 
 		/*
 		 * weekly goal section
@@ -296,15 +298,35 @@ public class DailyScrollController implements Initializable {
 		rightTextSection.setMinHeight(400);
 	}
 	
-	
-	private void resizeVBox(VBox vbox, Double newNodeHeight) {
-		Double totalHeightOfElements = 0.0;
-		for (Node node: vbox.getChildren()) {
-			totalHeightOfElements += ((AnchorPane) node).getHeight();
+	/*
+	 * 1/25/2023-9:36PM --- 5/5
+	 * 
+	 * because the nodes aren't uniform size and we can't directly access their height, we infer upon their height
+	 */
+	private void resizeDoneSection() {
+		Double newHeight = 0.0;
+		for (Node node: dailyScrollDoneSectionVBox.getChildren()) {
+			AnchorPane root = (AnchorPane) node;
+			AnchorPane marginKeeper = (AnchorPane) root.getChildren().get(0);
+			VBox vbox = (VBox) marginKeeper.getChildren().get(0);
+			AnchorPane reflectionAreaHolder = (AnchorPane) vbox.getChildren().get(1);
+			
+			if (reflectionAreaHolder.isVisible()) {
+				newHeight+=heightOfExpandedDoneSectionNode;
+			}
+			else {
+				newHeight+=heightOfDoneSectionNode;
+			}
 		}
-				
-		vbox.setMinHeight(totalHeightOfElements + newNodeHeight);
-		vbox.setMaxHeight(totalHeightOfElements + newNodeHeight);
+		
+		if (newHeight <= heightOfDoneSectionNode*2) {
+			dailyScrollDoneSectionVBox.setMinHeight(heightOfDoneSectionNode*2);
+			dailyScrollDoneSectionVBox.setMaxHeight(heightOfDoneSectionNode*2);			
+		}
+		else {
+			dailyScrollDoneSectionVBox.setMinHeight(newHeight);
+			dailyScrollDoneSectionVBox.setMaxHeight(newHeight);			
+		}
 	}
 	
 	/*
@@ -313,9 +335,9 @@ public class DailyScrollController implements Initializable {
 	 */
 	private void resizeToDoSection() {
 		Double newHeight = toDoVBox.getChildren().size()*heightOfToDoSectionNode;
-		if (newHeight <= 200) {
-			dailyScrollToDoSection.setMinHeight(200);
-			dailyScrollToDoSection.setMaxHeight(200);
+		if (newHeight <= heightOfToDoSectionNode*4) {
+			dailyScrollToDoSection.setMinHeight(heightOfToDoSectionNode*4);
+			dailyScrollToDoSection.setMaxHeight(heightOfToDoSectionNode*4);
 		}
 		else {
 			dailyScrollToDoSection.setMinHeight(newHeight);
@@ -328,9 +350,9 @@ public class DailyScrollController implements Initializable {
 	 */
 	private void resizeLongTermGoalSection() {
 		Double newHeight = longTermGoalSectionVBox.getChildren().size()*heightOfLongTermGoalSectionNode;
-		if (newHeight <= 100) {
-			longTermGoalSection.setMinHeight(100);
-			longTermGoalSection.setMaxHeight(100);
+		if (newHeight <= heightOfLongTermGoalSectionNode*2) {
+			longTermGoalSection.setMinHeight(heightOfLongTermGoalSectionNode*2);
+			longTermGoalSection.setMaxHeight(heightOfLongTermGoalSectionNode*2);
 		}
 		else {
 			longTermGoalSection.setMinHeight(newHeight);
@@ -400,7 +422,6 @@ public class DailyScrollController implements Initializable {
 
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
-		
 	}
 	
 	/*
@@ -434,10 +455,13 @@ public class DailyScrollController implements Initializable {
 	
 	
 	/*
-	 * the anchor for the loaded node will be a class which overrides anchorpane
-	 * this way, it can hold node specific attributes without making a reference to a controller
+	 * 1/25/2023-8:40PM --- 5/5
+	 * 
+	 * there needs to be a toDoSectionNode which is a stepping place for the DoneSecitonNode, which is saved permanently
+	 * 
+	 * returns a textfield so that if the contents of the textfield are already known, the node can be created and textfield value changed
 	 */
-	public void toDoSectionButtonPushed() {
+	public TextField toDoSectionButtonPushed() {
         FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/ToDoSectionNode.fxml"));
 		try {
 			AnchorPane loadedNode = fxmlLoader.load();
@@ -445,65 +469,99 @@ public class DailyScrollController implements Initializable {
 			toDoVBox.getChildren().add(loadedNode);
 			resizeToDoSection();
 			
-			loadedNode.maxWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
-			loadedNode.minWidthProperty().bind(dailyScrollToDoSection.widthProperty().subtract(40));
+			loadedNode.maxWidthProperty().bind(toDoVBox.widthProperty());
+			loadedNode.minWidthProperty().bind(toDoVBox.widthProperty());
 			
-			//TODO these are static references and can break if the tree structure of the node changes
-			VBox encapsulatingVBox = (VBox) loadedNode.getChildren().get(0);
-			AnchorPane originalAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(0);
-			Button actionButton = (Button) originalAnchor.getChildren().get(0);
-			HBox rightSideHBox = (HBox) originalAnchor.getChildren().get(1);
-			Button deleteButton = (Button) rightSideHBox.getChildren().get(2);
+			Button actionButton = (Button) loadedNode.getChildren().get(0);
+			TextField textField = (TextField) loadedNode.getChildren().get(1);
+			Button deleteButton = (Button) loadedNode.getChildren().get(2);
 			
 			handleDeleteButtonListener(deleteButton, loadedNode, toDoVBox);
 			
 			actionButton.setOnAction(new EventHandler<ActionEvent>() { 
+				/*
+				 * 1/25/2023-8:40PM --- 4/5
+				 * 
+				 * needs to remove toDoSectionNode, add DoneSectionNode with title of the now-remove toDoSectionNode, remove toDoSectionNode from its vBox
+				 */
 	    		@Override
 	    		public void handle(ActionEvent event) {
 	    	        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/DailyScrollSubFXMLs/DoneSectionNode.fxml"));
 	    			try {
 						AnchorPane doneSectionRoot = fxmlLoader.load();
-						Double doneSectionRootHeight = 50.0;
-						doneSectionRoot.setMinHeight(doneSectionRootHeight);
-						
 						AnchorPane marginKeeper = (AnchorPane) doneSectionRoot.getChildren().get(0);
-						BorderPane borderPane = (BorderPane) marginKeeper.getChildren().get(0);
+						VBox vbox = (VBox) marginKeeper.getChildren().get(0);
+						BorderPane borderPane = (BorderPane) vbox.getChildren().get(0);
 						
 						Button mainButton = (Button) borderPane.getCenter();
-						
 						mainButton.setMinWidth(100);						
-						mainButton.setText("This is a test");
+						mainButton.setText(textField.getText());
 						
+						Button deleteButton = (Button) borderPane.getRight();
+						deleteButton.setOnAction(new EventHandler<ActionEvent>() {
+							/*
+							 * 1/25/2023-8:50PM --- TODO incomplete, this needs to call to database
+							 * 
+							 * removes the DoneSectionNode, sends back to the toDoSection, with the same value for the button / textfield
+							 */
+				    		@Override
+				    		public void handle(ActionEvent event) {
+								dailyScrollDoneSectionVBox.getChildren().remove(doneSectionRoot);
+								resizeDoneSection();
+								
+								TextField textField = toDoSectionButtonPushed();
+								textField.setText(mainButton.getText());
+				    		}});
 						
-						//TODO incomplete
+						AnchorPane textAreaHolder = (AnchorPane) vbox.getChildren().get(1);
+						TextArea reflectionTextArea = (TextArea) textAreaHolder.getChildren().get(0);
+						textAreaHolder.setVisible(false);
+						reflectionTextArea.setVisible(false);
+						
+						mainButton.setOnAction(new EventHandler<ActionEvent>() {
+							/*
+							 * 1/25/2023-9:25PM --- 
+							 * 
+							 * toggles between the reflectionTextArea and its holder being visible or not and also must change the size of the node
+							 */
+				    		@Override
+				    		public void handle(ActionEvent event) {
+				    			
+				    			if (reflectionTextArea.isVisible()) {
+					    			doneSectionRoot.setPrefHeight(heightOfDoneSectionNode);
+					    			
+					    			textAreaHolder.setVisible(false);
+					    			reflectionTextArea.setVisible(false);
+					    			resizeDoneSection();
+				    			}
+				    			else {
+					    			doneSectionRoot.setPrefHeight(heightOfExpandedDoneSectionNode);
+					    			
+					    			textAreaHolder.setVisible(true);
+					    			reflectionTextArea.setVisible(true);
+					    			resizeDoneSection();
+				    			}				    			
+				    		}});
 						
 						doneSectionRoot.maxWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
 						doneSectionRoot.minWidthProperty().bind(dailyScrollDoneSectionVBox.widthProperty());
 												
 						dailyScrollDoneSectionVBox.getChildren().add(doneSectionRoot);
-
-						resizeVBox(dailyScrollDoneSectionVBox, doneSectionRootHeight);
+						resizeDoneSection();
+						
+						toDoVBox.getChildren().remove(loadedNode);
 						
 					} catch (IOException e) {
 						e.printStackTrace();
 					}
 	    		}});
 			
-			AnchorPane secondAnchor = (AnchorPane) encapsulatingVBox.getChildren().get(1);
-			AnchorPane nestedAnchor = (AnchorPane) secondAnchor.getChildren().get(0);
-			TextArea reflectionTextArea = (TextArea) nestedAnchor.getChildren().get(0);
-			
-			reflectionTextArea.setVisible(false);
-			
-			//only one if statement here because the above code is default implementation for if nodes in closed form
-			if (toDoSectionInExpandedMode == true) {
-				reflectionTextArea.setVisible(true);
-				loadedNode.setPrefHeight(heightOfClosedToDoSectionNode + heightOfReflectionSection);
-			}
+			return textField;
 			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		return null;
 	}
 	
 	

@@ -634,80 +634,46 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\applicat
  * Daily Scroll: To Do Section                                                 *
  *                                                                             *
  ******************************************************************************/
- #toDoSectionNodeDeleteButton {
+#toDoSectionNodeDeleteButton, #doneSectionNodeDeleteButton {
   	-fx-border-radius: 0px;
   	-fx-border-width: 0px;
  	
- 	-fx-background-color:  rgba(65, 65, 65, 0.9);
- 	-fx-background-radius: 4px;
+ 	-fx-background-color:  rgba(50, 50, 50, 0.9);
+ 	-fx-background-radius: 5px;
  }
- #toDoSectionNodeDeleteButton:hover {
-  	-fx-background-color:  rgba(120, 43, 25, 0.85);
+ #toDoSectionNodeDeleteButton:hover, #doneSectionNodeDeleteButton:hover {
+  	-fx-background-color:  rgba(120, 43, 25, 0.5);
  }
- #toDoSectionNodeDeleteButton:pressed {
-  	-fx-background-color:  rgba(120, 43, 25, 0.95);
- }
- 
- 
- #toDoSectionNodeLockButton {
-  	-fx-border-radius: 5px;
- 	-fx-border-width: 0px;
- 	
- 	-fx-background-color:  rgba(78, 96, 145, 0.8);
- 	-fx-background-radius: 7px;
- }
- #toDoSectionNodeLockButton:hover {
- 	-fx-background-color:  rgba(78, 96, 145, 0.95);
- }
- #toDoSectionNodeLockButton:pressed {
- 	-fx-background-color:  rgba(78, 96, 145, 1);
+ #toDoSectionNodeDeleteButton:pressed, #doneSectionNodeDeleteButton:pressed {
+  	-fx-background-color:  rgba(120, 43, 25, 0.75);
  }
  
  
- #toDoSectionNodeCheckButton {
-  	-fx-border-radius: 5px;
- 	-fx-border-width: 0px;
- 	
- 	-fx-background-color:  rgba(85, 145, 78, 0.8);
- 	-fx-background-radius: 7px;
- }
- #toDoSectionNodeCheckButton:hover {
- 	-fx-background-color:  rgba(85, 145, 78, 0.95);
- }
- #toDoSectionNodeCheckButton:pressed {
- 	-fx-background-color:  rgba(85, 145, 78, 1);
- }
- 
-
 #toDoSectionNodeReflectButton {
- 	-fx-text-fill: -full-grayish-white;
- 	-fx-font-size: 13px;
- 	 	
- 	-fx-border-radius: 5px;
- 	-fx-border-width: 0px;
- 	
- 	-fx-background-color:  rgba(65, 65, 65, 0.9);
- 	-fx-background-radius: 7px;
- }
-#toDoSectionNodeReflectButton:hover {
- 	-fx-background-color:  rgba(65, 65, 65, 0.95);
-}
-#toDoSectionNodeReflectButton:pressed {
- 	-fx-background-color:  rgba(65, 65, 65, 1);	
+ 	-fx-background-radius: 5px;
 }
 
-#toDoSectionTextField, #reflectionTextArea {
+#toDoSectionTextField {
 	-fx-background-color: rgba(47, 47, 47, 0.6);
  	-fx-text-fill: -full-grayish-white;
  	-fx-prompt-text-fill: rgba(256, 256, 256, 0.5);
 }
 
-#reflectionTextArea {
-	-fx-background-color: rgba(47, 47, 47, 0.75);
- 	-fx-text-fill: -full-grayish-white;
- 	
- 	-fx-focus-color: transparent;
-    -fx-faint-focus-color: transparent;
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Done Section                                                  *
+ *                                                                             *
+ ******************************************************************************/
+
+#doneSectionNodeMarginKeeper {
+	-fx-border-color: -default-gray;
+	-fx-border-radius: 3px;
+	-fx-border-width: 3px;
+}
+
+#doneSectionReflectionTextArea {
+	-fx-background-color: rgba(46, 46, 46, 0.95);
 }
 
 /*******************************************************************************
@@ -864,19 +830,6 @@ sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\applicat
 	-fx-border-radius: 3px;
 	-fx-border-width: 3px;	
 }
-
-/*******************************************************************************
- *                                                                             *
- * Daily Scroll: Done Section                                                  *
- *                                                                             *
- ******************************************************************************/
-
-#doneSectionNodeMarginKeeper {
-	-fx-border-color: -default-gray;
-	-fx-border-radius: 3px;
-	-fx-border-width: 3px;
-}
-
 
 /*******************************************************************************
  *                                                                             *
