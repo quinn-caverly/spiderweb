@@ -171,6 +171,8 @@ public class DailyScrollController implements Initializable {
 	private TextArea rightTextSectionTextArea;
 	@FXML
 	private TextArea leftTextSectionTextArea;
+	@FXML
+	private VBox dailyScrollMasterVBox;
 	
 	
 	public void setMasterReference(MasterReference mR) {
@@ -1403,6 +1405,34 @@ public class DailyScrollController implements Initializable {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/*
+	 * 1/27/2023-6:43PM --- TODO incomplete
+	 * 
+	 * needs to remove all elements besides leftTextArea, rightTextArea, and the DoneSection which will be moved above the hbox
+	 */
+	public void configureForTimeCapsule() {
+		rightCollectorVBox.getChildren().clear();
+		rightCollectorVBox.getChildren().add(rightTextSection);
+		
+		leftCollectorVBox.getChildren().clear();
+		leftCollectorVBox.getChildren().add(leftTextSection);	
+		
+		AnchorPane doneSectionNewHolder = new AnchorPane();
+		doneSectionNewHolder.getChildren().add(dailyScrollDoneSectionVBox);
+		
+		doneSectionNewHolder.minWidthProperty().bind(dailyScrollMasterVBox.widthProperty());
+		doneSectionNewHolder.maxWidthProperty().bind(dailyScrollMasterVBox.widthProperty());
+		
+	     AnchorPane.setLeftAnchor(dailyScrollDoneSectionVBox, 10.0);
+	     AnchorPane.setRightAnchor(dailyScrollDoneSectionVBox, 30.0);
+	     AnchorPane.setTopAnchor(dailyScrollDoneSectionVBox, 10.0);
+
+		
+		dailyScrollMasterVBox.getChildren().add(1, doneSectionNewHolder);
+		
+
 	}
 	
 	/*

@@ -832,12 +832,11 @@ public final class DatabaseHandler {
 	}
 	
 	/*
-	 * 1/26/2023-4:49PM ---
+	 * 1/27/2023-6:40PM ---
 	 * 
 	 * needs to load the scrolls and add them to the listview
 	 * importantly, needs to decide whether the scroll is a current scroll (today) or a previous scroll
 	 * 
-	 * if a previous scroll, use the TimeCapsuleDailyScroll type, otherwise use DailyScroll
 	 * CREATE TABLE DailyScroll (Name VARCHAR(100), LeftTextAreaContents VARCHAR(30000), RightTextAreaContents VARCHAR(30000))
 	 * CREATE TABLE DoneSectionNode (Name VARCHAR(100), Id INT, Description VARCHAR(1000), ReflectionTextAreaContents VARCHAR(10000))
 	 */
@@ -857,29 +856,32 @@ public final class DatabaseHandler {
 	    	String nameOfCurrent = resultSet.getString("Name");
 	    	String leftTextAreaContents = resultSet.getString("LeftTextAreaContents");
 	    	String rightTextAreaContents = resultSet.getString("RightTextAreaContents");
-	    	
-	    	if (nameOfToday.equals(nameOfCurrent)) {
-	    		System.out.println("today");
-	    		
-	    		Note newDailyScroll = mR.getNoteChooserHandler().new Note(nameOfToday, "DailyScroll");
-	    		mR.getMainClassController().getDailyPageList().getItems().add(newDailyScroll);
-	    		DailyScrollController dailyScrollController = (DailyScrollController) newDailyScroll.getController();
-	    		
-	    		dailyScrollController.getLeftTextSectionTextArea().setText(leftTextAreaContents);
-	    		dailyScrollController.getRightTextSectionTextArea().setText(rightTextAreaContents);
-	    		
-	    		//having multiple queries on one statement can cause errors
-				Statement subStatement = connection.createStatement();
-			    ResultSet resSet = subStatement.executeQuery("SELECT * FROM DoneSectionNode WHERE Name = '" + nameOfCurrent + "'");
-			    while (resSet.next()) {
-		    		try {
-						TextArea reflectionTextArea = dailyScrollController.directlyCreateDoneSectionNode(resSet.getString("Description"));
-						reflectionTextArea.setText(resSet.getString("ReflectionTextAreaContents"));
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-			    }
+	    	    		
+    		Note newDailyScroll = mR.getNoteChooserHandler().new Note(nameOfCurrent, "DailyScroll");
+    		mR.getMainClassController().getDailyPageList().getItems().add(newDailyScroll);
+    		DailyScrollController dailyScrollController = (DailyScrollController) newDailyScroll.getController();
+    		
+    		dailyScrollController.getLeftTextSectionTextArea().setText(leftTextAreaContents);
+    		dailyScrollController.getRightTextSectionTextArea().setText(rightTextAreaContents);
+    		
+    		//having multiple queries on one statement can cause errors
+			Statement subStatement = connection.createStatement();
+		    ResultSet resSet = subStatement.executeQuery("SELECT * FROM DoneSectionNode WHERE Name = '" + nameOfCurrent + "'");
+		    while (resSet.next()) {
+	    		try {
+					TextArea reflectionTextArea = dailyScrollController.directlyCreateDoneSectionNode(resSet.getString("Description"));
+					reflectionTextArea.setText(resSet.getString("ReflectionTextAreaContents"));
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		    }
+		    
+	    	if (!nameOfToday.equals(nameOfCurrent)) {
+	    		dailyScrollController.configureForTimeCapsule();
 	    	}
+
+		    
+
 	    }
 	}
 	

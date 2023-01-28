@@ -171,17 +171,20 @@ public class NoteChooserHandler {
 						public void handle(ActionEvent event) {
 							mR.openNote(Note.this);	
 						}});
+											
+					if (getName().equals("temporary")) {
+						LocalDate date = LocalDate.now();
 						
-					LocalDate date = LocalDate.now();
+						String day = String.valueOf(date.getDayOfMonth());
+						String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
+						String year = String.valueOf(date.getYear());
+						
+						setName(day + " " + month + " " + year);
+					}
 					
-					String day = String.valueOf(date.getDayOfMonth());
-					String month = date.getMonth().getDisplayName(TextStyle.FULL, Locale.ENGLISH);
-					String year = String.valueOf(date.getYear());
-
 					button.setStyle("-fx-font-size: 16px;");
-					button.setText(day + " " + month + " " + year);
-					setName(day + " " + month + " " + year);
-					
+					button.setText(getName());
+
 					listViewAnchor.setMaxWidth(100);
 				} catch (IOException e) {
 					e.printStackTrace();
