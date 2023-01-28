@@ -202,6 +202,8 @@ public class DailyScrollController implements Initializable {
 	private static Double heightOfExpandedDoneSectionNode = 135.0;
 	
 	private MasterReference mR;
+	
+	private Boolean inTimeCapsuleMode = false;
 		
 	
 	@Override
@@ -410,8 +412,16 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
 		
-		changeWeeklyGoalSectionMode();
-		changeBookSectionMode();
+		
+		if (inTimeCapsuleMode) {
+			parentOfLeftScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty());
+			parentOfLeftScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty());
+		    AnchorPane.setRightAnchor(leftTextSection, 10.0);
+		}
+		else {
+			changeWeeklyGoalSectionMode();
+			changeBookSectionMode();
+		}
 	}
 	
 	/*
@@ -428,16 +438,27 @@ public class DailyScrollController implements Initializable {
 
 		topButtonHolder.getChildren().clear();
 		topButtonHolder.getChildren().add(whenNeededButton);
+		
+		if (inTimeCapsuleMode) {
+			parentOfRightScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty());
+			parentOfRightScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty());
+		    AnchorPane.setLeftAnchor(rightTextSection, 10.0);
+		}
 	}
 	
 	/*
-	 * resets the topButtonHolder and left and right sides back to original state
+	 * 1/27/2023-10:35PM --- 4/5
+	 * 
+	 * this method needed to be adjusted to fit the structure of the TimeCapsule mode
 	 */
 	public void whenNeededButtonPushed() {
 		
-		parentOfScrollPanes.getChildren().clear();
-		parentOfScrollPanes.getChildren().add(parentOfLeftScrollPane);
-		parentOfScrollPanes.getChildren().add(parentOfRightScrollPane);
+		if (parentOfScrollPanes.getChildren().contains(parentOfLeftScrollPane)) {
+			parentOfScrollPanes.getChildren().add(parentOfRightScrollPane);
+		}
+		else {
+			parentOfScrollPanes.getChildren().add(0, parentOfLeftScrollPane);
+		}
 		
 		topButtonHolder.getChildren().clear();
 		
@@ -445,17 +466,28 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().add(topButtonMarginMaker);
 		topButtonHolder.getChildren().add(dailyScrollTopRightButton);
 		
-		if (toDoSectionInExpandedMode == true) {
-			//placeholder, describes relevance of the toDoSectionInExpandedMode variable
-		}
-		if (weeklyGoalSectionInExpandedMode == true) {
-			changeWeeklyGoalSectionMode();
-		}
-		if (bookSectionInExpandedMode == true) {
-			changeBookSectionMode();
-			if (bookSectionInBrowseMode == true) {
-				bookSectionMainButtonPushed();
+		if (!inTimeCapsuleMode) {
+			if (toDoSectionInExpandedMode == true) {
+				//placeholder, describes relevance of the toDoSectionInExpandedMode variable
 			}
+			if (weeklyGoalSectionInExpandedMode == true) {
+				changeWeeklyGoalSectionMode();
+			}
+			if (bookSectionInExpandedMode == true) {
+				changeBookSectionMode();
+				if (bookSectionInBrowseMode == true) {
+					bookSectionMainButtonPushed();
+				}
+			}
+		}
+		else {
+			parentOfLeftScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+			parentOfLeftScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+		    AnchorPane.setRightAnchor(leftTextSection, 5.0);
+
+			parentOfRightScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+			parentOfRightScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+		    AnchorPane.setLeftAnchor(rightTextSection, 5.0);
 		}
 	}
 	
@@ -1413,11 +1445,7 @@ public class DailyScrollController implements Initializable {
 	 * needs to remove all elements besides leftTextArea, rightTextArea, and the DoneSection which will be moved above the hbox
 	 */
 	public void configureForTimeCapsule() {
-		rightCollectorVBox.getChildren().clear();
-		rightCollectorVBox.getChildren().add(rightTextSection);
-		
-		leftCollectorVBox.getChildren().clear();
-		leftCollectorVBox.getChildren().add(leftTextSection);	
+		inTimeCapsuleMode = true;
 		
 		AnchorPane doneSectionNewHolder = new AnchorPane();
 		doneSectionNewHolder.getChildren().add(dailyScrollDoneSectionVBox);
@@ -1425,14 +1453,31 @@ public class DailyScrollController implements Initializable {
 		doneSectionNewHolder.minWidthProperty().bind(dailyScrollMasterVBox.widthProperty());
 		doneSectionNewHolder.maxWidthProperty().bind(dailyScrollMasterVBox.widthProperty());
 		
-	     AnchorPane.setLeftAnchor(dailyScrollDoneSectionVBox, 10.0);
-	     AnchorPane.setRightAnchor(dailyScrollDoneSectionVBox, 30.0);
-	     AnchorPane.setTopAnchor(dailyScrollDoneSectionVBox, 10.0);
-
+	    AnchorPane.setLeftAnchor(dailyScrollDoneSectionVBox, 10.0);
+	    AnchorPane.setRightAnchor(dailyScrollDoneSectionVBox, 10.0);
+	    AnchorPane.setTopAnchor(dailyScrollDoneSectionVBox, 10.0);
 		
 		dailyScrollMasterVBox.getChildren().add(1, doneSectionNewHolder);
 		
+		parentOfLeftScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+		parentOfLeftScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
 
+		parentOfRightScrollPane.maxWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+		parentOfRightScrollPane.minWidthProperty().bind(parentOfScrollPanes.widthProperty().divide(2));
+		
+		parentOfLeftScrollPane.getChildren().clear();
+		parentOfLeftScrollPane.getChildren().add(leftTextSection);
+	    AnchorPane.setLeftAnchor(leftTextSection, 10.0);
+	    AnchorPane.setRightAnchor(leftTextSection, 5.0);
+	    AnchorPane.setBottomAnchor(leftTextSection, 60.0);
+	    AnchorPane.setTopAnchor(leftTextSection, 10.0);
+		
+		parentOfRightScrollPane.getChildren().clear();
+		parentOfRightScrollPane.getChildren().add(rightTextSection);
+	    AnchorPane.setLeftAnchor(rightTextSection, 5.0);
+	    AnchorPane.setRightAnchor(rightTextSection, 10.0);
+	    AnchorPane.setBottomAnchor(rightTextSection, 60.0);
+	    AnchorPane.setTopAnchor(rightTextSection, 10.0);		
 	}
 	
 	/*

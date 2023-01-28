@@ -832,7 +832,7 @@ public final class DatabaseHandler {
 	}
 	
 	/*
-	 * 1/27/2023-6:40PM ---
+	 * 1/27/2023-6:40PM --- 4/5
 	 * 
 	 * needs to load the scrolls and add them to the listview
 	 * importantly, needs to decide whether the scroll is a current scroll (today) or a previous scroll
@@ -849,9 +849,10 @@ public final class DatabaseHandler {
 		String nameOfToday = day + " " + month + " " + year;
 		
 		Connection connection = DriverManager.getConnection(urlForConnection);
-	    Statement statement = connection.createStatement();
+	    Statement statement = connection.createStatement(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE);
 	    ResultSet resultSet = statement.executeQuery("SELECT * FROM DailyScroll");
-	    while (resultSet.next()) {
+	    resultSet.afterLast();
+	    while (resultSet.previous()) { //go backwards through the table so that the most recently added are traversed last, https://www.ibm.com/docs/en/db2-for-zos/11?topic=cjrudsdjs-specifying-updatability-scrollability-holdability-resultsets-in-jdbc-applications
 	    	
 	    	String nameOfCurrent = resultSet.getString("Name");
 	    	String leftTextAreaContents = resultSet.getString("LeftTextAreaContents");
@@ -879,9 +880,6 @@ public final class DatabaseHandler {
 	    	if (!nameOfToday.equals(nameOfCurrent)) {
 	    		dailyScrollController.configureForTimeCapsule();
 	    	}
-
-		    
-
 	    }
 	}
 	
