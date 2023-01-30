@@ -1,5 +1,6 @@
 # spiderweb
 
+---
 Reading type note
 
 ![test](https://i.gyazo.com/a24f8b15a9b1aab73ede518927c08c71.png)
@@ -24,3 +25,5 @@ like we take notes on paper? 👎 Below is an example of how a traditional bulle
 Notetaking apps mimic paper unnecessarily in the way that a large amount of text takes up a disproportionate amount of space compared to its position in the hierarchy.
 
 ![text overflow example](https://i.gyazo.com/1d05f4bc3639fd8f8177430ef3c31a59.png)
+
+---
