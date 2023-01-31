@@ -1,6 +1,6 @@
 # spiderweb
 
-comment format for this project:
+comment format for the project:
 
 ```
 /*
