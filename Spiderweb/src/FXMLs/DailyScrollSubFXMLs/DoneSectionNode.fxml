@@ -22,7 +22,7 @@
                   </BorderPane>
                   <AnchorPane prefHeight="60.0" prefWidth="10000.0">
                      <children>
-                        <TextArea fx:id="doneSectionReflectionTextArea" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0" />
+                        <TextArea fx:id="doneSectionReflectionTextArea" prefHeight="200.0" prefWidth="200.0" wrapText="true" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="5.0" AnchorPane.rightAnchor="5.0" AnchorPane.topAnchor="10.0" />
                      </children>
                   </AnchorPane>
                </children>

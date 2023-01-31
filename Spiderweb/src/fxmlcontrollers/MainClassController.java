@@ -290,7 +290,7 @@ public class MainClassController implements Initializable {
 	public void newDailyPageButtonPushed() {
 		Note newDailyScroll = mR.getNoteChooserHandler().new Note("temporary", "DailyScroll"); //name is overridden with the date later
 				
-		dailyPageList.getItems().add(newDailyScroll);
+		dailyPageList.getItems().add(0, newDailyScroll);
 		
 		mR.openNote(newDailyScroll);
 	}

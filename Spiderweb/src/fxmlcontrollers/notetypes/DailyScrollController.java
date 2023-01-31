@@ -216,15 +216,15 @@ public class DailyScrollController implements Initializable {
 		leftMarginKeeper.maxWidthProperty().bind(parentOfLeftScrollPane.widthProperty());
 		
 		//the margin keeper height is bounded to its child, or the collector vbox, this makes it so that the scrollpane is activated as the anchorpane becomes larger than the area
-		leftMarginKeeper.minHeightProperty().bind(leftCollectorVBox.heightProperty());
-		leftMarginKeeper.maxHeightProperty().bind(leftCollectorVBox.heightProperty());
+		leftMarginKeeper.minHeightProperty().bind(leftCollectorVBox.heightProperty().add(30));
+		leftMarginKeeper.maxHeightProperty().bind(leftCollectorVBox.heightProperty().add(30));
 		
 		
 		rightMarginKeeper.minWidthProperty().bind(parentOfRightScrollPane.widthProperty());
 		rightMarginKeeper.maxWidthProperty().bind(parentOfRightScrollPane.widthProperty());
 		
-		rightMarginKeeper.minHeightProperty().bind(rightCollectorVBox.heightProperty());
-		rightMarginKeeper.maxHeightProperty().bind(rightCollectorVBox.heightProperty());
+		rightMarginKeeper.minHeightProperty().bind(rightCollectorVBox.heightProperty().add(30));
+		rightMarginKeeper.maxHeightProperty().bind(rightCollectorVBox.heightProperty().add(30));
 		
 		
 		/*
