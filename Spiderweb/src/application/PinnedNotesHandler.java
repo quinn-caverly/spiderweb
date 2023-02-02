@@ -25,8 +25,6 @@ public class PinnedNotesHandler {
 	
 	public PinnedNotesHandler(MasterReference mR) {
 		this.mR = mR;
-		
-		
 	}
 	
 	public void newNoteOpenedProcedure() {

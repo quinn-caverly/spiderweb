@@ -1481,6 +1481,13 @@ public class DailyScrollController implements Initializable {
 	}
 	
 	/*
+	 * 2/1/2023:2:50AM --- 5/5
+	 */
+	public String returnTextForClassifier() {
+		return leftTextSectionTextArea.getText() + " " + rightTextSectionTextArea.getText();
+	}
+	
+	/*
 	 * https://stackoverflow.com/questions/237159/whats-the-best-way-to-check-if-a-string-represents-an-integer-in-java?page=1&tab=scoredesc#tab-top
 	 * 
 	 * leaving as public because might be useful in other classes?

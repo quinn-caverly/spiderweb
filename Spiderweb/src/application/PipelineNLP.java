@@ -22,6 +22,7 @@ import edu.mit.jwi.item.ISynsetID;
 import edu.mit.jwi.item.IWord;
 import edu.mit.jwi.item.IWordID;
 import edu.mit.jwi.item.POS;
+import fxmlcontrollers.notetypes.DailyScrollController;
 import fxmlcontrollers.notetypes.DailyTypeNoteController;
 import fxmlcontrollers.notetypes.ReadingTypeNoteController;
 import fxmlcontrollers.notetypes.StandardTypeNoteController;
@@ -55,7 +56,7 @@ public class PipelineNLP {
 	String pathToDict = "lib/wordnetdict";
 	
 	Map<String, Double> IFVDictionary;
-	Double valueOfSupporter;
+	Double halfValue;
 	
 	
 	/*
@@ -165,15 +166,11 @@ public class PipelineNLP {
 	
 	
 	/*
-	 * This class takes inspiration from the project at http://www.diva-portal.org/smash/get/diva2:1461669/FULLTEXT01.pdf
-	 * (the classes which deal with the openNLP)
+	 * 2/1/2023-9:03PM --- 5/5
 	 * 
-	 * It is essentially basic usage of the OpenNLP API, it saves me the time of reading the documentation...
-	 * while I will cite the source, the code is nothing more than a straightforward implementation...
+	 * references http://www.diva-portal.org/smash/get/diva2:1461669/FULLTEXT01.pdf
 	 */
-	
 	public PipelineNLP() {
-				
 		try {
 			tokenBinInputStream = new FileInputStream("lib/en-token.bin");
 			tokenizerModel = new TokenizerModel(tokenBinInputStream);
@@ -190,22 +187,16 @@ public class PipelineNLP {
 			lemmatizerDictInputStream = new FileInputStream("lib/en-lemmatizer.txt");
 			lemmatizer = new DictionaryLemmatizer(lemmatizerDictInputStream);
 			
-			
-			//opens the wordnet dictionary here so it does not need to be done by every note
-		    URL url;
-			url = new URL("file", null, pathToDict);
-			dictionaryFromJWI = new Dictionary(url);
+			dictionaryFromJWI = new Dictionary(new URL("file", null, pathToDict));
 			dictionaryFromJWI.open();
 			
 			File csvFile = new File("lib/unigram_freq.csv");
 			Scanner csvScanner = new Scanner(csvFile);
 			IFVDictionary = new HashMap<String, Double>();
-			
+						
 			Integer topper = 30000; //only want the first 30,000 values of the dictionary
 			while (csvScanner.hasNext() && topper > 0) {
-				
-				String line = csvScanner.next();
-				String[] lst = line.split(",");
+				String[] lst = csvScanner.next().split(",");
 				
 				IFVDictionary.put(lst[0], Math.pow(10, 10) * 1/Double.valueOf(lst[1]));
 				
@@ -213,17 +204,15 @@ public class PipelineNLP {
 			}
 			csvScanner.close();
 			
-			valueOfSupporter = IFVDictionary.get("supporter");
-
+			halfValue = IFVDictionary.get("supporter");
 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (MalformedURLException e) {
-				e.printStackTrace();
+			e.printStackTrace();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		
 	}
 	
 	/*
@@ -242,10 +231,9 @@ public class PipelineNLP {
 	 * assign "IFV" values to first and second level synsets
 	 * generate classifierMap (matrix)
 	 */
-	
 	public void runThroughPipeline(Note currentNote) {
 		
-		String[] separateSentence = separateSentences(getContents(currentNote));
+		String[] separateSentence = sentenceDetector.sentDetect(getContents(currentNote));
 		
 		ArrayList<String[]> sentencesOfTokens = separateTokens(separateSentence);
 		
@@ -260,29 +248,17 @@ public class PipelineNLP {
 	
 	
 	/*
-	 * Separates the raw text into sentences using OpenNLP
-	 * this is necessary because sentences must be intact in order to assign the part of speech
-	 */
-	private String[] separateSentences(String contents) {
-		
-		String[] sentences = sentenceDetector.sentDetect(contents);
-		
-		return sentences;
-	}
-	
-	
-	/*
+	 * 2/1/2023-9:05PM --- 5/5
+	 * 
 	 * Tokenized, but still the sentences are kept intact
 	 * is effectively an arraylist of sentences, those sentences are a string array of the tokens
 	 */
 	private ArrayList<String[]> separateTokens(String[] sentences) {
-		
 		ArrayList<String[]> sentencesOfTokens = new ArrayList<String[]>();
 		
 		for (int i=0; i < sentences.length; i++) {
 			sentencesOfTokens.add(tokenizer.tokenize((sentences[i])));
 		}
-		
 		return sentencesOfTokens;
 	}
 	
@@ -312,15 +288,11 @@ public class PipelineNLP {
 			// iterates through each word in the sentence, adding it to the tokenElement list
 			
 			for (int j=0; j < tags.length; j++) {
-				
 				//substring is important here, the OpenNLP POS are often a few letters
 				//for the JWI, the POS needs to be just one, the first character takes what we need from the OpenNLP POS
 				String partOfSpeechTag = tags[j].substring(0, 1);
-				
 				String lemma = lemmas[j];
-				
 				String token = tokens[j];
-				
 								
 				POS POSTag = null;
 				/*
@@ -336,7 +308,6 @@ public class PipelineNLP {
 				 * pronouns, articles, quantitative and other irrelevant adjectives
 				 * punctuation is also excluded
 				 */
-				
 				if (partOfSpeechTag.equals("J")) {
 					POSTag = POS.ADJECTIVE;
 				}
@@ -377,10 +348,8 @@ public class PipelineNLP {
 			if (!tokenElement.getLemma().equals("O")) { //this will output "O" if there is no lemma given
 				tokenToUse = tokenElement.getLemma();
 			}
-			
 			else { //word will be given, but it has to be cleaned first
-				
-				//lemmetization implicitly places the words into lowercase
+				//lemmatization implicitly places the words into lowercase
 				tokenToUse = tokenElement.getOriginalWord().toLowerCase();
 			}
 			
@@ -456,8 +425,6 @@ public class PipelineNLP {
 			if (listOfFirstLevelSimilars.get(i).equals(tokenToUse)) {
 				listOfFirstLevelSimilars.remove(i);
 			}
-			
-			
 		}
 		
 		tokenElement.setFirstLevelRelatedWords(listOfFirstLevelSimilars);
@@ -506,14 +473,11 @@ public class PipelineNLP {
 				
 			}
 			
-			
 			classifierMap.put(tokenElement.getUsedToken(), tokenElement.getIFV());
 			
 			addToMatrix(classifierMap, firstLevelList);
 			addToMatrix(classifierMap, secondLevelList);
 		}
-		
-		
 		
 		return classifierMap;
 	}
@@ -525,7 +489,7 @@ public class PipelineNLP {
 		// if the word is not in the dictionary, assigned the value of "supporter"
 		//this is the 15,000 word in the dictionary, half of the 30,000 
 		if (IFVDictionary.get(tokenElement.getUsedToken()) == null) {
-			tokenElement.setIFV(valueOfSupporter);
+			tokenElement.setIFV(halfValue);
 		}
 		else {
 			tokenElement.setIFV(IFVDictionary.get(tokenElement.getUsedToken()));
@@ -539,9 +503,9 @@ public class PipelineNLP {
 		// if the word is not in the dictionary, assigned the value of "supporter"
 		//this is the 15,000 word in the dictionary, half of the 30,000 
 		if (IFVDictionary.get(similarWord) == null) {
-			tokenElement.setIFV(valueOfSupporter);
+			tokenElement.setIFV(halfValue);
 			
-			return valueOfSupporter;
+			return halfValue;
 		}
 		else {
 			tokenElement.setIFV(IFVDictionary.get(similarWord));
@@ -557,7 +521,6 @@ public class PipelineNLP {
 		
 		//first assign IFV then sum up the IFVs for this level
 		for (String levelSimilar : listOfLevelStrings) {
-			
 			SubTokenElement subTokenForSimilar = new SubTokenElement(levelSimilar);
 			levelList.add(subTokenForSimilar);
 			
@@ -570,11 +533,8 @@ public class PipelineNLP {
 		 * the effective IFVs in the first level add up to the IFV of the original word
 		 */
 		for (SubTokenElement subTokenForSimilar: levelList) {
-
 			Double percentOfTotal = subTokenForSimilar.getIFV() / sumIFV;
-			
-			subTokenForSimilar.setEffectiveIFV(totalAvailable * percentOfTotal);
-								
+			subTokenForSimilar.setEffectiveIFV(totalAvailable * percentOfTotal);		
 		}
 		
 		return levelList;
@@ -602,32 +562,31 @@ public class PipelineNLP {
 		}
 	}
 	
-	//this is a method to avoid redundancy, takes the note and calls returnTextForClassifier on the correct controller type
+	/*
+	 * 2/1/2023-2:52AM --- 5/5
+	 * 
+	 * returns "" if no contents, this is not an issue later
+	 */
 	private String getContents(Note currentNote) {
-		//in case something goes wrong, it will stay as "" for type safety
 		String contents = "";
-		
 		String type = currentNote.getTypeOfNote();
 		
-		if (type == "Standard") {
+		if (type.equals("Standard")) {
 			StandardTypeNoteController stnc = (StandardTypeNoteController) currentNote.getController();
-			
 			contents = stnc.returnTextForClassifier();
 		}
-		
-		else if (type == "Reading") {
+		else if (type.equals("Reading")) {
 			ReadingTypeNoteController rtnc = (ReadingTypeNoteController) currentNote.getController();
-			
 			contents = rtnc.returnTextForClassifier();
 		}
-		
-		else if (type == "Daily") {
-			DailyTypeNoteController dtnc = (DailyTypeNoteController) currentNote.getController();
-			
+		else if (type.equals("Daily")) {
+			DailyTypeNoteController dtnc = (DailyTypeNoteController) currentNote.getController();	
 			contents = dtnc.returnTextForClassifier();
 		}
-		
-		
+		else if (type.equals("Daily Scroll")) {
+			DailyScrollController dsc = (DailyScrollController) currentNote.getController();
+			contents = dsc.returnTextForClassifier();
+		}
 		return contents;
 	}
 

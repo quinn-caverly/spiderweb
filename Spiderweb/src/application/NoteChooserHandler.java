@@ -76,8 +76,6 @@ public class NoteChooserHandler {
 		 * this is needed because a scroll is not contained in a treeItem
 		 * this could be refactored so that everything is just a note and not treeItem
 		 * if I ever do a large refactor of code
-		 * 
-		 * TODO
 		 */
 		public TypeTab(String name, Node node, Note scroll) {
 			super(name, node);
@@ -97,37 +95,27 @@ public class NoteChooserHandler {
 		
 		//an id that uniquely identifies the note because the filepath cannot uniquely identify the note because it changes
 		private Integer id;
-		
 		//an Integer[] of the ids which are pinned to this note
 		private ArrayList<Integer> listOfPinnedIDs;
-		
 		//this is the root which is loaded from fxml which is added to the tabPane on open
 		private AnchorPane root;
-		
 		private Object controller;
-		
 		private TreeViewCellController cellController;
-		
 		private HBox treeViewHBox;
 		private AnchorPane listViewAnchor;
-
 	    private String name;
 	    private final String typeOfNote;
-	    
 	    private String childrenFilePath;
 	    private String selfPath;
-	    
 	    private Double scoreWithNoteBeingClassified;
-	    
 	    private boolean isFullSaved = false;
-	    
 	    //so that the note is not initialized twice
 	    private boolean isInitialized = false;
-	    
 	    private Integer databaseId;
 	    private ArrayList<String> childrenIds;
-	    
 	    private TreeMap<String, Double> classifierMap;
+	    private TreeItem<Note> treeItem;
+	    
 	    
 	    public Note(String name, String typeOfNote){	    	
 	        this.name = name;
@@ -366,6 +354,16 @@ public class NoteChooserHandler {
 
 		public void setChildrenIds(ArrayList<String> childrenIds) {
 			this.childrenIds = childrenIds;
+		}
+
+
+		public TreeItem<Note> getTreeItem() {
+			return treeItem;
+		}
+
+
+		public void setTreeItem(TreeItem<Note> treeItem) {
+			this.treeItem = treeItem;
 		}
 		
 	}
@@ -823,7 +821,6 @@ public class NoteChooserHandler {
 		
 		
 		//creates list of note names in under the encapsulating node
-		Note encapsulatingNote = noteTreeItem.getValue();
 		ArrayList<String> listOfNoteNames = new ArrayList<String>();
 		for (TreeItem<Note> treeItem: noteTreeItem.getChildren()) {
 			Note currentNote = treeItem.getValue();
@@ -867,12 +864,14 @@ public class NoteChooserHandler {
 		}
 		
 		
-		TreeItem<Note> newNote = new TreeItem<Note>(new Note(title, typeOfNote));
+		Note newNote = new Note(title, typeOfNote);
+		TreeItem<Note> newTreeItem = new TreeItem<Note>(newNote);
+		newNote.setTreeItem(newTreeItem);
 		
-		mR.saveNote(newNote);
+		mR.saveNote(newTreeItem);
 		
 		//adds to treeView structure
-		noteTreeItem.getChildren().add(newNote);
+		noteTreeItem.getChildren().add(newTreeItem);
 				
 		/* TODO incomplete
 		noteTreeItem.getChildren().sort(Comparator.comparing(i->((TreeItem<Note>) i).getValue().getTypeOfNote())

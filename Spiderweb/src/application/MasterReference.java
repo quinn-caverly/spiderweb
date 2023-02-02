@@ -104,7 +104,8 @@ public class MasterReference {
 					//changes the values in the similarNotesHBox
 					pipelineConsolidator.newNoteOpenedProcedure();
 					//changes the values in the pinnedNotesHBox
-					pinnedNotesHandler.newNoteOpenedProcedure();
+					//TODO pinnedNotesHandler is currently not activated
+					//pinnedNotesHandler.newNoteOpenedProcedure();
 				}
 			}
 		});
@@ -126,6 +127,9 @@ public class MasterReference {
 		
     	for (TreeItem<Note> treeItem : pipelineConsolidator.createListOfTreeItems()) {
     		pipeline.runThroughPipeline(treeItem.getValue());
+    	}
+    	for (Note scroll : mCC.getDailyPageList().getItems()) {
+    		pipeline.runThroughPipeline(scroll);    		
     	}
     	
 		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note

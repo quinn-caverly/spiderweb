@@ -964,7 +964,10 @@ public final class DatabaseHandler {
 			stnc.getStandardTypeMainTextArea().setText(resultSet.getString("BoxContents"));
 			stnc.getStandardTypeNoteTitleButton().setText(resultSet.getString("Title"));
 						
-			treeList.add(new TreeItem<Note>(standardNote));
+			TreeItem<Note> newTreeItem = new TreeItem<Note>(standardNote);
+			standardNote.setTreeItem(newTreeItem);
+			
+			treeList.add(newTreeItem);
 	    }
 	}
 	
@@ -992,7 +995,10 @@ public final class DatabaseHandler {
 			dtnc.getToDoSection().setText(resultSet.getString("TopRightBoxContents"));
 			dtnc.getCalendarSection().setText(resultSet.getString("BottomRightBoxContents"));
 			
-			treeList.add(new TreeItem<Note>(legacyDailyNote));
+			TreeItem<Note> newTreeItem = new TreeItem<Note>(legacyDailyNote);
+			legacyDailyNote.setTreeItem(newTreeItem);
+			
+			treeList.add(newTreeItem);
 	    }
 	}
 	
@@ -1087,7 +1093,10 @@ public final class DatabaseHandler {
 				}	
 			}
 			
-			treeList.add(new TreeItem<Note>(readingNote));
+			TreeItem<Note> newTreeItem = new TreeItem<Note>(readingNote);
+			readingNote.setTreeItem(newTreeItem);
+			
+			treeList.add(newTreeItem);
 	    }
 	}
 	
