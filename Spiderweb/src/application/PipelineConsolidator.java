@@ -67,7 +67,7 @@ public class PipelineConsolidator {
 		}
 		
 		for (Note currentNote: listOfNotes) {
-			compareItemToCurrentItem(currentNote, openedNote);
+			compareItemToCurrentItem(openedNote, currentNote);
 		}
 		
 		ArrayList<Note> sortedListOfNotes = classifyAndSortNotes(listOfNotes, openedNote);
@@ -160,7 +160,6 @@ public class PipelineConsolidator {
 		TreeMap<String, Double> mapOfCurrentItem = currentNote.getClassifierMap();
 
 		Double score = 0.0;
-		
 		for (Map.Entry<String, Double> entry : mapOfOpenedItem.entrySet()) {
 			
 			/*

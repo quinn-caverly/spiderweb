@@ -570,7 +570,7 @@ public class PipelineNLP {
 	private String getContents(Note currentNote) {
 		String contents = "";
 		String type = currentNote.getTypeOfNote();
-		
+				
 		if (type.equals("Standard")) {
 			StandardTypeNoteController stnc = (StandardTypeNoteController) currentNote.getController();
 			contents = stnc.returnTextForClassifier();
@@ -583,7 +583,7 @@ public class PipelineNLP {
 			DailyTypeNoteController dtnc = (DailyTypeNoteController) currentNote.getController();	
 			contents = dtnc.returnTextForClassifier();
 		}
-		else if (type.equals("Daily Scroll")) {
+		else if (type.equals("DailyScroll")) {
 			DailyScrollController dsc = (DailyScrollController) currentNote.getController();
 			contents = dsc.returnTextForClassifier();
 		}

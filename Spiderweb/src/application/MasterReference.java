@@ -98,22 +98,18 @@ public class MasterReference {
 			
 			
 			//a new note has been selected by the tabPane
-			else if (oldVal != newVal) {
-				
-				if (bottomSectionEnabled == true) {
+			else if (oldVal != newVal && bottomSectionEnabled == true) {				
 					//changes the values in the similarNotesHBox
 					pipelineConsolidator.newNoteOpenedProcedure();
 					//changes the values in the pinnedNotesHBox
 					//TODO pinnedNotesHandler is currently not activated
 					//pinnedNotesHandler.newNoteOpenedProcedure();
-				}
 			}
 		});
 		
 		
 		mCC.getLeftVBoxOfMainSplit().maxWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
-		
 		
 		
 
@@ -129,7 +125,7 @@ public class MasterReference {
     		pipeline.runThroughPipeline(treeItem.getValue());
     	}
     	for (Note scroll : mCC.getDailyPageList().getItems()) {
-    		pipeline.runThroughPipeline(scroll);    		
+    		pipeline.runThroughPipeline(scroll);
     	}
     	
 		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
