@@ -1,11 +1,15 @@
 # spiderweb
 
+<p align="center">
+  <img src="https://i.gyazo.com/35c776ff4a4be42b5317ce34d98110a5.png" width=90% height=90%>
+</p>
 
 ---
-Daily type note
-
 ![full image of the daily type note w/ directory view opened](https://i.gyazo.com/35c776ff4a4be42b5317ce34d98110a5.png)
 
+<details>
+<summary>Daily type note</summary>
+<br>
 Long term goal / Long term task section. Because the daily type note serves as a daily hub for me, it is convenient to display important things which I have coming up in a way which feels more readable and concise than a calendar. 
 
 ![closeup picture of the long term goal section](https://i.gyazo.com/ba92f94324027b45a36207687e1e6f76.png)
@@ -29,6 +33,8 @@ The text sections at the bottom are used for daily thoughts and ideas. The secti
 The two large buttons at the top are used to expand either the left or right section. This feature is particularly useful for expanding the text sections when writing them. It also allows the expansion of the book section for choosing the 3 books for the compact section. It creates three lists out of all of the book notes contained in the app. The three sections are intended to resemble bookshelves. 
 
 ![expanded left side](https://i.gyazo.com/8539faebe7531953e56094b83dad2c92.png)
+</details>
+
 
 
 
