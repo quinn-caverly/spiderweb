@@ -5,10 +5,9 @@
 </p>
 
 ---
-![full image of the daily type note w/ directory view opened](https://i.gyazo.com/35c776ff4a4be42b5317ce34d98110a5.png)
 
 <details>
-<summary>Daily type note</summary>
+<summary> Daily type note</summary>
 <br>
 Long term goal / Long term task section. Because the daily type note serves as a daily hub for me, it is convenient to display important things which I have coming up in a way which feels more readable and concise than a calendar. 
 
