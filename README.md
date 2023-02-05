@@ -36,18 +36,15 @@ The two large buttons at the top are used to expand either the left or right sec
 
 
 
-
-
-
-
-
-
-
 ---
-Reading type note
 
-![test](https://i.gyazo.com/a24f8b15a9b1aab73ede518927c08c71.png)
+<p align="center">
+  <img src="https://i.gyazo.com/a24f8b15a9b1aab73ede518927c08c71.png" width=90% height=90%>
+</p>
 
+<details>
+<summary> Reading type note</summary>
+<br>
 
 The motivation for creating the reading type note was due to a disliking for the conventional design decisions made by notetaking apps.
 Notetaking apps tend to value flexibility. However, I prefer a pre-determined format for notetaking because it easier to not have to worry about organizing the notes
@@ -68,5 +65,7 @@ like we take notes on paper? 👎 Below is an example of how a traditional bulle
 Notetaking apps mimic paper unnecessarily in the way that a large amount of text takes up a disproportionate amount of space compared to its position in the hierarchy.
 
 ![text overflow example](https://i.gyazo.com/1d05f4bc3639fd8f8177430ef3c31a59.png)
+  
+<\details>
 
 ---
