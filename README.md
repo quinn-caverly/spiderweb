@@ -2,12 +2,14 @@
 
 ---
 
+## Daily type note
+
 <p align="center">
   <img src="https://i.gyazo.com/35c776ff4a4be42b5317ce34d98110a5.png" width=90% height=90%>
 </p>
 
 <details>
-<summary> Daily type note</summary>
+<summary>details</summary>
 <br>
 Long term goal / Long term task section. Because the daily type note serves as a daily hub for me, it is convenient to display important things which I have coming up in a way which feels more readable and concise than a calendar. 
 
@@ -34,16 +36,16 @@ The two large buttons at the top are used to expand either the left or right sec
 ![expanded left side](https://i.gyazo.com/8539faebe7531953e56094b83dad2c92.png)
 </details>
 
-
-
 ---
+
+## Reading type note
 
 <p align="center">
   <img src="https://i.gyazo.com/a24f8b15a9b1aab73ede518927c08c71.png" width=90% height=90%>
 </p>
 
 <details>
-<summary> Reading type note</summary>
+<summary>details</summary>
 <br>
 
 The motivation for creating the reading type note was due to a disliking for the conventional design decisions made by notetaking apps.
