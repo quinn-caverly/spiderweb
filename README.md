@@ -1,10 +1,10 @@
 # spiderweb
 
+---
+
 <p align="center">
   <img src="https://i.gyazo.com/35c776ff4a4be42b5317ce34d98110a5.png" width=90% height=90%>
 </p>
-
----
 
 <details>
 <summary> Daily type note</summary>
@@ -66,6 +66,6 @@ Notetaking apps mimic paper unnecessarily in the way that a large amount of text
 
 ![text overflow example](https://i.gyazo.com/1d05f4bc3639fd8f8177430ef3c31a59.png)
   
-<\details>
+</details>
 
 ---
