@@ -74,4 +74,4 @@ Notetaking apps mimic paper unnecessarily in the way that a large amount of text
 
 ---
 
-Anyone can feel free to use code from this project for making javafx applications or any project. (Code from earlier commits often follows poor coding practice in JavaFX).
+Anyone can feel free to use code from this project for making javafx applications or any project. (Code from the initial commit often follows poor coding practice in JavaFX).
