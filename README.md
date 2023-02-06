@@ -1,6 +1,6 @@
 # spiderweb
 
-This project was made using Java 17, JavaFX, Derby embedded db with IBM DB2 (SQL), MIT's Java Wordnet interface, Apache's Open-NLP, SceneBuilder, SCSS CSS stylesheet (CSS extension)
+This project was made using Java 17, JavaFX, embedded Derby IBM DB2 (SQL), MIT's JWI (Java Wordnet Interface), Apache's Open-NLP, SceneBuilder, SCSS CSS extension
 
 The project has 3 notable extensions which are, the classifier which ranks similarity between notes, the daily type note, and the reading type note. Click dropdown menus for more information.
 
