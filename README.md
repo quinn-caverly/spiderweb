@@ -4,6 +4,20 @@ This project was made using Java 17, JavaFX, embedded Derby IBM DB2 (SQL), MIT's
 
 The project has 3 notable extensions which are, the classifier which ranks similarity between notes, the daily type note, and the reading type note. Click dropdown menus for more information.
 
+## Similarity of Notes Classifier
+
+<p align="center">
+  <img src="https://i.gyazo.com/064af54438249d8a258a7427fea67398.png" width=90% height=90%>
+</p>
+
+<details>
+<summary>details</summary>
+<br>
+
+</details>
+
+
+
 ## Daily type note
 
 <p align="center">
