@@ -112,7 +112,6 @@ public class MasterReference {
 		mCC.getLeftVBoxOfMainSplit().prefWidthProperty().bind((mCC.getMainSplitPane()).widthProperty().divide(goldenRatio*2));
 		
 		
-
 		//TODO this code should be moved to an actual location will be necessary if I ever decide to make 
 		//the jar exportable 
 		//DatabaseHandler.initializeDatabase();
@@ -121,12 +120,14 @@ public class MasterReference {
 		
 		DatabaseHandler.startLoadProtocol(this);
 		
+		
     	for (TreeItem<Note> treeItem : pipelineConsolidator.createListOfTreeItems()) {
     		pipeline.runThroughPipeline(treeItem.getValue());
     	}
     	for (Note scroll : mCC.getDailyPageList().getItems()) {
     		pipeline.runThroughPipeline(scroll);
     	}
+    	
     	
 		//this is called after the tree nodes already exist, it goes through and makes their style in the treeView align with the type of that note
 		setTreeCellStyles();

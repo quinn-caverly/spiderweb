@@ -881,8 +881,13 @@ public class NoteChooserHandler {
 		//because the treeview structure has changed, sends a call to the database handler
 		DatabaseHandler.startTreeViewSaveProtocol(mR);
 		
-		mR.openNote(newNote);
-		
+		if (typeOfNote.equals("DailyScroll")) {
+			mR.openNote(newNote);
+		}
+		else {
+			mR.openNote(newTreeItem);
+		}
+				
 		resetFunctionBox();
 		
 		mR.setTreeCellStyles();
