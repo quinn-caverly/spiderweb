@@ -12,6 +12,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
+import javafx.scene.control.ScrollPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.AnchorPane;
@@ -60,13 +61,15 @@ public class ReadingTypeNoteController implements Initializable {
 	//the right-side scrollbar eating up space
 	private static Integer scrollbarBuffer = 10;
 	
+	private static Integer subtractFromCollectorVBoxChild = 0;
+	
 	
 	@Override
 	public void initialize(URL arg0, ResourceBundle arg1) {
 			
 		//has to bind the marginKeeper's heights and widths because this cannot be done easily in SceneBuilder
-		marginKeeper.minWidthProperty().bind(parentOfScrollPane.widthProperty());
-		marginKeeper.maxWidthProperty().bind(parentOfScrollPane.widthProperty());
+		marginKeeper.minWidthProperty().bind(parentOfScrollPane.widthProperty().subtract(25));
+		marginKeeper.maxWidthProperty().bind(parentOfScrollPane.widthProperty().subtract(25));
 		
 		//the margin keeper height is bounded to its child, or the collector vbox, this makes it so that the scrollpane is activated as the anchorpane becomes larger than the area
 		marginKeeper.minHeightProperty().bind(collectorVBox.heightProperty().add(10));
@@ -114,8 +117,6 @@ public class ReadingTypeNoteController implements Initializable {
     			pushSectionButton();
     		}
         });
-        
-       
 	}
 	
 	private void handleCloseButtonListener(Button button, AnchorPane anchor) {
@@ -185,8 +186,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -242,8 +243,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -306,8 +307,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -363,8 +364,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -426,8 +427,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -478,8 +479,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
@@ -541,8 +542,8 @@ public class ReadingTypeNoteController implements Initializable {
 			//adds the HBox to the anchor and binds the hbox to the dimensions
 			anchor.getChildren().add(mainHBox);
 			
-			mainHBox.minWidthProperty().bind(anchor.widthProperty());
-			mainHBox.maxWidthProperty().bind(anchor.widthProperty());
+			mainHBox.minWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
+			mainHBox.maxWidthProperty().bind(anchor.widthProperty().subtract(subtractFromCollectorVBoxChild));
 			
 			mainHBox.minHeightProperty().bind(anchor.heightProperty());
 			mainHBox.maxHeightProperty().bind(anchor.heightProperty());
