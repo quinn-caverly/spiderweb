@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+
+<AnchorPane fx:id="weeklyGoalSectionCreationStageRoot" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="50.0" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <Button fx:id="weeklyGoalCreateButton" layoutX="10.0" layoutY="10.0" maxHeight="20.0" maxWidth="25.0" minHeight="20.0" minWidth="25.0" mnemonicParsing="false" prefHeight="1000.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <HBox prefWidth="150.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="30.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="0.0">
+         <children>
+            <AnchorPane prefWidth="10000.0" HBox.hgrow="ALWAYS">
+               <children>
+                  <TextField fx:id="weeklyGoalDescriptionTextField" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="15.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+            <AnchorPane maxWidth="75.0" minWidth="75.0" HBox.hgrow="NEVER">
+               <children>
+                  <ComboBox fx:id="weeklyGoalQuantityCombobox" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
+               </children>
+            </AnchorPane>
+         </children>
+      </HBox>
+      <Button fx:id="weeklyGoalSectionCreationDeleteButton" layoutX="30.0" layoutY="30.0" maxHeight="20.0" maxWidth="15.0" minHeight="20.0" minWidth="15.0" mnemonicParsing="false" prefHeight="1000.0" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="10.0" />
+   </children>
+</AnchorPane>

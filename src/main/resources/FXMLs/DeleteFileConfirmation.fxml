@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
+
+<AnchorPane fx:id="test" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="216.0" prefWidth="325.0" style="-fx-background-color: E3E3E3;" xmlns="http://javafx.com/javafx/17" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <VBox layoutX="77.0" layoutY="8.0" prefHeight="200.0" prefWidth="171.0">
+         <children>
+            <Label prefHeight="45.0" prefWidth="171.0" style="-fx-border-color: gray;" text="Are You Sure You Would Like to Delete This File?" textAlignment="CENTER" wrapText="true" />
+            <AnchorPane prefHeight="8.0" prefWidth="171.0" style="-fx-background-color: E3E3E3;" />
+            <Label prefHeight="45.0" prefWidth="171.0" style="-fx-border-color: gray;" text="(All Contents Will Be Deleted)" textAlignment="CENTER" wrapText="true" />
+            <AnchorPane prefHeight="35.0" prefWidth="171.0" style="-fx-background-color: E3E3E3;" />
+            <HBox prefHeight="62.0" prefWidth="171.0">
+               <children>
+                  <Button mnemonicParsing="false" onAction="#deleteDirectoryPostCancellation" prefHeight="25.0" prefWidth="91.0" text="Cancel" />
+                  <Button mnemonicParsing="false" onAction="#deleteDirectoryPostConfirmation" prefHeight="25.0" prefWidth="103.0" text="Confirm" />
+               </children>
+            </HBox>
+         </children>
+      </VBox>
+   </children>
+</AnchorPane>

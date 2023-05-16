@@ -1,0 +1,703 @@
+/* reference for the CSS alpha channel for adding opacity to hex colors https://gist.github.com/lopspower/03fb1cc0ac9f32ef38f4 */
+/*
+the command for powershell for autoupdating saves to this file to the actual css file:
+sass --watch C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\application.scss C:\Users\quinn\git\spiderweb\Spiderweb\src\application\css\application.css
+*/
+/*******************************************************************************
+ *                                                                             *
+ * Loading Fonts (Fonts are referenced by the strings commmented out)          *
+ *                                                                             *
+ ******************************************************************************/
+@font-face {
+  src: url("../files/AbrilFatface-Regular.ttf");
+}
+@font-face {
+  src: url("../files/BebasNeue-Regular.ttf");
+}
+@font-face {
+  src: url("../files/RobotoMono-Regular.ttf");
+}
+@font-face {
+  src: url("../files/RobotoMono-SemiBold.ttf");
+}
+@font-face {
+  src: url("../files/BebasNeue-Regular.ttf");
+}
+@font-face {
+  src: url("../files/Quicksand-VariableFont_wght.ttf");
+}
+/*******************************************************************************
+ *                                                                             *
+ * Base                                                                        *
+ *                                                                             *
+ ******************************************************************************/
+.root {
+  -background-blue: rgb(68, 84, 105);
+  -background-purple: rgb(68, 68, 90);
+  -background-purple-transparent: rgba(68, 68, 90, 0.75);
+  -background-blue-transparent: rgba(68, 84, 105, 0.75);
+  -ghost-white: rgba(210, 210, 210, 0.2);
+  -full-grayish-white: rgb(210, 210, 210);
+  -transparent-white: rgba(210, 210, 210, 0.3);
+  -transparent-darker-white: rgba(190, 190, 190, 0.3);
+  -transparent-darkest-white: rgba(180, 180, 180, 0.3);
+  -thicker-white: rgba(210, 210, 210, 0.4);
+  -thicker-darker-white: rgba(190, 190, 190, 0.4);
+  -thicker-darkest-white: rgba(180, 180, 180, 0.4);
+  -default-gray: rgba(47, 47, 47, 0.8);
+  -contrasting-gray: rgba(100, 100, 100, 0.8);
+  -text-area-dark: rgba(55, 55, 55, 0.95);
+  -text-area-darker: rgba(40, 40, 40, 0.95);
+  -text-field-middleground: rgba(45, 45, 45, 0.95);
+  -closed-white-gradient-vertical: linear-gradient(to bottom, -transparent-white 2%, -thicker-white 25%, -thicker-white 75%, -transparent-white 98%);
+  -closed-white-gradient-horizontal: linear-gradient(to right, -transparent-white 2%, -thicker-white 25%, -thicker-white 75%, -transparent-white 98%);
+  -closed-darker-white-gradient-vertical: linear-gradient(to bottom, -transparent-darker-white 2%, -thicker-darker-white 25%, -thicker-darker-white 75%, -transparent-darker-white 98%);
+  -closed-darker-white-gradient-horizontal: linear-gradient(to right, -transparent-darker-white 2%, -thicker-darker-white 25%, -thicker-darker-white 75%, -transparent-darker-white 98%);
+  -closed-darkest-white-gradient-vertical: linear-gradient(to bottom, -transparent-darkest-white 2%, -thicker-darkest-white 25%, -thicker-darkest-white 75%, -transparent-darkest-white 98%);
+  -closed-darkest-white-gradient-horizontal: linear-gradient(to right, -transparent-darkest-white 2%, -thicker-darkest-white 25%, -thicker-darkest-white 75%, -transparent-darkest-white 98%);
+  -white-gradient-vertical: linear-gradient(to bottom, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent 98%);
+  -white-gradient-horizontal: linear-gradient(to right, transparent 2%, -transparent-white 25%, -transparent-white 75%, transparent 98%);
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+  -fx-selection-bar: transparent;
+  -fx-cell-focus-inner-border: transparent;
+  -standard-drop-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 10, 0, 0, 8);
+  -light-drop-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 5, 0, 0, 3);
+  -light-transparent-drop-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 5, 0, 0, 3);
+  -medium-transparent-drop-shadow: dropshadow(gaussian, rgba(0, 0, 0, 0.05), 7, 0, 0, 4);
+  -fx-font-size: 15px;
+  -fx-font-family: "Quicksand Light";
+  -fx-text-fill: -full-grayish-white;
+}
+
+.button, .split-pane, .tab-pane, .vbox, .anchorpane, .tree-view, .tree-cell, .gridpane, .hbox, .scroll-pane, .scroll-bar, .text-area {
+  -fx-background-color: transparent;
+  -fx-border-color: transparent;
+  -fx-base: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Background                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+#mainVBox {
+  -fx-background-image: url("../files/colormash.png");
+  -fx-background-repeat: repeat;
+  -fx-background-size: cover;
+  -fx-padding: 10px 15px;
+  -fx-background-radius: 10px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Text COMMON                                                                 *
+ *                                                                             *
+ ******************************************************************************/
+.text-input {
+  -fx-text-fill: -full-grayish-white;
+  -fx-highlight-fill: -background-blue-transparent;
+  -fx-highlight-text-fill: -full-grayish-white;
+  -fx-prompt-text-fill: derive(-fx-control-inner-background, -30%);
+  -fx-background-color: linear-gradient(to bottom, derive(-fx-text-box-border, -10%), -fx-text-box-border), linear-gradient(from 0px 0px to 0px 5px, derive(-fx-control-inner-background, -9%), -fx-control-inner-background);
+  -fx-background-insets: 0, 1;
+  -fx-background-radius: 3, 2;
+  -fx-cursor: text;
+  -fx-padding: 0.333333em 0.583em 0.333333em 0.583em; /* 4 7 4 7 */
+}
+
+.text-input:focused {
+  -fx-highlight-fill: -background-purple-transparent;
+  -fx-highlight-text-fill: -full-grayish-white;
+  -fx-background-insets: -0.2, 1, -1.4, 3;
+  -fx-background-radius: 3, 2, 4, 0;
+  -fx-prompt-text-fill: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Text Area / Field                                                           *
+ *                                                                             *
+ ******************************************************************************/
+.text-area {
+  -fx-background-color: -text-area-dark;
+  -fx-background-radius: 5px;
+  -fx-effect: -standard-drop-shadow;
+  -fx-font-family: "Quicksand";
+  -fx-text-fill: -full-grayish-white;
+}
+
+.text-field {
+  -fx-background-color: -text-field-middleground;
+  -fx-background-radius: 5px;
+  -fx-effect: -standard-drop-shadow;
+  -fx-font-family: "Quicksand Semibold";
+  -fx-text-fill: -full-grayish-white;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Scrollbar                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+.scroll-bar:vertical > .thumb {
+  -fx-background-color: -closed-white-gradient-vertical;
+  -fx-background-radius: 5px;
+  -fx-effect: -light-drop-shadow;
+}
+.scroll-bar:vertical > .thumb:hover {
+  -fx-background-color: -closed-darker-white-gradient-vertical;
+}
+.scroll-bar:vertical > .thumb:pressed {
+  -fx-background-color: -closed-darkest-white-gradient-vertical;
+}
+
+#noteChooser .scroll-bar * {
+  -fx-min-width: 0;
+  -fx-pref-width: 0;
+  -fx-max-width: 0;
+  -fx-min-height: 0;
+  -fx-pref-height: 0;
+  -fx-max-height: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Splitpane                                                                   *
+ *                                                                             *
+ ******************************************************************************/
+.split-pane:horizontal > .split-pane-divider {
+  -fx-background-color: -white-gradient-vertical;
+  -fx-background-radius: 10px;
+}
+
+.split-pane:vertical > .split-pane-divider {
+  -fx-background-color: -white-gradient-horizontal;
+  -fx-background-radius: 10px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * TabPane of Note Section                                                     *
+ *                                                                             *
+ ******************************************************************************/
+#noteTabPane {
+  -fx-tab-min-height: 40px;
+  -fx-tab-max-height: 40px;
+  -fx-tab-min-width: 200px;
+  -fx-tab-max-width: 200px;
+  -fx-effect: -light-drop-shadow;
+  -fx-focus-color: transparent;
+  -fx-faint-focus-color: transparent;
+}
+#noteTabPane > .tab-header-area {
+  -fx-background-color: transparent;
+}
+#noteTabPane > .tab-header-area > .headers-region > .tab {
+  -fx-font-size: 14px;
+  -fx-border-color: transparent;
+  -fx-border-radius: 0px;
+  -fx-background-color: rgba(47, 47, 47, 0.7);
+  -fx-background-radius: 5px;
+}
+#noteTabPane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-label {
+  -fx-alignment: CENTER;
+  -fx-text-fill: -full-grayish-white;
+}
+#noteTabPane > .tab-header-area > .headers-region > .tab:hover {
+  -fx-background-color: rgba(47, 47, 47, 0.85);
+}
+#noteTabPane > .tab-header-area > .headers-region > .tab:selected {
+  -fx-background-color: rgba(47, 47, 47, 0.95);
+}
+#noteTabPane > .tab-header-area > .headers-region > .tab > .tab-container > .tab-close-button {
+  -fx-background-color: -full-grayish-white;
+  -fx-shape: "M 0,0 H1 L 4,3 7,0 H8 V1 L 5,4 8,7 V8 H7 L 4,5 1,8 H0 V7 L 3,4 0,1 Z";
+  -fx-scale-shape: false;
+  -fx-effect: dropshadow(two-pass-box, rgba(255, 255, 255, 0.4), 1, 0, 0, 1);
+}
+
+/* This refers to the area "behind" the individual tabs */
+#noteTabPane > .tab-header-area > .tab-header-background {
+  -fx-background-color: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Standard Note                                                               *
+ *                                                                             *
+ ******************************************************************************/
+#standardTypeMarginKeeper {
+  -fx-border-color: transparent;
+  -fx-border-width: 0px;
+  -fx-border-radius: 5px;
+  -fx-background-color: rgba(47, 47, 47, 0.55);
+  -fx-background-radius: 10px;
+  -fx-effect: -light-transparent-drop-shadow;
+}
+
+#standardTypeMainTextArea {
+  -fx-background-color: rgba(46, 46, 46, 0.95);
+  -fx-font-size: 18px;
+}
+
+#standardTypeNoteTitleButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 23px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#standardTypeNoteTitleButton:hover {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+#standardTypeNoteTitleButton:pressed {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Invisible TabPane                                                           *
+ *                                                                             *
+ ******************************************************************************/
+#standardTypeTabPane, #treeViewTabPane {
+  -fx-tab-max-height: 0;
+}
+
+#standardTypeTabPane, #treeViewTabPane > .tab-header-area {
+  -fx-background-color: transparent;
+  -fx-opacity: 0;
+}
+
+#standardTypeTabPane, #treeViewTabPane > .tab-header-area > .headers-region {
+  -fx-background-color: transparent;
+  -fx-opacity: 0;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Note                                                                  *
+ *                                                                             *
+ ******************************************************************************/
+#dailyTypeRoot .text-area {
+  -fx-background-radius: 5px;
+  -fx-text-fill: -full-grayish-white;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Reading Note                                                                *
+ *                                                                             *
+ ******************************************************************************/
+#readingTypeRoot .button {
+  -fx-background-radius: 5px;
+}
+#readingTypeRoot .text-area .scroll-bar:vertical .thumb {
+  -fx-background-radius: 4.5px;
+}
+
+#chapterDescriptionButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 20px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#chapterDescriptionButton:hover {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+#chapterDescriptionButton:pressed {
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+}
+
+#sectionDescriptionButton {
+  -fx-font-family: "Quicksand";
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 22px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#sectionDescriptionButton:hover {
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+}
+
+#sectionDescriptionButton:pressed {
+  -fx-background-color: rgba(40, 40, 40, 0.9);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Buttons                                                                     *
+ *                                                                             *
+ ******************************************************************************/
+.button {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 13px;
+  -fx-effect: -light-drop-shadow;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(47, 47, 47, 0.9);
+  -fx-background-radius: 7px;
+}
+
+.button:hover {
+  -fx-background-color: rgba(44, 44, 44, 0.95);
+}
+
+.button:pressed {
+  -fx-background-color: rgb(40, 40, 40);
+}
+
+/*
+* Buttons which will only show the text when hovered over
+*/
+#saveButton, #saveAllButton, #refreshSimilarsButton, #weeklyGoalResetButton,
+#addAnalysisButton, #addBothButton, #addQuoteButton, #addSectionButton, #addChapterButton {
+  -fx-text-fill: transparent;
+  -fx-font-size: 13px;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(47, 47, 47, 0.9);
+  -fx-background-radius: 7px;
+}
+
+#saveButton:hover, #saveAllButton:hover, #refreshSimilarsButton:hover, #weeklyGoalResetButton:hover,
+#addAnalysisButton:hover, #addBothButton:hover, #addQuoteButton:hover,
+#addSectionButton:hover, #addChapterButton:hover {
+  -fx-text-fill: -full-grayish-white;
+  -fx-background-color: rgba(44, 44, 44, 0.95);
+}
+
+#saveButton:pressed, #saveAllButton:pressed,
+#refreshSimilarsButton:pressed, #weeklyGoalResetButton:pressed,
+#addAnalysisButton:pressed, #addBothButton:pressed, #addQuoteButton:pressed,
+#addSectionButton:pressed, #addChapterButton:pressed {
+  -fx-background-color: rgb(40, 40, 40);
+}
+
+/*******************************************************************************
+*                                                                             *
+* Function Box Items                                                          *
+*                                                                             *
+******************************************************************************/
+#newNoteNameVBox .text-field, #renameNoteVBox .text-field, #deleteNoteVBox .text-field {
+  -fx-background-color: rgba(47, 47, 47, 0.3);
+  -fx-text-fill: -full-grayish-white;
+  -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+#deleteNoteVBox .label {
+  -fx-background-color: rgba(47, 47, 47, 0.3);
+  -fx-background-radius: 3.5px;
+}
+
+/*******************************************************************************
+*                                                                             *
+* List View / Cells                                                           *
+*                                                                             *
+******************************************************************************/
+.list-view {
+  -fx-background-color: -text-area-dark;
+  -fx-selection-bar: transparent;
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell {
+  -fx-text-fill: -full-grayish-white;
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:filled:selected {
+  -fx-background-color: transparent;
+}
+
+.list-view:focused > .virtual-flow > .clipped-container > .sheet > .list-cell:hover {
+  -fx-background-color: transparent;
+}
+
+/* When the ListView is _not_ focused, we show alternate selection colors */
+.list-cell:filled:selected:focused, .list-cell:filled:selected, .list-view:horizontal .list-cell:filled:selected {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fx-selection-bar-text;
+}
+
+.list-cell:filled:selected:focused:disabled, .list-cell:filled:selected:disabled {
+  -fx-opacity: -fx-disabled-opacity;
+}
+
+.list-cell:filled:hover {
+  -fx-background-color: transparent;
+  -fx-text-fill: -fx-text-inner-color;
+}
+
+.list-view:focused .list-cell:filled:focused:hover {
+  -fx-background-color: transparent;
+  -fx-background-insets: 0, 1, 2;
+  -fx-text-fill: -fx-text-inner-color;
+}
+
+.list-view:horizontal .list-cell:filled:selected, .list-view:horizontal .list-cell:filled:selected:hover {
+  -fx-background-color: linear-gradient(to right, derive(-fx-accent, -7%), derive(-fx-accent, -25%));
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * PopupMenu (Context Menu and ComboBox)                                       *
+ *                                                                             *
+ ******************************************************************************/
+.context-menu {
+  -fx-background-color: -text-area-dark;
+  -fx-background-insets: 0, 1;
+  -fx-padding: 0.333333em 0.083333em 0.333333em 0.083333em; /* 4 1 8 1 */
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 12, 0, 0, 8);
+  -fx-background-radius: 5px;
+}
+
+.context-menu > * > .menu-item > .label {
+  -fx-text-fill: -full-grayish-white;
+}
+
+.context-menu > * > .menu-item:hover {
+  -fx-background-color: -background-purple-transparent;
+  -fx-background-radius: 3px;
+}
+
+.context-menu > * > .menu-item:focused {
+  -fx-background-color: -background-purple-transparent;
+  -fx-background-radius: 3px;
+}
+
+.combo-box {
+  -fx-background-color: -text-area-dark;
+  -fx-effect: dropshadow(gaussian, rgba(0, 0, 0, 0.2), 12, 0, 0, 8);
+  -fx-background-radius: 5px;
+}
+
+.combo-box-popup > .list-view {
+  -fx-background-color: -text-area-dark;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Note Selectors                                                              *
+ *                                                                             *
+ ******************************************************************************/
+.list-view {
+  -fx-background-color: transparent;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll Specific                                                       *
+ *                                                                             *
+ ******************************************************************************/
+#dailyScrollToDoSection, #longTermGoalSection, #weeklyGoalSection, #bookSection, #rightTextSection, #leftTextSection,
+#dailyScrollDoneSectionVBox {
+  -fx-border-color: transparent;
+  -fx-border-width: 0px;
+  -fx-border-radius: 5px;
+  -fx-background-color: rgba(47, 47, 47, 0.55);
+  -fx-background-radius: 10px;
+  -fx-effect: -light-transparent-drop-shadow;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: To Do Section                                                 *
+ *                                                                             *
+ ******************************************************************************/
+#toDoSectionNodeDeleteButton, #doneSectionNodeDeleteButton {
+  -fx-border-radius: 0px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(50, 50, 50, 0.9);
+  -fx-background-radius: 5px;
+}
+
+#toDoSectionNodeDeleteButton:hover, #doneSectionNodeDeleteButton:hover {
+  -fx-background-color: rgba(120, 43, 25, 0.5);
+}
+
+#toDoSectionNodeDeleteButton:pressed, #doneSectionNodeDeleteButton:pressed {
+  -fx-background-color: rgba(120, 43, 25, 0.75);
+}
+
+#toDoSectionNodeReflectButton {
+  -fx-background-radius: 5px;
+}
+
+#toDoSectionTextField {
+  -fx-background-color: rgba(47, 47, 47, 0.6);
+  -fx-text-fill: -full-grayish-white;
+  -fx-prompt-text-fill: rgba(255, 255, 255, 0.5);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Done Section                                                  *
+ *                                                                             *
+ ******************************************************************************/
+#doneSectionNodeMarginKeeper {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 3px;
+}
+
+#doneSectionReflectionTextArea {
+  -fx-background-color: rgba(46, 46, 46, 0.95);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Weekly Goal Section                                           *
+ *                                                                             *
+ ******************************************************************************/
+#weeklyGoalRightSectionBorderAnchor, #weeklyGoalLeftSectionBorderAnchor {
+  -fx-border-color: rgba(47, 47, 47, 0.9);
+  -fx-border-width: 5px;
+  -fx-border-radius: 3px;
+}
+
+#weeklyGoalCreateButton, #weeklyGoalSectionCreationDeleteButton {
+  -fx-background-radius: 4px;
+}
+
+#weeklyGoalCreatedLabel {
+  -fx-font-family: "Quicksand Light";
+}
+
+#weeklyGoalCreatedColoredBackground {
+  -fx-background-color: rgba(255, 255, 255, 0.2);
+  -fx-background-radius: 7px;
+  -fx-effect: -standard-drop-shadow;
+}
+
+#weeklyGoalCreatedBorderPane {
+  -fx-background-color: rgba(55, 55, 55, 0.9);
+  -fx-effect: -standard-drop-shadow;
+}
+
+#lineupCardHolderHBox {
+  -fx-spacing: 3px;
+}
+
+#weeklyGoalLineupNode {
+  -fx-background-color: rgba(44, 44, 44, 0.9);
+  -fx-background-radius: 5px;
+  -fx-effect: -standard-drop-shadow;
+}
+
+#weeklyGoalLineupNode:hover {
+  -fx-background-color: rgba(40, 40, 40, 0.95);
+}
+
+#weeklyGoalLineupNode:pressed {
+  -fx-background-color: rgb(37, 37, 37);
+}
+
+.weeklyGoalLineupNodeGone {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 2px;
+  -fx-border-width: 4px;
+  -fx-effect: -standard-drop-shadow;
+}
+
+#weeklyGoalSectionLockedColoredBackground {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 4px;
+}
+
+#weeklyGoalSectionDescriptionButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 15px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Long Term Goal Section                                        *
+ *                                                                             *
+ ******************************************************************************/
+#longTermGoalSectionDescriptionButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 15px;
+}
+
+#longTermGoalSectionActionButton:hover, #longTermGoalSectionDeleteButton:hover {
+  -fx-background-color: rgba(44, 44, 44, 0.9);
+}
+
+#longTermGoalSectionActionButton:pressed, #longTermGoalSectionDeleteButton:pressed {
+  -fx-background-color: rgba(40, 40, 40, 0.95);
+}
+
+#longTermGoalLockedColoredBackground {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 4px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Short Term Goal Section                                       *
+ *                                                                             *
+ ******************************************************************************/
+#shortTermGoalSectionButton {
+  -fx-text-fill: -full-grayish-white;
+  -fx-font-size: 13px;
+  -fx-border-radius: 5px;
+  -fx-border-width: 0px;
+  -fx-background-color: rgba(47, 47, 47, 0.8);
+  -fx-background-radius: 6px;
+}
+
+#shortTermGoalSectionButton:hover {
+  -fx-background-color: rgba(44, 44, 44, 0.9);
+}
+
+#shortTermGoalSectionButton:pressed {
+  -fx-background-color: rgba(40, 40, 40, 0.95);
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Book Section                                                  *
+ *                                                                             *
+ ******************************************************************************/
+#bookshelfSpotOne, #bookshelfSpotTwo, #bookshelfSpotThree {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 3px;
+}
+
+#firstBookshelfAnchor, #secondBookshelfAnchor, #thirdBookshelfAnchor {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 4px;
+}
+
+#libraryBookVBox {
+  -fx-border-color: -default-gray;
+  -fx-border-radius: 3px;
+  -fx-border-width: 3px;
+}
+
+/*******************************************************************************
+ *                                                                             *
+ * Daily Scroll: Text Sections                                                 *
+ *                                                                             *
+ ******************************************************************************/
+#leftTextSectionTextArea, #rightTextSectionTextArea {
+  -fx-background-color: rgba(46, 46, 46, 0.95);
+}
+
+/*# sourceMappingURL=application.css.map */
