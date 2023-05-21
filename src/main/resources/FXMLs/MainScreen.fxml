@@ -78,7 +78,7 @@
                                                    <children>
                                                       <AnchorPane maxHeight="40.0" minHeight="40.0" prefHeight="200.0" prefWidth="200.0">
                                                          <children>
-                                                            <Button fx:id="newDailyPageButton" mnemonicParsing="false" onAction="#newDailyPageButtonPushed" text="+" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
+                                                            <Button fx:id="newDailyScrollButton" mnemonicParsing="false" onAction="#newDailyScrollButtonPushed" text="+" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="0.0" />
                                                          </children>
                                                       </AnchorPane>
                                                       <ScrollPane fx:id="dailyPageListScrollPane" prefHeight="10000.0">

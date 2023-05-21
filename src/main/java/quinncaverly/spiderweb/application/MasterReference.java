@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Objects;
 
 import quinncaverly.spiderweb.application.NoteChooserHandler.Note;
 import quinncaverly.spiderweb.application.NoteChooserHandler.TypeTab;
@@ -27,9 +28,8 @@ import javafx.scene.layout.VBox;
 
 public class MasterReference {
 
-    private final Double goldenRatio = (double) (1+Math.sqrt(5))/2;
+    private final Double goldenRatio = (1+Math.sqrt(5))/2;
     private Double similarNotesButtonFontSize = (double) 8;
-
 	private final MainClassController mCC;
 
 	private final NoteChooserHandler noteChooserHandler;
@@ -72,6 +72,7 @@ public class MasterReference {
 
 		//initializes the handlers which are not location specific
 		noteChooserHandler = new NoteChooserHandler(this);
+
 		pinnedNotesHandler = new PinnedNotesHandler(this);
 
 
@@ -98,7 +99,7 @@ public class MasterReference {
 
 
 			//a new note has been selected by the tabPane
-			else if (oldVal != newVal && bottomSectionEnabled == true) {
+			else if (oldVal != newVal && bottomSectionEnabled) {
 					//changes the values in the similarNotesHBox
 					pipelineConsolidator.newNoteOpenedProcedure();
 					//changes the values in the pinnedNotesHBox
@@ -166,7 +167,7 @@ public class MasterReference {
 
 
 	/*
-	 * a separate but similar method is needed because scrolls are not treeItems
+	 * separate but similar method is needed because scrolls are not treeItems
 	 */
 	public void openNote(Note dailyScroll) {
 
@@ -351,8 +352,6 @@ public class MasterReference {
 	 */
 	public void saveScroll(Note scroll) {
 		DatabaseHandler.saveDailyScrollToDatabase(scroll);
-
-
 	}
 
 	public void renameCurrentNote() throws IOException {
@@ -562,20 +561,19 @@ public class MasterReference {
 
 			//gets the first part of directory based on type of the note
 
-			if (note.getTypeOfNote() == "Standard") {
-				pathToImage += "StandardNote/";
-			}
-
-			else if (note.getTypeOfNote() == "Reading") {
-				pathToImage += "ReadingNote/";
-			}
-
-			else if (note.getTypeOfNote() == "Topic") {
-				pathToImage += "TopicNote/";
-			}
-
-			else if (note.getTypeOfNote() == "Daily") {
-				pathToImage += "DailyNote/";
+			switch (note.getTypeOfNote()) {
+				case "Standard":
+					pathToImage += "StandardNote/";
+					break;
+				case "Reading":
+					pathToImage += "ReadingNote/";
+					break;
+				case "Topic":
+					pathToImage += "TopicNote/";
+					break;
+				case "Daily":
+					pathToImage += "DailyNote/";
+					break;
 			}
 
 			//gets second part of the note based on whether it is full saved and whether it has children

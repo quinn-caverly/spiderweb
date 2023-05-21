@@ -181,13 +181,13 @@ public class DailyScrollController implements Initializable {
 
 	private static Integer heightOfReflectionSection = 70;
 	private static Integer heightOfClosedToDoSectionNode = 50;
-	private Boolean toDoSectionInExpandedMode = false;
+	private boolean toDoSectionInExpandedMode = false;
 	//starts in expanded mode and is immediately closed on creation in order to efficiently reference elements
-	private Boolean weeklyGoalSectionInExpandedMode = true;
+	private boolean weeklyGoalSectionInExpandedMode = true;
 
-	private Boolean bookSectionInExpandedMode = true;
-	private Boolean bookSectionInBrowseMode = false;
-	private Boolean bookSectionLibraryInitialized = false;
+	private boolean bookSectionInExpandedMode = true;
+	private boolean bookSectionInBrowseMode = false;
+	private boolean bookSectionLibraryInitialized = false;
 	private TreeItem<Note> bookNotesTreeItem;
 	private static String bookShelfName = "Book Notes"; //TODO incomplete, make this more legit
 
@@ -342,7 +342,7 @@ public class DailyScrollController implements Initializable {
 	 * this child vbox's size changes but does not trigger a resize through javafx, this essentially forces it to change to what it should have been prior
 	 */
 	private void resizeToDoSection() {
-		Double newHeight = toDoVBox.getChildren().size()*heightOfToDoSectionNode;
+		double newHeight = toDoVBox.getChildren().size()*heightOfToDoSectionNode;
 		if (newHeight <= heightOfToDoSectionNode*4) {
 			dailyScrollToDoSection.setMinHeight(heightOfToDoSectionNode*4);
 			dailyScrollToDoSection.setMaxHeight(heightOfToDoSectionNode*4);
@@ -357,7 +357,7 @@ public class DailyScrollController implements Initializable {
 	 * see comments for above method resizeToDoSection()
 	 */
 	private void resizeLongTermGoalSection() {
-		Double newHeight = longTermGoalSectionVBox.getChildren().size()*heightOfLongTermGoalSectionNode;
+		double newHeight = longTermGoalSectionVBox.getChildren().size()*heightOfLongTermGoalSectionNode;
 		if (newHeight <= heightOfLongTermGoalSectionNode*2) {
 			longTermGoalSection.setMinHeight(heightOfLongTermGoalSectionNode*2);
 			longTermGoalSection.setMaxHeight(heightOfLongTermGoalSectionNode*2);
@@ -427,7 +427,7 @@ public class DailyScrollController implements Initializable {
 	/*
 	 * this button disables the left side, then switches the two buttons with one larger button
 	 *
-	 * this also opens the reflection sections in the ToDo Section
+	 * this also opens the reflection sections in the To-Do Section
 	 *
 	 * needs to adjust the size of each of the nodes, currently the size of the reflectionArea is __, this will be set to a static private variable for
 	 * easy changes as I adjust the cosmetic aspects of the scroll later
@@ -467,15 +467,15 @@ public class DailyScrollController implements Initializable {
 		topButtonHolder.getChildren().add(dailyScrollTopRightButton);
 
 		if (!inTimeCapsuleMode) {
-			if (toDoSectionInExpandedMode == true) {
+			if (toDoSectionInExpandedMode) {
 				//placeholder, describes relevance of the toDoSectionInExpandedMode variable
 			}
-			if (weeklyGoalSectionInExpandedMode == true) {
+			if (weeklyGoalSectionInExpandedMode) {
 				changeWeeklyGoalSectionMode();
 			}
-			if (bookSectionInExpandedMode == true) {
+			if (bookSectionInExpandedMode) {
 				changeBookSectionMode();
-				if (bookSectionInBrowseMode == true) {
+				if (bookSectionInBrowseMode) {
 					bookSectionMainButtonPushed();
 				}
 			}
@@ -637,7 +637,7 @@ public class DailyScrollController implements Initializable {
 	//TODO incomplete
 	public void changeBookSectionMode() {
 
-		if (bookSectionInExpandedMode == false) {
+		if (!bookSectionInExpandedMode) {
 			bookSectionInExpandedMode = true;
 
 			bookSectionHBox.getChildren().add(bookSectionMainButtonHolder);
@@ -809,8 +809,9 @@ public class DailyScrollController implements Initializable {
 		/*
 		 * Description, Day, Month, Year
 		 */
-		Integer count = 0;
+		int count = 0;
 
+		assert listOfLists != null;
 		for (ArrayList<String> entry : listOfLists) {
 
 			try {
@@ -827,10 +828,10 @@ public class DailyScrollController implements Initializable {
 				descriptionButton.setText(entry.get(0));
 
 				LocalDate date = LocalDate.now();
-				LocalDate entryDate = LocalDate.of(Integer.valueOf(entry.get(3)), Integer.valueOf(entry.get(2)), Integer.valueOf(entry.get(1)));
+				LocalDate entryDate = LocalDate.of(Integer.parseInt(entry.get(3)), Integer.parseInt(entry.get(2)), Integer.parseInt(entry.get(1)));
 
-				Integer daysBetween = (int) ChronoUnit.DAYS.between(date, entryDate);
-				longTermGoalSectionDaysLabel.setText(daysBetween.toString() + " days");
+				int daysBetween = (int) ChronoUnit.DAYS.between(date, entryDate);
+				longTermGoalSectionDaysLabel.setText(daysBetween + " days");
 
 				handleLongTermGoalCompleteButton(descriptionButton, entry.get(0), lockedNode);
 
@@ -854,7 +855,7 @@ public class DailyScrollController implements Initializable {
     		public void handle(ActionEvent event) {
     			DatabaseHandler.deleteFromLongTermGoalTable(description);
 
-				Integer indexCounter = 0;
+				int indexCounter = 0;
 				for (Node presentNode : longTermGoalSectionVBox.getChildren()) {
 					if (((AnchorPane) presentNode).equals(node)) {
 						longTermGoalSectionVBox.getChildren().remove(node);

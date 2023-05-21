@@ -6,10 +6,7 @@ import java.io.InputStream;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.TextStyle;
-import java.util.ArrayList;
-import java.util.Locale;
-import java.util.Set;
-import java.util.TreeMap;
+import java.util.*;
 
 import quinncaverly.spiderweb.fxmlcontrollers.TreeViewCellController;
 import quinncaverly.spiderweb.fxmlcontrollers.notetypes.DailyScrollController;
@@ -42,9 +39,9 @@ public class NoteChooserHandler {
 	//mainReference
 	MasterReference mR;
 
-	private TreeView<Note> treeView;
+	private final TreeView<Note> treeView;
 	private ListView<Note> recencyList;
-	private HBox functionBox;
+	private final HBox functionBox;
 
 	private static final Set<String> ALLOWEDCHARACTERS = Set.of(
 			"a", "b", "c", "d", "e", "f", "g", "h", "i", "j"
@@ -119,10 +116,10 @@ public class NoteChooserHandler {
 	        this.name = name;
 	        this.typeOfNote = typeOfNote;
 
-	        listOfPinnedIDs = new ArrayList<Integer>();
+	        listOfPinnedIDs = new ArrayList<>();
 
 	        //sets style in the treeView
-	        if (typeOfNote != "DailyScroll") { //TODO static reference
+	        if (!typeOfNote.equals("DailyScroll")) { //TODO static reference
 	            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/TreeViewCell.fxml"));
 		    	try {
 					HBox loadedHBox = fxmlLoader.load();
@@ -152,11 +149,7 @@ public class NoteChooserHandler {
 					this.listViewAnchor = listViewAnchor;
 
 					Button button = (Button) listViewAnchor.getChildren().get(0);
-					button.setOnAction(new EventHandler<ActionEvent>() {
-						@Override
-						public void handle(ActionEvent event) {
-							mR.openNote(Note.this);
-						}});
+					button.setOnAction(event -> mR.openNote(Note.this));
 
 					if (getName().equals("temporary")) {
 						LocalDate date = LocalDate.now();
@@ -178,65 +171,53 @@ public class NoteChooserHandler {
 	        }
 
 
-	        if (typeOfNote == "Standard") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/StandardType.fxml"));
+			switch (typeOfNote) {
+				case "Standard": {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/StandardType.fxml"));
 
-	        	try {
-					root = loader.load();
-		        	StandardTypeNoteController stnc = loader.getController();
-		        	controller = stnc;
-
-				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						root = loader.load();
+						controller = loader.<StandardTypeNoteController>getController();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
 				}
-	        }
+				case "Daily": {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyType.fxml"));
 
-	        else if (typeOfNote == "Daily") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyType.fxml"));
-
-	        	try {
-					root = loader.load();
-
-		        	DailyTypeNoteController dtnc = loader.getController();
-
-		        	controller = dtnc;
-
-				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						root = loader.load();
+						controller = loader.<DailyTypeNoteController>getController();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
 				}
-	        }
+				case "Reading": {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/ReadingType.fxml"));
 
-	        else if (typeOfNote == "Reading") {
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/ReadingType.fxml"));
-
-	        	try {
-					root = loader.load();
-
-		        	ReadingTypeNoteController rtnc = loader.getController();
-
-		        	controller = rtnc;
-
-				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						root = loader.load();
+						controller = loader.<ReadingTypeNoteController>getController();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
 				}
-	        }
+				case "DailyScroll": {
 
-	        else if (typeOfNote == "DailyScroll") {
+					FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyScroll.fxml"));
 
-				FXMLLoader loader = new FXMLLoader(getClass().getResource("/FXMLs/NoteTypes/DailyScroll.fxml"));
-
-	        	try {
-					root = loader.load();
-
-					DailyScrollController dsc = loader.getController();
-
-		        	controller = dsc;
-
-				} catch (IOException e) {
-					e.printStackTrace();
+					try {
+						root = loader.load();
+						controller = loader.<DailyScrollController>getController();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					break;
 				}
-	        }
-
+			}
 	    }
 
 
@@ -426,12 +407,11 @@ public class NoteChooserHandler {
 
 	public class NoteTreeCell extends TreeCell<Note>{
 
-	    private ContextMenu treeViewContextMenu = new ContextMenu();
-
 		public NoteTreeCell() {
 			//creates contextMenu format
 	        MenuItem addMenuItem = new MenuItem("New Note");
-	        treeViewContextMenu.getItems().add(addMenuItem);
+			ContextMenu treeViewContextMenu = new ContextMenu();
+			treeViewContextMenu.getItems().add(addMenuItem);
 
 	        MenuItem newDirectory = new MenuItem("New Directory");
 	        treeViewContextMenu.getItems().add(newDirectory);
@@ -452,208 +432,129 @@ public class NoteChooserHandler {
 	        //has to start disabled
 	        deleteNote.setDisable(true);
 	        //a listener for the selection model of the treeView
-			treeView.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
-
-				if (newValue == null) {
-					deleteNote.setDisable(true);
-				}
-
-				else {
-					deleteNote.setDisable(false);
-				}
-
-				});
-
+			treeView.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> deleteNote.setDisable(newValue == null));
 
 	        //Open Note Menu Item Handler
-	        openNote.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+	        openNote.setOnAction(event -> {
 				TreeItem<Note> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
 				try {
 					mR.openNote(selectedTreeItem);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-			}});
+			});
 
 			//New Note Menu Item Handler
-	        addMenuItem.setOnAction(new EventHandler<ActionEvent>() {
-	        	@Override
-	            public void handle(ActionEvent event) {
-	                FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/NewNoteName.fxml"));
-	        		try {
-	        			TreeItem<Note> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
+	        addMenuItem.setOnAction(new EventHandler<>() {
+				@Override
+				public void handle(ActionEvent event) {
+					FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/NewNoteName.fxml"));
+					try {
+						TreeItem<Note> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
 
-	        			if (selectedTreeItem == null) {
-	        				selectedTreeItem = treeView.getRoot();
-	        			}
-
-
-	        			VBox newNoteName = fxmlLoader.load();
-
-	        			functionBox.getChildren().clear();
-	        			functionBox.getChildren().add(newNoteName);
-
-	        			functionBox.setMinHeight(145);
-
-        				AnchorPane comboBoxAnchor = (AnchorPane) newNoteName.getChildren().get(1);
-
-        				ComboBox comboBox = (ComboBox) comboBoxAnchor.getChildren().get(0);
-
-        				comboBox.getItems().add("Standard");
-        				comboBox.getItems().add("Reading");
-        				comboBox.getItems().add("Topic");
-        				comboBox.getItems().add("Daily");
-
-        				AnchorPane textFieldAnchor = (AnchorPane) newNoteName.getChildren().get(0);
-        				TextField textField = (TextField) textFieldAnchor.getChildren().get(0);
+						if (selectedTreeItem == null) {
+							selectedTreeItem = treeView.getRoot();
+						}
 
 
-	        			if (selectedTreeItem.getValue().getTypeOfNote() == "Standard") {
-	        				//the note could be assigned to any type
+						VBox newNoteName = fxmlLoader.load();
 
-	        				comboBox.getSelectionModel().select(0);
-	        			}
+						functionBox.getChildren().clear();
+						functionBox.getChildren().add(newNoteName);
 
-	        			else if (selectedTreeItem.getValue().getTypeOfNote() == "Reading") {
+						functionBox.setMinHeight(145);
 
-	        				comboBox.getSelectionModel().select(1);
+						AnchorPane comboBoxAnchor = (AnchorPane) newNoteName.getChildren().get(1);
 
-	        				comboBox.setDisable(true);
-	        			}
+						ComboBox comboBox = (ComboBox) comboBoxAnchor.getChildren().get(0);
 
-	        			else if (selectedTreeItem.getValue().getTypeOfNote() == "Topic") {
+						comboBox.getItems().add("Standard");
+						comboBox.getItems().add("Reading");
+						comboBox.getItems().add("Topic");
+						comboBox.getItems().add("Daily");
 
-	        				comboBox.getSelectionModel().select(2);
+						AnchorPane textFieldAnchor = (AnchorPane) newNoteName.getChildren().get(0);
+						TextField textField = (TextField) textFieldAnchor.getChildren().get(0);
 
-	        				comboBox.setDisable(true);
-	        			}
+						switch (selectedTreeItem.getValue().getTypeOfNote()) {
+							case "Standard":
+								//if standard, its children could be any type
+								comboBox.getSelectionModel().select(0);
+							case "Reading":
+								comboBox.getSelectionModel().select(1);
 
-	        			else if (selectedTreeItem.getValue().getTypeOfNote() == "Daily") {
+								comboBox.setDisable(true);
+							case "Topic":
+								comboBox.getSelectionModel().select(2);
 
-	        				comboBox.getSelectionModel().select(3);
+								comboBox.setDisable(true);
+							case "Daily":
+								comboBox.getSelectionModel().select(3);
 
-	        				comboBox.setDisable(true);
-
-	        				//if the type is daily, we want the title to default to today's date
-	        				setTitleAsMonth(textField);
-
-	        			}
-
-
-	        			VBox subVBox = (VBox) newNoteName.getChildren().get(2);
-	        			HBox subHBox = (HBox) subVBox.getChildren().get(1);
-
-	        			Button cancelButton = (Button) subHBox.getChildren().get(1);
-	        			Button confirmButton = (Button) subHBox.getChildren().get(3);
-
-
-	        			EventHandler<ActionEvent> onCancelPressed = (new EventHandler<ActionEvent>() {
-	        				@Override
-	        				public void handle(ActionEvent arg0) {
-	        					cancelFunctionBoxOperation();
-	        				}});
-	        			cancelButton.setOnAction(onCancelPressed);
-
-	        			EventHandler<ActionEvent> onConfirmPressed = (new EventHandler<ActionEvent>() {
-	        				@Override
-	        				public void handle(ActionEvent arg0) {
-	        					try {
-									newNoteConfirmPushed(newNoteName, (String) comboBox.getSelectionModel().getSelectedItem(), textField.getText(), treeView.getSelectionModel().getSelectedItem());
-								} catch (IOException e) {
-									e.printStackTrace();
-								}
-	        				}});
-	        			confirmButton.setOnAction(onConfirmPressed);
+								comboBox.setDisable(true);
+								//if the type is daily, we want the title to default to today's date
+								setTitleAsMonth(textField);
+						}
 
 
-	        			comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
 
-	        				if (newValue == "Daily") {
-	        					setTitleAsMonth(textField);
-	        				}
+						VBox subVBox = (VBox) newNoteName.getChildren().get(2);
+						HBox subHBox = (HBox) subVBox.getChildren().get(1);
 
-	        				});
-
-
-	        		} catch (IOException e) {
-	        			e.printStackTrace();
-	        		}
-	        	}
-		        private void setTitleAsMonth(TextField textField) {
-    				LocalDate date = LocalDate.now();
-    				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
-
-    				String theDate = formatter.format(date);
-
-    				String[] dateList = theDate.split("-");
-
-    				String day = dateList[0];
-    				String month = dateList[1];
-    				String year = dateList[2];
-
-    				if (day.charAt(0) == "0".charAt(0)) {
-    					day = String.valueOf(day.charAt(1));
-    				}
-
-    				if (month.charAt(0) == "0".charAt(0)) {
-    					month = String.valueOf(month.charAt(1));
-    				}
+						Button cancelButton = (Button) subHBox.getChildren().get(1);
+						Button confirmButton = (Button) subHBox.getChildren().get(3);
 
 
-    				if (Integer.valueOf(month)== 1) {
-    					month = "January";
-    				}
+						EventHandler<ActionEvent> onCancelPressed = (arg0 -> cancelFunctionBoxOperation());
+						cancelButton.setOnAction(onCancelPressed);
 
-    				else if (Integer.valueOf(month)== 2) {
-    					month = "February";
-    				}
+						EventHandler<ActionEvent> onConfirmPressed = (arg0 -> {
+							try {
+								newNoteConfirmPushed((String) comboBox.getSelectionModel().getSelectedItem(), textField.getText(), treeView.getSelectionModel().getSelectedItem());
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+						});
+						confirmButton.setOnAction(onConfirmPressed);
 
-    				else if (Integer.valueOf(month)== 3) {
-    					month = "March";
-    				}
+						comboBox.getSelectionModel().selectedItemProperty().addListener((options, oldValue, newValue) -> {
+							if (newValue == "Daily") {
+								setTitleAsMonth(textField);
+							}
+						});
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
 
-    				else if (Integer.valueOf(month)== 4) {
-    					month = "April";
-    				}
+				private void setTitleAsMonth(TextField textField) {
+					LocalDate date = LocalDate.now();
+					DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy");
 
-    				else if (Integer.valueOf(month)== 5) {
-    					month = "May";
-    				}
+					String theDate = formatter.format(date);
 
-    				else if (Integer.valueOf(month)== 6) {
-    					month = "June";
-    				}
+					String[] dateList = theDate.split("-");
 
-    				else if (Integer.valueOf(month)== 7) {
-    					month = "July";
-    				}
+					String day = dateList[0];
+					String month = dateList[1];
+					String year = dateList[2];
 
-    				else if (Integer.valueOf(month)== 8) {
-    					month = "August";
-    				}
+					if (day.charAt(0) == '0') {
+						day = String.valueOf(day.charAt(1));
+					}
 
-    				else if (Integer.valueOf(month)== 9) {
-    					month = "September";
-    				}
+					if (month.charAt(0) == '0') {
+						month = String.valueOf(month.charAt(1));
+					}
 
-    				else if (Integer.valueOf(month)== 10) {
-    					month = "October";
-    				}
+					String[] months = {"January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"};
 
-    				else if (Integer.valueOf(month)== 11) {
-    					month = "November";
-    				}
+					month = months[Integer.parseInt(month)-1];
 
-    				else if (Integer.valueOf(month)== 12) {
-    					month = "December";
-    				}
+					textField.setText(day + " " + month + " " + year);
+				}
 
-    				textField.setText(day + " " + month + " " + year);
-		        }
-
-	        	});
+			});
 
 
 
@@ -663,9 +564,9 @@ public class NoteChooserHandler {
 			public void handle(ActionEvent event) {
                 FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/FXMLs/NewNoteName.fxml"));
         		try {
-        			TreeItem<Note> rootItem = treeView.getRoot();;
+        			TreeItem<Note> rootItem = treeView.getRoot();
 
-        			VBox newNoteName = fxmlLoader.load();
+					VBox newNoteName = fxmlLoader.load();
 
         			functionBox.getChildren().clear();
         			functionBox.getChildren().add(newNoteName);
@@ -691,28 +592,22 @@ public class NoteChooserHandler {
         			Button cancelButton = (Button) subHBox.getChildren().get(1);
         			Button confirmButton = (Button) subHBox.getChildren().get(3);
 
-        			EventHandler<ActionEvent> onCancelPressed = (new EventHandler<ActionEvent>() {
-        				@Override
-        				public void handle(ActionEvent arg0) {
-        					cancelFunctionBoxOperation();
-        				}});
+        			EventHandler<ActionEvent> onCancelPressed = (arg0 -> cancelFunctionBoxOperation());
         			cancelButton.setOnAction(onCancelPressed);
 
-        			EventHandler<ActionEvent> onConfirmPressed = (new EventHandler<ActionEvent>() {
-        				@Override
-        				public void handle(ActionEvent arg0) {
-        					try {
-        						if ((String) comboBox.getSelectionModel().getSelectedItem() == null) {
-    								newNoteConfirmPushed(newNoteName, "Standard", textField.getText(), rootItem);
-        						}
-        						else {
-    								newNoteConfirmPushed(newNoteName, (String) comboBox.getSelectionModel().getSelectedItem(), textField.getText(), rootItem);
-
-        						}
-							} catch (IOException e) {
-								e.printStackTrace();
+        			EventHandler<ActionEvent> onConfirmPressed = (arg0 -> {
+						try {
+							if (comboBox.getSelectionModel().getSelectedItem() == null) {
+								newNoteConfirmPushed("Standard", textField.getText(), rootItem);
 							}
-        				}});
+							else {
+								newNoteConfirmPushed((String) comboBox.getSelectionModel().getSelectedItem(), textField.getText(), rootItem);
+
+							}
+						} catch (IOException e) {
+							e.printStackTrace();
+						}
+					});
         			confirmButton.setOnAction(onConfirmPressed);
         		} catch (IOException e) {
         			e.printStackTrace();
@@ -723,40 +618,21 @@ public class NoteChooserHandler {
 
 
 	        //Same as new note but the current note is the root note
-	        deleteNote.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+	        deleteNote.setOnAction(event -> {
 				if (treeView.getSelectionModel().getSelectedItem() != null) {
 					mR.deleteNote(treeView.getSelectionModel().getSelectedItem());
 				}
-        		}
-	        }
-	        );
-
-
-
+				}
+			);
 
 	        //Open Note Menu Item Handler
-	        renameNote.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
+	        renameNote.setOnAction(event -> {
 				TreeItem<Note> selectedTreeItem = treeView.getSelectionModel().getSelectedItem();
 				mR.renameNote(selectedTreeItem);
-			}});
-
-
+			});
 
 	        //Open Note Menu Item Handler
-	        pinToOpened.setOnAction(new EventHandler<ActionEvent>() {
-			@Override
-			public void handle(ActionEvent event) {
-				mR.pinCurrentToOpened();
-			}});
-
-
-
-
-
+	        pinToOpened.setOnAction(event -> mR.pinCurrentToOpened());
 
 	        this.setContextMenu(treeViewContextMenu);
 		}
@@ -810,7 +686,7 @@ public class NoteChooserHandler {
 
 
 	//for when confirm is pushed on the newNoteName menu
-	public void newNoteConfirmPushed(VBox newNoteName, String typeOfNote, String title, TreeItem<Note> noteTreeItem) throws IOException {
+	public void newNoteConfirmPushed(String typeOfNote, String title, TreeItem<Note> noteTreeItem) throws IOException {
 
 		//this runs if there is no selected note, defaults it to the root
 		if (noteTreeItem == null) {
@@ -819,7 +695,7 @@ public class NoteChooserHandler {
 
 
 		//creates list of note names in under the encapsulating node
-		ArrayList<String> listOfNoteNames = new ArrayList<String>();
+		ArrayList<String> listOfNoteNames = new ArrayList<>();
 		for (TreeItem<Note> treeItem: noteTreeItem.getChildren()) {
 			Note currentNote = treeItem.getValue();
 
@@ -829,19 +705,19 @@ public class NoteChooserHandler {
 		}
 
 		//cannot be named either of these
-		if (title == noteTreeItem.getValue().getName() || title == "children") {
+		if (Objects.equals(title, noteTreeItem.getValue().getName()) || Objects.equals(title, "children")) {
 			title = "";
 		}
 
 		//will default to New Note
 		//finds the lowest number New Note(x) available
-		if (title == "") {
+		if (Objects.equals(title, "")) {
 			if (listOfNoteNames.contains("New Note")) {
-				Integer num = 1;
+				int num = 1;
 				String current = "New Note(1)";
 				while (listOfNoteNames.contains(current)) {
 					num +=1;
-					current = "New Note(" + num.toString() + ")";
+					current = "New Note(" + num + ")";
 				}
 				title = current;
 			}
@@ -852,18 +728,18 @@ public class NoteChooserHandler {
 
 		//if there is a duplicate name
 		if (listOfNoteNames.contains(title)) {
-			Integer num = 1;
+			int num = 1;
 			String current = title + "(1)";
 			while (listOfNoteNames.contains(current)) {
 				num +=1;
-				current = title + "(" + num.toString() + ")";
+				current = title + "(" + num + ")";
 			}
 			title = current;
 		}
 
 
 		Note newNote = new Note(title, typeOfNote);
-		TreeItem<Note> newTreeItem = new TreeItem<Note>(newNote);
+		TreeItem<Note> newTreeItem = new TreeItem<>(newNote);
 		newNote.setTreeItem(newTreeItem);
 
 		mR.saveNote(newTreeItem);

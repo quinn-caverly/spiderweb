@@ -2,14 +2,11 @@ package quinncaverly.spiderweb.fxmlcontrollers;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Random;
 import java.util.ResourceBundle;
 
 import quinncaverly.spiderweb.application.MasterReference;
 import quinncaverly.spiderweb.application.NoteChooserHandler.Note;
 import quinncaverly.spiderweb.application.NoteChooserHandler.TypeTab;
-import quinncaverly.spiderweb.fxmlcontrollers.notetypes.ReadingTypeNoteController;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.Button;
@@ -20,7 +17,6 @@ import javafx.scene.control.SplitPane;
 import javafx.scene.control.TabPane;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TreeView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
@@ -134,7 +130,7 @@ public class MainClassController implements Initializable {
     @FXML
     private Button buttonBelowNoteChooser;
     @FXML
-    private Button newDailyPageButton;
+    private Button newDailyScrollButton;
     @FXML
     private ScrollPane dailyPageListScrollPane;
     @FXML
@@ -287,7 +283,13 @@ public class MainClassController implements Initializable {
 		}
 	}
 
-	public void newDailyPageButtonPushed() {
+	/*
+	 * need to check if there is already a daily scroll for the current date. If there is, do not create a new one, just open the current
+	 */
+	public void newDailyScrollButtonPushed() {
+
+
+
 		Note newDailyScroll = mR.getNoteChooserHandler().new Note("temporary", "DailyScroll"); //name is overridden with the date later
 
 		dailyPageList.getItems().add(0, newDailyScroll);

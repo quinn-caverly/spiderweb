@@ -2,6 +2,8 @@ package quinncaverly.spiderweb.application;
 
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.Objects;
+
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.stage.Stage;
@@ -19,10 +21,10 @@ public class Main extends Application {
 		try {
 	        primaryStage.initStyle(StageStyle.DECORATED);
 
-			Parent root = FXMLLoader.load(getClass().getResource("/FXMLs/MainScreen.fxml"));
+			Parent root = FXMLLoader.load(Objects.requireNonNull(getClass().getResource("/FXMLs/MainScreen.fxml")));
 			Scene scene = new Scene(root);
 
-			scene.getStylesheets().add(getClass().getResource("/css/application.css").toExternalForm());
+			scene.getStylesheets().add(Objects.requireNonNull(getClass().getResource("/css/application.css")).toExternalForm());
 	        scene.setFill(Color.TRANSPARENT);
 
 			//name and icon of the application
